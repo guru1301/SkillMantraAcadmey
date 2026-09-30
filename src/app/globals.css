@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-navy: #0A3A7A;
+  --color-brand-deep: #062F68;
+  --color-brand-academic: #0B4EA2;
+  --color-brand-gold: #FCAF0A;
+  --color-brand-warm-gold: #F5A800;
+  --color-brand-light: #F7F9FC;
+  --color-brand-text: #162033;
+  --color-brand-muted: #667085;
+  --color-brand-border: #E4E8EF;
+}
+
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F7F9FC;
+  --text-main: #162033;
+  --text-muted: #667085;
+  --primary-navy: #0A3A7A;
+  --deep-navy: #062F68;
+  --academic-blue: #0B4EA2;
+  --primary-gold: #FCAF0A;
+  --border-color: #E4E8EF;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  color: var(--text-main);
+  background-color: #FFFFFF;
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* Institutional Custom Utilities */
+.container-custom {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Academic Card styling: 12px max radius, restrained border, subtle shadow */
+.academic-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E4E8EF;
+  border-radius: 12px;
+  transition: all 0.25s ease-in-out;
+}
+
+.academic-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 10px 25px -5px rgba(10, 58, 122, 0.06), 0 8px 10px -6px rgba(10, 58, 122, 0.04);
+}
+
+/* Gold Accent line */
+.gold-accent-line {
+  height: 3px;
+  width: 48px;
+  background-color: #FCAF0A;
+  border-radius: 2px;
+}
+
+/* Subtle focus indicators for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0A3A7A;
+  outline-offset: 2px;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
