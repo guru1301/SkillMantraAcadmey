@@ -1,0 +1,6 @@
+roll_number,full_name,email,phone,department,year_or_semester
+21CS001,Aakash Raman,aakash.r@example.com,+91 9876543210,CSE,3rd Year / 6th Sem
+21CS002,Deepa Srinivasan,deepa.s@example.com,+91 9876543211,CSE,3rd Year / 6th Sem
+21IT001,Karthik Natarajan,karthik.n@example.com,+91 9876543212,IT,3rd Year / 6th Sem
+21EC001,Harini Sundaram,harini.s@example.com,+91 9876543213,ECE,3rd Year / 6th Sem
+21CS003,Vigneshwaran M,vignesh.m@example.com,+91 9876543214,CSE,3rd Year / 6th Sem

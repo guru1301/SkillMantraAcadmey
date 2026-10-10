@@ -1,10 +1,24 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Mail, Phone, MapPin, ArrowRight, ShieldCheck, Award } from 'lucide-react';
 import { BRAND_INFO } from '@/data/siteData';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Hide public footer on dedicated admin portal, college portal, and login routes
+  if (
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/portal') ||
+    pathname === '/login'
+  ) {
+    return null;
+  }
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -69,6 +83,11 @@ export default function Footer() {
               <li>
                 <Link href="/about#leadership" className="hover:text-[#FCAF0A] transition-colors">
                   Trainer Credentials
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="text-[#FCAF0A] hover:underline font-semibold transition-colors flex items-center gap-1">
+                  Member Portal Login
                 </Link>
               </li>
             </ul>

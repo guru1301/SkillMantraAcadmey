@@ -2,10 +2,22 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { MessageSquare, X, Send, Phone, Mail, Building, CheckCircle2 } from 'lucide-react';
 import { BRAND_INFO } from '@/data/siteData';
 
 export default function InstitutionalChatWidget() {
+  const pathname = usePathname();
+
+  // Hide floating chat on admin, college portal, and login routes
+  if (
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/portal') ||
+    pathname === '/login'
+  ) {
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [quickForm, setQuickForm] = useState({

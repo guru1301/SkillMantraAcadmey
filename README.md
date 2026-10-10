@@ -1,34 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skill Mantra Academy - Web Platform
 
-## Getting Started
+Institutional Training, Corporate Upskilling, and Academic Management Portal built with **Next.js 16 (App Router)**, **React 19**, **Tailwind CSS v4**, and **Neon PostgreSQL**.
 
-First, run the development server:
+---
 
+## 🚀 Quick Start for Developers
+
+### 1. Prerequisites
+- **Node.js**: v18.18.0 or newer (v20+ recommended)
+- **npm**: v9+ (comes with Node.js)
+
+### 2. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Environment Setup
+Create a `.env.local` file in the root directory by copying `.env.example`:
+```bash
+# Windows PowerShell:
+Copy-Item .env.example .env.local
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# macOS / Linux / Git Bash:
+cp .env.example .env.local
+```
 
-## Learn More
+### 4. Start the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔒 Database & Cloud Notice for Team Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> **Note for Collaborators:**  
+> Live production database credentials (`DATABASE_URL`) are strictly isolated and not shared in this codebase to protect live production records and prevent accidental data overwrites.
 
-## Deploy on Vercel
+- **Frontend & UI Development**:  
+  You **do not need a database connection** to work on landing pages, components, layouts, styles, or static views (`/`, `/about`, `/contact`, `/programs`, etc.). Simply run `npm run dev`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Admin & Portal Backend Development**:  
+  If you are developing or testing database-backed features (e.g. `/admin`, `/portal`):
+  1. Create a free isolated database branch on [Neon](https://neon.tech) or spin up a local PostgreSQL database.
+  2. Put your connection string in `.env.local`:
+     ```env
+     DATABASE_URL="postgresql://user:password@localhost:5432/skillmantra"
+     AUTH_SECRET="your-32-character-secret-key-for-local-testing"
+     ```
+  3. Initialize your isolated database tables and demo seed data:
+     ```bash
+     npm run db:setup
+     npm run db:seed-demo
+     ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠 Available Scripts
+
+| Command | Purpose |
+| :--- | :--- |
+| `npm run dev` | Runs the Next.js development server at `localhost:3000` |
+| `npm run build` | Builds production-optimized bundle |
+| `npm run start` | Runs the production build locally |
+| `npm run lint` | Runs ESLint check |
+| `npm run db:setup` | Runs migrations & seeds initial super admin on your DB |
+| `npm run db:seed-demo` | Seeds demo colleges, programs, trainers & batches |
+
+---
+
+## 📁 Key Directories
+
+- `src/app/` — Next.js App Router pages and layouts
+- `src/components/` — UI components (sections, layouts, admin modules)
+- `src/lib/` — Helper utilities, validation schemas, and database query handlers
+- `src/db/` — Database migrations and seed scripts
+- `public/` — Static assets and images
+

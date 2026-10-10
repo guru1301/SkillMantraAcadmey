@@ -29,12 +29,20 @@ import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
 
 export default function Header() {
   const pathname = usePathname();
+
+  // Hide public header on dedicated admin portal, college portal, and login routes
+  if (
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/portal') ||
+    pathname === '/login'
+  ) {
+    return null;
+  }
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpandedSection, setMobileExpandedSection] = useState<string | null>(null);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [loginTab, setLoginTab] = useState<'institutional' | 'faculty' | 'student' | 'corporate'>('institutional');
 
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -78,11 +86,6 @@ export default function Header() {
         <div className="container-custom flex flex-col md:flex-row justify-between items-center gap-2">
           {/* Left: Quick Institutional Contacts & Social Presence */}
           <div className="flex items-center space-x-4 text-slate-300">
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FCAF0A]" />
-              ESTD. 2024 | ISO 9001:2015 ALIGNED SKILL ECOSYSTEM
-            </span>
-            <span className="hidden lg:inline text-slate-600">|</span>
             <a
               href={`mailto:${BRAND_INFO.contactEmail}`}
               className="flex items-center gap-1.5 hover:text-[#FCAF0A] transition-colors"
@@ -202,14 +205,13 @@ export default function Header() {
 
           {/* Mobile Hamburger Button */}
           <div className="flex lg:hidden items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setLoginModalOpen(true)}
-              className="p-2 rounded-lg bg-[#0A3A7A] text-white text-xs font-semibold flex items-center gap-1.5"
+            <Link
+              href="/login"
+              className="p-2 rounded-lg bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
               <User className="w-3.5 h-3.5 text-[#FCAF0A]" />
               <span>Login</span>
-            </button>
+            </Link>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -655,12 +657,15 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Right: Pill "LOGIN / MY ACCOUNT" Button (Exact match to screenshot 1, 2, 3, 4!) */}
+          {/* Right: Pill "LOGIN / MY ACCOUNT" Link (Direct dedicated /login page) */}
           <div className="hidden lg:flex items-center space-x-3 py-1.5">
-            <button
-              type="button"
-              onClick={() => setLoginModalOpen(true)}
-              className="border border-slate-400/80 hover:border-[#FCAF0A] rounded-full px-4 py-1.5 flex items-center gap-2.5 text-xs text-slate-200 hover:text-white transition-all bg-black/20 hover:bg-black/40 cursor-pointer"
+            <Link
+              href="/login"
+              className={`border rounded-full px-4 py-1.5 flex items-center gap-2.5 text-xs transition-all cursor-pointer ${
+                pathname === '/login'
+                  ? 'border-[#FCAF0A] bg-black/40 text-white ring-1 ring-[#FCAF0A]/40'
+                  : 'border-slate-400/80 hover:border-[#FCAF0A] text-slate-200 hover:text-white bg-black/20 hover:bg-black/40'
+              }`}
             >
               <User className="w-4 h-4 text-[#FCAF0A]" />
               <div className="text-left leading-tight">
@@ -671,140 +676,10 @@ export default function Header() {
                   My Account
                 </span>
               </div>
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
-
-      {/* 4. INSTITUTIONAL LOGIN / MY ACCOUNT MODAL */}
-      {loginModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E4E8EF] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            {/* Modal Header */}
-            <div className="bg-[#062F68] text-white p-6 relative">
-              <button
-                type="button"
-                onClick={() => setLoginModalOpen(false)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-md"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <div className="flex items-center gap-2 text-xs font-bold text-[#FCAF0A] uppercase tracking-wider mb-1">
-                <ShieldCheck className="w-4 h-4" />
-                <span>Institutional Portal Access</span>
-              </div>
-              <h3 className="text-xl font-bold text-white">
-                Skill Mantra Member Sign-In
-              </h3>
-              <p className="text-xs text-slate-300 mt-1">
-                Select your role to access attendance, courseware, or institution dashboard.
-              </p>
-            </div>
-
-            {/* Portal Tab Switcher */}
-            <div className="grid grid-cols-4 border-b border-[#E4E8EF] text-center text-xs font-semibold bg-[#F7F9FC]">
-              <button
-                type="button"
-                onClick={() => setLoginTab('institutional')}
-                className={`py-3 px-1 border-b-2 transition-all ${
-                  loginTab === 'institutional'
-                    ? 'border-[#0A3A7A] text-[#0A3A7A] bg-white font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                College
-              </button>
-              <button
-                type="button"
-                onClick={() => setLoginTab('faculty')}
-                className={`py-3 px-1 border-b-2 transition-all ${
-                  loginTab === 'faculty'
-                    ? 'border-[#0A3A7A] text-[#0A3A7A] bg-white font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Faculty
-              </button>
-              <button
-                type="button"
-                onClick={() => setLoginTab('student')}
-                className={`py-3 px-1 border-b-2 transition-all ${
-                  loginTab === 'student'
-                    ? 'border-[#0A3A7A] text-[#0A3A7A] bg-white font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                onClick={() => setLoginTab('corporate')}
-                className={`py-3 px-1 border-b-2 transition-all ${
-                  loginTab === 'corporate'
-                    ? 'border-[#0A3A7A] text-[#0A3A7A] bg-white font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Corporate
-              </button>
-            </div>
-
-            {/* Form */}
-            <div className="p-6 space-y-4">
-              <div className="text-xs text-slate-600 bg-blue-50 border border-blue-100 p-3 rounded-lg">
-                <strong>{loginTab.toUpperCase()} PORTAL:</strong> Enter registered institutional email or enrollment ID to access batch dashboards.
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#162033] uppercase tracking-wider mb-1">
-                  Registered Institutional Email / ID
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. principal@college.edu.in"
-                  className="w-full px-3 py-2 text-sm border border-[#E4E8EF] rounded-lg focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#162033] uppercase tracking-wider mb-1">
-                  Password / Passcode
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••••••"
-                  className="w-full px-3 py-2 text-sm border border-[#E4E8EF] rounded-lg focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A]"
-                />
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert('Institutional demo authentication verified. In production, this securely connects with your college SSO / LMS credentials.');
-                    setLoginModalOpen(false);
-                  }}
-                  className="w-full py-2.5 bg-[#0A3A7A] hover:bg-[#062F68] text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-all"
-                >
-                  Access {loginTab} Dashboard
-                </button>
-              </div>
-
-              <div className="text-center text-xs text-slate-500 pt-2">
-                Need to register your institution or faculty cohort?{' '}
-                <Link
-                  href="/contact?intent=portal-onboarding"
-                  onClick={() => setLoginModalOpen(false)}
-                  className="text-[#0A3A7A] font-bold hover:underline"
-                >
-                  Request Institutional Credentials
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 5. MOBILE ACCORDION DRAWER NAVIGATION */}
       {mobileMenuOpen && (
@@ -830,19 +705,16 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* Login Button in Mobile */}
+              {/* Login Button in Mobile Drawer */}
               <div className="py-4 border-b border-slate-700">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setLoginModalOpen(true);
-                  }}
-                  className="w-full border border-[#FCAF0A] rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 text-xs font-bold text-[#FCAF0A] uppercase tracking-wider bg-black/30"
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full border border-[#FCAF0A] rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 text-xs font-bold text-[#FCAF0A] uppercase tracking-wider bg-black/30 hover:bg-black/50 transition-colors"
                 >
                   <User className="w-4 h-4" />
                   <span>Login / My Account</span>
-                </button>
+                </Link>
               </div>
 
               {/* Mobile Accordions */}
@@ -951,6 +823,8 @@ export default function Header() {
                 >
                   Contact
                 </Link>
+
+
               </nav>
             </div>
 
