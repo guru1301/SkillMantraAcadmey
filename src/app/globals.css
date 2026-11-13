@@ -2,90 +2,136 @@
 
 @theme {
   --color-brand-navy: #0A3A7A;
-  --color-brand-deep: #062F68;
+  --color-brand-deep: #06284F;
   --color-brand-academic: #0B4EA2;
   --color-brand-gold: #FCAF0A;
   --color-brand-warm-gold: #F5A800;
   --color-brand-light: #F7F9FC;
-  --color-brand-text: #162033;
-  --color-brand-muted: #667085;
-  --color-brand-border: #E4E8EF;
+  --color-brand-text: #0F1623;
+  --color-brand-muted: #6B7280;
+  --color-brand-border: #E5E7EB;
 }
 
 :root {
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F7F9FC;
-  --text-main: #162033;
-  --text-muted: #667085;
+  --bg-secondary: #06284F;
+  --text-main: #0F1623;
+  --text-muted: #6B7280;
   --primary-navy: #0A3A7A;
-  --deep-navy: #062F68;
+  --deep-navy: #06284F;
   --academic-blue: #0B4EA2;
   --primary-gold: #FCAF0A;
-  --border-color: #E4E8EF;
+  --border-color: #E5E7EB;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
 }
 
 html {
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   color: var(--text-main);
-  background-color: #FFFFFF;
+  background-color: #041427;
   font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
-/* Institutional Custom Utilities */
+/* Custom Containers */
 .container-custom {
   width: 100%;
   max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @media (min-width: 640px) {
   .container-custom {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
   }
 }
 
-/* Academic Card styling: 12px max radius, restrained border, subtle shadow */
-.academic-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E4E8EF;
-  border-radius: 12px;
-  transition: all 0.25s ease-in-out;
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+  }
 }
 
-.academic-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 10px 25px -5px rgba(10, 58, 122, 0.06), 0 8px 10px -6px rgba(10, 58, 122, 0.04);
+/* Atmospheric grid background */
+.bg-tech-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Gold Accent line */
-.gold-accent-line {
-  height: 3px;
-  width: 48px;
-  background-color: #FCAF0A;
-  border-radius: 2px;
+.bg-tech-grid-dark {
+  background-image: radial-gradient(rgba(252, 175, 10, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-/* Subtle focus indicators for accessibility */
+/* Glass cards */
+.glass-panel-navy {
+  background: rgba(6, 40, 79, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-gold {
+  background: rgba(10, 58, 122, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(252, 175, 10, 0.25);
+}
+
+/* Focus states */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #0A3A7A;
+  outline: 2px solid #FCAF0A;
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* Respect user preference for reduced motion */
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #041427;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0A3A7A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FCAF0A;
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;

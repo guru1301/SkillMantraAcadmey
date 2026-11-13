@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, MessageCircle, Sparkles } from 'lucide-react';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
 import { getApiUrl } from '@/lib/api/config';
 
@@ -73,7 +73,6 @@ function ContactFormContent() {
       if (response.ok) {
         setStatus('success');
       } else {
-        const data = await response.json().catch(() => null);
         if (response.status === 429) {
           setStatus('error');
           setErrorMessage('Too many inquiries received from this connection. Please try again shortly or contact via WhatsApp.');
@@ -87,53 +86,65 @@ function ContactFormContent() {
   };
 
   return (
-    <section id="contact" className="py-16 lg:py-24 bg-white border-b border-[#E2E8F0]">
-      <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-          {/* Left Column: Direct Contact & Location (5 cols on lg) */}
-          <div className="lg:col-span-5 space-y-6">
+    <section id="contact" className="relative py-24 lg:py-32 bg-[#051C38] text-white overflow-hidden border-t border-white/10">
+      {/* Background ambient lighting */}
+      <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#0A3A7A]/30 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 container-custom">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+          {/* Left Column: Direct Contacts & Campus Information (5 cols) */}
+          <div className="lg:col-span-5 space-y-7">
             <div>
-              <div className="text-[11px] font-mono uppercase tracking-wider text-[#0A3A7A] mb-2">
-                Enrollment &amp; Admissions
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCAF0A]/10 border border-[#FCAF0A]/30 text-[#FCAF0A] text-xs font-semibold uppercase tracking-wider mb-4">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Admissions Desk</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#062551] tracking-tight leading-tight">
-                Ready to start your learning journey?
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                Ready to start your <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCAF0A] to-[#F5A800]">learning journey?</span>
               </h2>
-              <div className="w-10 h-0.5 bg-[#FCAF0A] mt-3" />
+              <div className="h-1 w-16 bg-[#FCAF0A] mt-4 rounded-full" />
             </div>
 
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-              Reach out to our team for course details, upcoming batch schedules, fee structures, or to schedule a visit to our Trichy training center.
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+              Connect directly with our academic coordinators for course syllabi, fee structures, upcoming batch schedules, or to schedule a visit to our Anna Nagar training center in Trichy.
             </p>
 
-            {/* Direct Contact Ledger */}
-            <div className="space-y-3 pt-2 text-xs sm:text-sm text-slate-700">
-              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <MapPin className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+            {/* Direct Contact Cards */}
+            <div className="space-y-3.5 text-xs sm:text-sm text-slate-300">
+              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+                <div className="w-9 h-9 rounded-lg bg-[#FCAF0A]/10 border border-[#FCAF0A]/30 flex items-center justify-center text-[#FCAF0A] shrink-0 mt-0.5">
+                  <MapPin className="w-4 h-4" />
+                </div>
                 <div>
-                  <strong className="text-[#162033] block mb-0.5">Training Center &amp; Office:</strong>
-                  <span className="text-slate-600 leading-relaxed">{BRAND_INFO.officeLocation}</span>
+                  <strong className="text-white block mb-0.5">Training Center &amp; Head Office:</strong>
+                  <span className="text-slate-300 leading-relaxed">{BRAND_INFO.officeLocation}</span>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <Phone className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+                <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 mt-0.5">
+                  <Phone className="w-4 h-4" />
+                </div>
                 <div>
-                  <strong className="text-[#162033] block mb-0.5">Direct Telephones:</strong>
-                  <a href={`tel:${BRAND_INFO.contactPhone.replace(/\s+/g, '')}`} className="hover:text-[#0A3A7A] block">
+                  <strong className="text-white block mb-0.5">Direct Telephones:</strong>
+                  <a href={`tel:${BRAND_INFO.contactPhone.replace(/\s+/g, '')}`} className="text-white hover:text-[#FCAF0A] block">
                     {BRAND_INFO.contactPhone}
                   </a>
-                  <a href="tel:+918015577800" className="text-slate-500 hover:text-[#0A3A7A] block text-xs">
+                  <a href="tel:+918015577800" className="text-slate-400 hover:text-[#FCAF0A] block text-xs mt-0.5">
                     +91 80155 77800 (Alternate Desk)
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <Mail className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+                <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                  <Mail className="w-4 h-4" />
+                </div>
                 <div>
-                  <strong className="text-[#162033] block mb-0.5">Admissions Email:</strong>
-                  <a href={`mailto:${BRAND_INFO.contactEmail}`} className="hover:text-[#0A3A7A]">
+                  <strong className="text-white block mb-0.5">Admissions Email:</strong>
+                  <a href={`mailto:${BRAND_INFO.contactEmail}`} className="text-white hover:text-[#FCAF0A]">
                     {BRAND_INFO.contactEmail}
                   </a>
                 </div>
@@ -141,12 +152,12 @@ function ContactFormContent() {
             </div>
 
             {/* Direct WhatsApp Quick Chat */}
-            <div className="pt-2">
+            <div>
               <a
                 href={BRAND_INFO.whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-lg transition-all"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Chat Directly on WhatsApp: +91 94426 05096</span>
@@ -154,27 +165,27 @@ function ContactFormContent() {
             </div>
           </div>
 
-          {/* Right Column: High-Precision Enquiry Form (7 cols on lg) */}
-          <div className="lg:col-span-7 bg-[#F8FAFC] border border-slate-200 rounded-lg p-6 sm:p-8">
-            <div className="mb-6 pb-4 border-b border-slate-200">
-              <h3 className="text-lg font-bold text-[#062551] tracking-tight">
+          {/* Right Column: High-Precision Enquiry Terminal (7 cols) */}
+          <div className="lg:col-span-7 rounded-2xl bg-white/[0.04] border border-white/15 p-7 sm:p-9 backdrop-blur-md shadow-2xl">
+            <div className="mb-6 pb-4 border-b border-white/10">
+              <h3 className="text-xl font-bold text-white tracking-tight">
                 Send Us an Enquiry
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Our admissions advisor will respond with course details, batch schedules, and fee information.
+              <p className="text-xs text-slate-300 mt-1">
+                Our admissions advisor will respond with full course details, upcoming batch timings, and fee structures.
               </p>
             </div>
 
             {status === 'success' ? (
-              <div className="py-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-6 h-6" />
+              <div className="py-10 text-center space-y-4">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900">
+                <h4 className="text-lg font-bold text-white">
                   Enquiry Submitted Successfully
                 </h4>
-                <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out to Skillthinker Solutions. An advisor will contact you shortly via phone or WhatsApp.
+                <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                  Thank you for reaching out to Skillthinker Solutions. An academic coordinator will contact you shortly via phone or WhatsApp.
                 </p>
                 <button
                   type="button"
@@ -188,25 +199,25 @@ function ContactFormContent() {
                       message: '',
                     });
                   }}
-                  className="mt-4 px-4 py-2 text-xs font-semibold text-[#0A3A7A] hover:underline"
+                  className="mt-4 px-5 py-2.5 rounded-xl bg-[#FCAF0A] text-[#041427] text-xs font-bold hover:bg-[#FDBE2E] transition-colors"
                 >
                   Submit another inquiry
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4.5">
                 {status === 'error' && errorMessage && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
+                  <div className="p-3.5 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-200 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name */}
-                  <div className="space-y-1">
-                    <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-700">
-                      Your Full Name <span className="text-red-500">*</span>
+                  <div className="space-y-1.5">
+                    <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-300">
+                      Your Full Name <span className="text-red-400">*</span>
                     </label>
                     <input
                       id="contact-name"
@@ -216,33 +227,33 @@ function ContactFormContent() {
                       placeholder="e.g. Anand Kumar"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:border-[#FCAF0A] focus:outline-none transition-colors"
                     />
                   </div>
 
                   {/* Phone */}
-                  <div className="space-y-1">
-                    <label htmlFor="contact-phone" className="block text-xs font-semibold text-slate-700">
-                      Phone Number (WhatsApp) <span className="text-red-500">*</span>
+                  <div className="space-y-1.5">
+                    <label htmlFor="contact-phone" className="block text-xs font-semibold text-slate-300">
+                      Phone Number (WhatsApp) <span className="text-red-400">*</span>
                     </label>
                     <input
                       id="contact-phone"
                       type="tel"
                       name="phone"
                       required
-                      placeholder="e.g. +91 98765 43210"
+                      placeholder="e.g. +91 94426 05096"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:border-[#FCAF0A] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Email */}
-                  <div className="space-y-1">
-                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-700">
-                      Email Address <span className="text-red-500">*</span>
+                  <div className="space-y-1.5">
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-300">
+                      Email Address <span className="text-red-400">*</span>
                     </label>
                     <input
                       id="contact-email"
@@ -252,13 +263,13 @@ function ContactFormContent() {
                       placeholder="e.g. anand@example.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:border-[#FCAF0A] focus:outline-none transition-colors"
                     />
                   </div>
 
                   {/* Course of Interest */}
-                  <div className="space-y-1">
-                    <label htmlFor="contact-course" className="block text-xs font-semibold text-slate-700">
+                  <div className="space-y-1.5">
+                    <label htmlFor="contact-course" className="block text-xs font-semibold text-slate-300">
                       Program of Interest
                     </label>
                     <select
@@ -266,21 +277,23 @@ function ContactFormContent() {
                       name="course"
                       value={formData.course}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#06284F] border border-white/20 rounded-xl text-white focus:border-[#FCAF0A] focus:outline-none transition-colors"
                     >
                       {PROGRAMS_DATA.map((prog) => (
-                        <option key={prog.id} value={prog.name}>
+                        <option key={prog.id} value={prog.name} className="bg-[#06284F] text-white">
                           {prog.name}
                         </option>
                       ))}
-                      <option value="Not sure yet / General enquiry">Not sure yet / General enquiry</option>
+                      <option value="Not sure yet / General enquiry" className="bg-[#06284F] text-white">
+                        Not sure yet / General enquiry
+                      </option>
                     </select>
                   </div>
                 </div>
 
                 {/* Message */}
-                <div className="space-y-1">
-                  <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-700">
+                <div className="space-y-1.5">
+                  <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-300">
                     Message or Questions (Optional)
                   </label>
                   <textarea
@@ -290,7 +303,7 @@ function ContactFormContent() {
                     placeholder="Tell us about your background, career goals, or batch preferences..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none resize-none"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:border-[#FCAF0A] focus:outline-none resize-none transition-colors"
                   />
                 </div>
 
@@ -299,15 +312,16 @@ function ContactFormContent() {
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#062551] hover:bg-[#0A3A7A] text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#FCAF0A] hover:bg-[#FDBE2E] text-[#041427] font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-4 h-4" />
                     <span>{status === 'submitting' ? 'Submitting Enquiry...' : 'Submit Course Enquiry'}</span>
                   </button>
                 </div>
               </form>
             )}
           </div>
+
         </div>
       </div>
     </section>
@@ -316,7 +330,7 @@ function ContactFormContent() {
 
 export default function ContactSection() {
   return (
-    <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading admissions form...</div>}>
+    <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading admissions terminal...</div>}>
       <ContactFormContent />
     </Suspense>
   );
