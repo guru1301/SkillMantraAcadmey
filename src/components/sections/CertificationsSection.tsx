@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Award, ShieldCheck, CheckCircle2, Search, ArrowRight, Sparkles, QrCode } from 'lucide-react';
+import { Award, ShieldCheck, CheckCircle2, Search, ArrowRight, Sparkles } from 'lucide-react';
 import { CERTIFICATE_TIERS, BRAND_INFO } from '@/data/siteData';
 
 export default function CertificationsSection() {
@@ -23,37 +23,33 @@ export default function CertificationsSection() {
   };
 
   return (
-    <section id="certifications" className="relative py-24 lg:py-32 bg-[#051C38] text-white overflow-hidden border-t border-b border-white/10">
-      {/* Background ambient lighting */}
-      <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-[#FCAF0A]/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 container-custom">
+    <section id="certifications" className="py-20 lg:py-28 bg-white border-b border-slate-200">
+      <div className="container-custom">
         
         {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCAF0A]/10 border border-[#FCAF0A]/30 text-[#FCAF0A] text-xs font-semibold uppercase tracking-wider mb-4">
-            <ShieldCheck className="w-3.5 h-3.5" />
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold uppercase tracking-wider mb-4">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>Digital Credential Authority</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            100% Digitally Verifiable Credentials with <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCAF0A] to-[#F5A800]">3 Merit Tiers.</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
+            100% Digitally Verifiable Credentials with <span className="text-[#0A3A7A]">3 Merit Tiers.</span>
           </h2>
-          <div className="h-1 w-16 bg-[#FCAF0A] mt-4 rounded-full" />
-          <p className="text-slate-300 text-sm sm:text-base mt-4 max-w-2xl font-normal leading-relaxed">
+          <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
+          <p className="text-slate-600 text-base mt-4 max-w-2xl font-normal leading-relaxed">
             Every credential issued by Skillthinker Solutions is backed by rigorous practical evaluations, lab assignments, and project defense. Recruiters, HR teams, and academic institutions can verify certificate authenticity instantly online.
           </p>
         </div>
 
         {/* Certificate Visual Showcase + Merit Tiers Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-14">
           
           {/* Left: Certificate Mockup Card (5 cols) */}
           <div className="lg:col-span-5 relative group">
-            <div className="relative rounded-2xl bg-gradient-to-b from-white via-slate-50 to-slate-100 p-7 sm:p-8 text-slate-900 border-4 border-[#FCAF0A] shadow-2xl shadow-[#FCAF0A]/10 transform transition-transform duration-300 group-hover:scale-[1.02]">
+            <div className="relative rounded-2xl bg-gradient-to-b from-white via-slate-50 to-amber-50/30 p-7 sm:p-8 text-slate-900 border-4 border-[#FCAF0A] shadow-xl">
               
               {/* Certificate Inner Border */}
-              <div className="border border-slate-300 rounded-xl p-5 sm:p-6 text-center space-y-4 bg-white/80">
+              <div className="border border-slate-300 rounded-xl p-5 sm:p-6 text-center space-y-4 bg-white/95">
                 {/* Logo & Header */}
                 <div className="flex justify-center">
                   <Image
@@ -93,14 +89,14 @@ export default function CertificationsSection() {
                     </div>
                   </div>
 
-                  <div className="w-12 h-12 rounded-full border-2 border-dashed border-[#0A3A7A] flex items-center justify-center bg-blue-50/50">
+                  <div className="w-12 h-12 rounded-full border-2 border-dashed border-[#0A3A7A] flex items-center justify-center bg-blue-50">
                     <ShieldCheck className="w-6 h-6 text-[#0A3A7A]" />
                   </div>
                 </div>
               </div>
 
               {/* Floating Verification Tag */}
-              <div className="absolute -bottom-3 -right-3 px-3.5 py-1.5 rounded-full bg-emerald-500 text-white text-[11px] font-bold shadow-lg flex items-center gap-1.5">
+              <div className="absolute -bottom-3 -right-3 px-3.5 py-1.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold shadow-md flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Verified Online</span>
               </div>
@@ -112,28 +108,28 @@ export default function CertificationsSection() {
             {CERTIFICATE_TIERS.map((tier) => (
               <div
                 key={tier.tier}
-                className="p-6 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#FCAF0A]/40 backdrop-blur-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                className="p-6 rounded-2xl bg-slate-50 hover:bg-white border border-slate-200/80 hover:border-blue-300 hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2.5">
                     <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${tier.badgeColor}`}>
                       {tier.tier} Level
                     </span>
-                    <h3 className="text-base font-bold text-white">
+                    <h3 className="text-base font-bold text-slate-900">
                       {tier.title}
                     </h3>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {tier.description}
                   </p>
-                  <div className="text-xs text-[#FCAF0A] font-medium pt-1">
-                    Criteria: <span className="text-slate-300 font-normal">{tier.criteria}</span>
+                  <div className="text-xs text-[#0A3A7A] font-semibold pt-1">
+                    Criteria: <span className="text-slate-600 font-normal">{tier.criteria}</span>
                   </div>
                 </div>
 
                 <div className="shrink-0 flex items-center gap-1 text-xs font-mono text-slate-400">
                   <Award className="w-4 h-4 text-[#FCAF0A]" />
-                  <span>Unique ID</span>
+                  <span>Encrypted ID</span>
                 </div>
               </div>
             ))}
@@ -142,15 +138,15 @@ export default function CertificationsSection() {
         </div>
 
         {/* Real-Time Certificate Verification Form Terminal */}
-        <div className="rounded-2xl bg-gradient-to-r from-[#06284F] via-[#0A3A7A] to-[#06284F] border border-white/20 p-8 sm:p-10 shadow-2xl max-w-3xl mx-auto">
+        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-8 sm:p-10 shadow-xs max-w-3xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-6">
-            <div className="w-12 h-12 rounded-xl bg-[#FCAF0A]/20 border border-[#FCAF0A]/40 flex items-center justify-center text-[#FCAF0A] mx-auto mb-3">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-[#0A3A7A] mx-auto mb-3">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#06284F]">
               Instant Certificate Verification Portal
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Enter any issued Skillthinker credential code below to authenticate candidate name, program track, issue date, and merit tier.
             </p>
           </div>
@@ -166,7 +162,7 @@ export default function CertificationsSection() {
                     setCertCode(e.target.value);
                     if (errorMsg) setErrorMsg('');
                   }}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:border-[#FCAF0A] focus:outline-none"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:border-[#0A3A7A] focus:outline-none shadow-2xs"
                   aria-label="Certificate Code"
                 />
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -174,7 +170,7 @@ export default function CertificationsSection() {
 
               <button
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-[#FCAF0A] hover:bg-[#FDBE2E] text-[#041427] font-bold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="px-6 py-3 rounded-xl bg-[#0A3A7A] hover:bg-[#06284F] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Verify</span>
                 <ArrowRight className="w-4 h-4" />
@@ -182,11 +178,11 @@ export default function CertificationsSection() {
             </div>
 
             {errorMsg && (
-              <p className="text-xs text-rose-400 text-center font-medium">{errorMsg}</p>
+              <p className="text-xs text-rose-600 text-center font-medium">{errorMsg}</p>
             )}
 
             <div className="text-center text-[11px] text-slate-400 pt-1">
-              Public registry endpoint: <span className="font-mono text-[#FCAF0A]">/verify/[code]</span>
+              Public registry endpoint: <span className="font-mono text-[#0A3A7A]">/verify/[code]</span>
             </div>
           </form>
         </div>

@@ -9,53 +9,57 @@ const AUDIENCE_CONFIG = [
   {
     icon: GraduationCap,
     badge: 'College & Degree Students',
-    accentBorder: 'hover:border-amber-400/50',
-    iconBg: 'from-amber-500/20 to-amber-700/20 text-[#FCAF0A]',
+    cardBg: 'bg-amber-50/40 hover:bg-white',
+    accentBorder: 'border-amber-200/80 hover:border-amber-400',
+    iconBg: 'bg-amber-100 text-amber-800',
     highlight: 'Foundation & Hands-On Code',
+    linkText: 'text-amber-800 hover:text-amber-900',
   },
   {
     icon: UserCheck,
     badge: 'Graduates & Job Seekers',
-    accentBorder: 'hover:border-blue-400/50',
-    iconBg: 'from-blue-500/20 to-blue-700/20 text-blue-400',
+    cardBg: 'bg-blue-50/40 hover:bg-white',
+    accentBorder: 'border-blue-200/80 hover:border-blue-400',
+    iconBg: 'bg-blue-100 text-[#0A3A7A]',
     highlight: 'Aptitude, GD & Technical Mock Interviews',
+    linkText: 'text-[#0A3A7A] hover:text-[#06284F]',
   },
   {
     icon: Briefcase,
     badge: 'Working Professionals',
-    accentBorder: 'hover:border-emerald-400/50',
-    iconBg: 'from-emerald-500/20 to-emerald-700/20 text-emerald-400',
+    cardBg: 'bg-emerald-50/40 hover:bg-white',
+    accentBorder: 'border-emerald-200/80 hover:border-emerald-400',
+    iconBg: 'bg-emerald-100 text-emerald-800',
     highlight: 'Weekend Batches & Domain Transitions',
+    linkText: 'text-emerald-800 hover:text-emerald-900',
   },
   {
     icon: Rocket,
     badge: 'Founders & Innovators',
-    accentBorder: 'hover:border-purple-400/50',
-    iconBg: 'from-purple-500/20 to-purple-700/20 text-purple-400',
+    cardBg: 'bg-purple-50/40 hover:bg-white',
+    accentBorder: 'border-purple-200/80 hover:border-purple-400',
+    iconBg: 'bg-purple-100 text-purple-800',
     highlight: 'Full-Stack Execution & Digital Growth',
+    linkText: 'text-purple-800 hover:text-purple-900',
   },
 ];
 
 export default function AudienceSection() {
   return (
-    <section id="audiences" className="relative py-24 lg:py-32 bg-[#051C38] text-white overflow-hidden border-t border-b border-white/10">
-      {/* Tech grid texture */}
-      <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-[#0A3A7A]/30 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 container-custom">
+    <section id="audiences" className="py-20 lg:py-28 bg-white border-b border-slate-200">
+      <div className="container-custom">
         
         {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCAF0A]/10 border border-[#FCAF0A]/30 text-[#FCAF0A] text-xs font-semibold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold uppercase tracking-wider mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-[#FCAF0A]" />
             <span>Target Profiles</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Training built around <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCAF0A] to-[#F5A800]">where you&apos;re starting from.</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
+            Training built around <span className="text-[#0A3A7A]">where you&apos;re starting from.</span>
           </h2>
-          <div className="h-1 w-16 bg-[#FCAF0A] mt-4 rounded-full" />
-          <p className="text-slate-300 text-sm sm:text-base mt-4 max-w-2xl font-normal leading-relaxed">
+          <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
+          <p className="text-slate-600 text-base mt-4 max-w-2xl font-normal leading-relaxed">
             Whether preparing for your first campus placement or switching tech stacks after five years in industry, our modular learning pathways adapt to your level.
           </p>
         </div>
@@ -69,44 +73,44 @@ export default function AudienceSection() {
             return (
               <div
                 key={aud.id}
-                className={`relative p-8 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 ${config.accentBorder} backdrop-blur-md transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group shadow-xl`}
+                className={`p-7 sm:p-8 rounded-2xl ${config.cardBg} border ${config.accentBorder} transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between group`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/[0.08] border border-white/10 text-slate-300">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white border border-slate-200 shadow-2xs text-slate-700">
                       {config.badge}
                     </span>
-                    <span className="text-xs font-mono font-bold text-white/40 group-hover:text-[#FCAF0A]">
+                    <span className="text-xs font-mono font-bold text-slate-400">
                       0{i + 1}
                     </span>
                   </div>
 
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${config.iconBg} border border-white/15 flex items-center justify-center shrink-0`}>
+                  <div className="flex items-start gap-4 mb-3">
+                    <div className={`w-12 h-12 rounded-xl ${config.iconBg} flex items-center justify-center shrink-0 shadow-2xs`}>
                       <IconComponent className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-[#FCAF0A] transition-colors">
+                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#0A3A7A] transition-colors">
                         {aud.title}
                       </h3>
-                      <div className="text-xs font-medium text-slate-400 mt-0.5">
+                      <div className="text-xs font-medium text-slate-500 mt-0.5">
                         {config.highlight}
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-slate-300/90 leading-relaxed font-normal mt-2">
+                  <p className="text-sm text-slate-600 leading-relaxed font-normal mt-2">
                     {aud.description}
                   </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-xs text-slate-400">
+                <div className="pt-6 mt-6 border-t border-slate-200/70 flex items-center justify-between">
+                  <span className="text-xs text-slate-500">
                     Personalized cohort guidance
                   </span>
                   <Link
                     href="/#programs"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FCAF0A] group-hover:translate-x-1 transition-all"
+                    className={`inline-flex items-center gap-1.5 text-xs font-bold ${config.linkText} group-hover:translate-x-1 transition-all`}
                   >
                     <span>View Recommended Tracks</span>
                     <ArrowRight className="w-3.5 h-3.5" />
