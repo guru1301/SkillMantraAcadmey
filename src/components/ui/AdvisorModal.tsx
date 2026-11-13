@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, MessageCircle, Phone } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, MessageCircle, Phone, MapPin, Sparkles } from 'lucide-react';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
 import { getApiUrl } from '@/lib/api/config';
 
@@ -150,129 +150,148 @@ function AdvisorModalDialog() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="advisor-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
-      style={{ animation: 'fadeIn 150ms ease' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
     >
       {/* Backdrop dismiss */}
       <div className="absolute inset-0 -z-10" onClick={closeModal} />
 
-      {/* Modal dialog */}
+      {/* Spacious, Confident, Human-Crafted Modal Dialog (max-w-2xl) */}
       <div
-        className="relative w-full max-w-[520px] bg-white rounded-xl shadow-2xl shadow-black/25 overflow-hidden max-h-[92vh] flex flex-col border border-gray-200"
-        style={{ animation: 'scaleIn 150ms ease' }}
+        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl shadow-black/40 overflow-hidden max-h-[92vh] flex flex-col border border-slate-200 animate-in zoom-in-95 duration-200"
       >
-        {/* Header */}
-        <div className="bg-[#06284F] text-white px-7 py-6 flex items-start justify-between gap-4 shrink-0">
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#FCAF0A] mb-1.5">
-              Skillthinker Solutions · Admissions
+        {/* Authoritative Header */}
+        <div className="bg-gradient-to-r from-[#041427] via-[#06284F] to-[#0A3A7A] text-white px-8 py-7 flex items-start justify-between gap-6 shrink-0 relative overflow-hidden">
+          {/* Subtle background glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FCAF0A]/10 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[#FCAF0A] text-xs font-bold uppercase tracking-widest mb-3">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Skillthinker Admissions Desk</span>
             </div>
-            <h3 id="advisor-modal-title" className="text-xl font-bold text-white tracking-tight">
-              Talk to an Advisor
+            <h3 id="advisor-modal-title" className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+              Talk to an Academic Advisor
             </h3>
-            <p className="text-xs text-white/55 mt-1.5 leading-relaxed font-normal">
-              Questions about curriculum, batch timings, fees, or course selection?
+            <p className="text-sm text-slate-300 mt-2 leading-relaxed font-normal max-w-lg">
+              Have questions regarding course curriculum, laboratory sessions, fee structures, or batch timings? Our mentors will walk you through the options.
             </p>
           </div>
+
           <button
             type="button"
             onClick={closeModal}
-            className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 mt-0.5"
+            className="p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all cursor-pointer shrink-0 mt-1 relative z-10"
             aria-label="Close dialog"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="px-7 py-6 overflow-y-auto space-y-5">
+        {/* Scrollable Form Body (Substantial, confident sizing) */}
+        <div className="p-8 overflow-y-auto space-y-6">
 
-          {/* WhatsApp quick action — compact, one line */}
-          <div className="flex items-center justify-between gap-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <div className="flex items-center gap-2 text-sm font-medium text-emerald-900">
-              <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Prefer instant messaging?</span>
-              <span className="text-xs text-emerald-700 font-normal hidden sm:inline">+91 94426 05096</span>
+          {/* Prominent WhatsApp Instant Option */}
+          <div className="p-4.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <MessageCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="text-sm font-bold text-emerald-950">
+                  Prefer instant messaging?
+                </div>
+                <div className="text-xs text-emerald-800 mt-0.5">
+                  Direct WhatsApp chat with admissions team (+91 94426 05096)
+                </div>
+              </div>
             </div>
+
             <a
               href={BRAND_INFO.whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shrink-0"
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all shadow-xs shrink-0"
             >
-              WhatsApp
+              Open WhatsApp Chat
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="h-px bg-gray-100 flex-1" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-              Or submit form
+          <div className="flex items-center gap-4">
+            <div className="h-px bg-slate-200 flex-1" />
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              Or submit inquiry form
             </span>
-            <div className="h-px bg-gray-100 flex-1" />
+            <div className="h-px bg-slate-200 flex-1" />
           </div>
 
           {status === 'success' ? (
-            <div className="py-8 text-center space-y-3.5">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="py-12 text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+                <CheckCircle2 className="w-10 h-10" />
               </div>
-              <h4 className="text-base font-bold text-gray-900">Enquiry Submitted</h4>
-              <p className="text-sm text-gray-500 max-w-xs mx-auto leading-relaxed">
-                An academic advisor will contact you shortly via phone or WhatsApp.
+              <h4 className="text-2xl font-extrabold text-slate-900">
+                Enquiry Submitted Successfully
+              </h4>
+              <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                Thank you for your interest. An academic advisor from our Anna Nagar, Trichy center will contact you shortly via phone or WhatsApp.
               </p>
-              <button
-                type="button"
-                onClick={handleResetAndClose}
-                className="px-5 py-2.5 rounded-lg bg-[#062551] text-white text-sm font-semibold hover:bg-[#0A3A7A] transition-colors cursor-pointer"
-              >
-                Done
-              </button>
+              <div className="pt-4">
+                <button
+                  type="button"
+                  onClick={handleResetAndClose}
+                  className="px-8 py-3.5 rounded-xl bg-[#06284F] hover:bg-[#0A3A7A] text-white text-sm font-bold transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {status === 'error' && errorMessage && (
-                <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
                   <span>{errorMessage}</span>
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* 2-Column Name and Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="modal-name" className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Full Name <span className="text-red-500">*</span>
+                  <label htmlFor="modal-name" className="block text-sm font-bold text-slate-800 mb-2">
+                    Your Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="modal-name"
                     type="text"
                     name="name"
                     required
-                    placeholder="Anand Kumar"
+                    placeholder="e.g. Anand Kumar"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-[#0A3A7A] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
                   />
                 </div>
+
                 <div>
-                  <label htmlFor="modal-phone" className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Phone / WhatsApp <span className="text-red-500">*</span>
+                  <label htmlFor="modal-phone" className="block text-sm font-bold text-slate-800 mb-2">
+                    Phone / WhatsApp Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="modal-phone"
                     type="tel"
                     name="phone"
                     required
-                    placeholder="+91 94426 05096"
+                    placeholder="e.g. +91 94426 05096"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-[#0A3A7A] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
+              {/* Email */}
               <div>
-                <label htmlFor="modal-email" className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label htmlFor="modal-email" className="block text-sm font-bold text-slate-800 mb-2">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -280,15 +299,16 @@ function AdvisorModalDialog() {
                   type="email"
                   name="email"
                   required
-                  placeholder="your.email@example.com"
+                  placeholder="e.g. anand@example.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-[#0A3A7A] focus:outline-none transition-colors"
+                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
                 />
               </div>
 
+              {/* Program of Interest Selector */}
               <div>
-                <label htmlFor="modal-course" className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label htmlFor="modal-course" className="block text-sm font-bold text-slate-800 mb-2">
                   Program of Interest
                 </label>
                 <select
@@ -296,60 +316,68 @@ function AdvisorModalDialog() {
                   name="course"
                   value={formData.course}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-[#0A3A7A] focus:outline-none bg-white transition-colors"
+                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all cursor-pointer font-medium text-slate-900"
                 >
                   {PROGRAMS_DATA.map((prog) => (
                     <option key={prog.id} value={prog.name}>
-                      {prog.name}
+                      {prog.name} ({prog.category})
                     </option>
                   ))}
-                  <option value="Not sure yet / General enquiry">Not sure yet / General enquiry</option>
+                  <option value="Not sure yet / General enquiry">
+                    Not sure yet / General career assessment
+                  </option>
                 </select>
               </div>
 
+              {/* Questions or Background */}
               <div>
-                <label htmlFor="modal-message" className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  Questions or Preferred Batch <span className="text-gray-400 font-normal">(Optional)</span>
+                <label htmlFor="modal-message" className="block text-sm font-bold text-slate-800 mb-2">
+                  Questions or Background <span className="text-slate-400 font-normal">(Optional)</span>
                 </label>
                 <textarea
                   id="modal-message"
                   name="message"
-                  rows={2}
-                  placeholder="Batch timings, fee structure, or curriculum questions..."
+                  rows={3}
+                  placeholder="Tell us about your background, career goals, or preferred batch timings..."
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-[#0A3A7A] focus:outline-none resize-none transition-colors"
+                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all resize-none"
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={status === 'submitting'}
-                className="w-full py-3 px-4 rounded-lg bg-[#062551] hover:bg-[#0A3A7A] text-white font-semibold text-sm transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-              >
-                {status === 'submitting' ? (
-                  <span>Submitting...</span>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Submit Course Enquiry</span>
-                  </>
-                )}
-              </button>
+              {/* Large, Authoritative Submit CTA Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FCAF0A] via-[#FDC34E] to-[#F5A800] hover:from-[#FDBE2E] hover:to-[#FCAF0A] text-[#041427] font-black text-base shadow-lg shadow-[#FCAF0A]/20 transition-all hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-3 disabled:opacity-60"
+                >
+                  {status === 'submitting' ? (
+                    <span>Submitting Enquiry...</span>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 text-[#041427]" />
+                      <span>Submit Admissions Enquiry</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
-              <div className="text-[11px] text-gray-400 text-center flex items-center justify-center gap-2">
-                <Phone className="w-3 h-3 text-[#0A3A7A]" />
-                <span>Admissions line: {BRAND_INFO.contactPhone}</span>
+              {/* Reassuring Location & Helpline Footer */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 border-t border-slate-100">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#0A3A7A]" />
+                  <span>Anna Nagar, Trichy Center</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#0A3A7A]" />
+                  <span>Direct Desk: {BRAND_INFO.contactPhone}</span>
+                </div>
               </div>
             </form>
           )}
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-      `}</style>
     </div>
   );
 }
