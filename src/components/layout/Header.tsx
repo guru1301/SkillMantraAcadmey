@@ -50,14 +50,10 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: 'Why Us', href: '/#why-skillthinker' },
     { label: 'About', href: '/#about' },
-    { label: 'Audiences', href: '/#audiences' },
-    { label: 'Programs', href: '/#programs' },
-    { label: 'Credentials', href: '/#certifications' },
-    { label: 'Journey', href: '/#journey' },
-    { label: 'Mentors', href: '/#mentors' },
-    { label: 'FAQ', href: '/#faq' },
+    { label: 'Why Us', href: '/#why-skillthinker' },
+    { label: 'Certifications', href: '/#certifications' },
+    { label: 'Contact', href: '/#contact' },
   ];
 
   return (
@@ -176,18 +172,10 @@ export default function Header() {
             </nav>
 
             {/* Right Action Terminal */}
-            <div className="hidden lg:flex items-center gap-3">
-              <Link
-                href="/verify"
-                className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Verify Credential</span>
-              </Link>
-
+            <div className="hidden lg:flex items-center gap-4">
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                className="flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white px-3 py-2 rounded-xl hover:bg-white/10 transition-colors"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Portal</span>
@@ -261,13 +249,6 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/#contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
-              >
-                Contact Admissions
-              </Link>
             </nav>
 
             <div className="pt-4 border-t border-white/10 space-y-3">
