@@ -1,136 +1,127 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Building2, CheckCircle2, Award, ShieldCheck, Globe, Users } from 'lucide-react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
+import { BRAND_INFO, HERO_HIGHLIGHTS } from '@/data/siteData';
+import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 
 export default function HeroSection() {
+  const { openModal } = useAdvisorModal();
+
   return (
-    <section className="relative bg-[#0d1624] text-white pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#0A3A7A]/50 overflow-hidden">
-      {/* Background Institutional Mesh & Global Tech Network Accents */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#061830] via-[#0d1e38] to-[#081528] opacity-95 -z-10" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-transparent -z-10 pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#0A3A7A]/20 filter blur-3xl -z-10 pointer-events-none" />
-
-      {/* Subtle Grid Lines Overlay for Institutional Precision */}
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none -z-10" 
-        style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
-      />
-
+    <section className="relative bg-white text-[#162033] pt-12 pb-16 lg:pt-18 lg:pb-22 border-b border-[#E2E8F0]">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          {/* Left Text Column (7 cols) - Matches ICT Academy authoritative typography */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* Left Column: Asymmetric Editorial Content (7 cols on lg) */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Academic Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/80 border border-blue-700/60 text-[#FCAF0A]">
-              <span className="w-2 h-2 rounded-full bg-[#FCAF0A] animate-pulse" />
-              <span className="text-xs font-bold uppercase tracking-wider">
-                Institutional Education • Skill Development • Industry Readiness
-              </span>
+            {/* Context Dateline */}
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-slate-500 pb-1 border-b border-slate-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0A3A7A]" />
+              <span>Skillthinker Solutions • Tiruchirappalli, Tamil Nadu</span>
             </div>
 
-            {/* Main Headline (Inspired by ICT Academy's bold institutional statements) */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-extrabold text-white tracking-tight leading-[1.18] uppercase">
-              Promoting Technical Rigor &amp;{' '}
-              <span className="text-[#FCAF0A] block sm:inline">Nurturing Innovation</span>
+            {/* Headline */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-[#062551] tracking-[-0.03em] leading-[1.14]">
+              The right skills can transform your career.
             </h1>
 
             {/* Supporting Copy */}
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
-              Skill Mantra Academy connects higher-education institutions, educators, students, and corporate organizations through rigorous, industry-relevant training—transforming academic curricula into verified, career-ready competencies.
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl font-normal">
+              {BRAND_INFO.heroSubheadline}
             </p>
 
-            {/* Key Institutional Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs sm:text-sm text-slate-200">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-                <span>Curriculum-Aligned Technical Workshops</span>
+            {/* 5 Authentic Highlights as an Editorial Index */}
+            <div className="pt-2">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                Core Training Standard
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-                <span>Faculty Development Programs (FDP)</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-                <span>Hands-on Project &amp; Lab-Based Pedagogy</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-                <span>Measurable Outcomes &amp; Accreditation Metrics</span>
-              </div>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs sm:text-sm text-slate-700">
+                {HERO_HIGHLIGHTS.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-[#0A3A7A] font-semibold text-xs mt-0.5">•</span>
+                    <span className="leading-snug">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Dual CTAs - Notice the Orange/Gold [LEARN MORE] Button matching ICT Academy! */}
-            <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Actions */}
+            <div className="pt-3 flex flex-wrap items-center gap-3">
               <Link
-                href="/for-institutions"
-                className="inline-flex items-center justify-center gap-2 bg-[#F5A800] hover:bg-[#FCAF0A] text-[#162033] font-extrabold text-sm uppercase tracking-wider px-8 py-3.5 rounded shadow-md transition-all group"
+                href="/#programs"
+                className="inline-flex items-center justify-center gap-2 bg-[#0A3A7A] hover:bg-[#062F68] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-md shadow-xs transition-colors"
               >
-                <span>Learn More</span>
-                <ArrowRight className="w-4 h-4 text-[#162033] group-hover:translate-x-1 transition-transform" />
+                <span>Explore Programs</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
 
-              <Link
-                href="/contact?intent=institutional-partnership"
-                className="inline-flex items-center justify-center gap-2 bg-transparent hover:bg-white/10 text-white font-bold text-sm uppercase tracking-wider px-6 py-3.5 rounded border border-white/30 hover:border-white transition-all"
+              <button
+                type="button"
+                onClick={() => openModal()}
+                className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-md border border-slate-200 transition-colors cursor-pointer"
               >
-                <Building2 className="w-4 h-4 text-[#FCAF0A]" />
-                <span>Partner With Us</span>
-              </Link>
+                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <span>Talk to an Advisor</span>
+              </button>
+
+              <a
+                href={BRAND_INFO.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-500 hover:text-emerald-700 transition-colors inline-flex items-center gap-1 pl-1"
+              >
+                <span>or WhatsApp: {BRAND_INFO.contactPhone}</span>
+              </a>
             </div>
 
-            {/* Institutional Framework Verification */}
-            <div className="pt-2 text-xs text-slate-400 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-              <span>Aligned with National Education Policy (NEP 2020) &amp; Outcome-Based Education (OBE)</span>
+            {/* Location & Training Center Note */}
+            <div className="pt-2 text-xs text-slate-500 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Center: {BRAND_INFO.officeLocation}. Classroom &amp; Live Interactive Cohorts.</span>
             </div>
           </div>
 
-          {/* Right Visual Column (5 cols) */}
+          {/* Right Column: Architectural Photography Frame & Metrics (5 cols on lg) */}
           <div className="lg:col-span-5">
-            <div className="relative mx-auto max-w-lg lg:max-w-none">
-              {/* Outer Decorative Frame */}
-              <div className="relative rounded-2xl overflow-hidden border-2 border-blue-800/80 shadow-2xl bg-slate-900 aspect-[16/10] sm:aspect-[4/3]">
+            <div className="relative mx-auto max-w-md lg:max-w-none">
+              {/* Image Container with Crisp 8px Corners & Hairline Border */}
+              <div className="relative rounded-lg overflow-hidden border border-slate-200 bg-slate-100 aspect-[4/3] sm:aspect-[16/11]">
                 <Image
                   src="/images/hero-training.jpg"
-                  alt="Skill Mantra Academy institutional technology training session in modern Indian higher-education university seminar hall"
+                  alt="Skillthinker Solutions practical technology training classroom in Trichy"
                   fill
                   priority
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#061830]/90 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#061830]/85 via-[#061830]/20 to-transparent" />
 
-                {/* Overlay Caption */}
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#FCAF0A] mb-1">
-                    <Award className="w-3.5 h-3.5 text-[#FCAF0A]" />
-                    <span>Applied Computing &amp; Engineering Labs</span>
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <div className="text-[11px] font-mono uppercase tracking-wider text-[#FCAF0A] mb-0.5">
+                    Classroom Lab • Trichy
                   </div>
-                  <p className="text-xs sm:text-sm font-medium text-slate-200 leading-snug">
-                    Real-world hands-on computing labs, microservices architecture, and faculty empowerment across college campuses.
+                  <p className="text-xs text-slate-200 leading-snug">
+                    Hands-on software development, real-world projects &amp; career guidance.
                   </p>
                 </div>
               </div>
 
-              {/* Floating Academic Badge */}
-              <div className="absolute -bottom-5 -left-4 sm:-bottom-6 sm:-left-6 bg-[#062F68] border border-blue-700 rounded-xl p-3 sm:p-4 shadow-xl flex items-center gap-3.5 text-white">
-                <div className="w-10 h-10 rounded-lg bg-blue-900 flex items-center justify-center text-[#FCAF0A] shrink-0">
-                  <Building2 className="w-5 h-5 text-[#FCAF0A]" />
+              {/* Institutional Metrics Matrix */}
+              <div className="mt-4 grid grid-cols-3 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <div className="space-y-0.5">
+                  <div className="text-lg sm:text-xl font-bold text-[#062551] font-mono">10</div>
+                  <div className="text-[10px] text-slate-500 font-medium leading-tight">Technical Tracks</div>
                 </div>
-                <div>
-                  <div className="text-xs font-bold text-[#FCAF0A] uppercase tracking-wider">
-                    Institutional Directorate
-                  </div>
-                  <div className="text-[12px] text-slate-200 font-medium">
-                    Higher-Ed &amp; Corporate Synergy
-                  </div>
+                <div className="space-y-0.5 border-x border-slate-200">
+                  <div className="text-lg sm:text-xl font-bold text-[#062551] font-mono">5-Step</div>
+                  <div className="text-[10px] text-slate-500 font-medium leading-tight">Guided Journey</div>
                 </div>
-              </div>
-
-              {/* Tagline Badge */}
-              <div className="absolute -top-3 -right-3 bg-[#F5A800] text-[#162033] px-3.5 py-1 rounded text-xs font-black tracking-wide shadow-md hidden sm:block">
-                Learn Today • Build Tomorrow
+                <div className="space-y-0.5">
+                  <div className="text-lg sm:text-xl font-bold text-[#062551] font-mono">100%</div>
+                  <div className="text-[10px] text-slate-500 font-medium leading-tight">Verifiable Certificates</div>
+                </div>
               </div>
             </div>
           </div>

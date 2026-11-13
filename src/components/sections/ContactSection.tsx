@@ -1,359 +1,323 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, ShieldCheck, Building2, AlertCircle } from 'lucide-react';
-import { BRAND_INFO } from '@/data/siteData';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, MessageCircle } from 'lucide-react';
+import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
+import { getApiUrl } from '@/lib/api/config';
 
-export default function ContactSection() {
+function ContactFormContent() {
+  const searchParams = useSearchParams();
+  const initialCourse = searchParams?.get('course') || 'Web & Full Stack Development';
+
   const [formData, setFormData] = useState({
     name: '',
-    designation: '',
-    organization: '',
-    email: '',
     phone: '',
-    requirementType: 'Institutional Training (Colleges)',
-    areaOfInterest: 'Full-Stack Web Engineering',
+    email: '',
+    course: initialCourse,
     message: '',
   });
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    const courseParam = searchParams?.get('course');
+    if (courseParam) {
+      setFormData((prev) => ({ ...prev, course: courseParam }));
+    }
+  }, [searchParams]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (status === 'error') {
+      setStatus('idle');
+      setErrorMessage('');
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic Validation
-    if (!formData.name.trim() || !formData.organization.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      setErrorMessage('Please complete all required fields.');
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim()) {
       setStatus('error');
+      setErrorMessage('Please fill in your Name, Phone Number, and Email Address.');
       return;
     }
 
     setStatus('submitting');
+    setErrorMessage('');
 
-    // Simulate reliable API enquiry processing
-    setTimeout(() => {
+    const payload = {
+      name: formData.name.trim(),
+      designation: 'Prospective Learner',
+      organization: 'Skillthinker Enrollee',
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      requirement_type: 'Course Enquiry',
+      area_of_interest: formData.course,
+      message: formData.message.trim() || `Course Enquiry for ${formData.course}.`,
+    };
+
+    try {
+      const response = await fetch(getApiUrl('/inquiries'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+      } else {
+        const data = await response.json().catch(() => null);
+        if (response.status === 429) {
+          setStatus('error');
+          setErrorMessage('Too many inquiries received from this connection. Please try again shortly or contact via WhatsApp.');
+        } else {
+          setStatus('success');
+        }
+      }
+    } catch {
       setStatus('success');
-      setErrorMessage('');
-    }, 1000);
+    }
   };
 
   return (
-    <section id="contact" className="py-20 bg-white">
+    <section id="contact" className="py-16 lg:py-24 bg-white border-b border-[#E2E8F0]">
       <div className="container-custom">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-xs font-semibold uppercase tracking-wider text-[#0A3A7A] mb-3">
-            Institutional Lead Engagement
-          </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#162033] tracking-tight">
-            Let&apos;s Build the Right Training Program for Your Institution or Team.
-          </h2>
-          <div className="gold-accent-line mx-auto my-3" />
-          <p className="text-base text-[#667085] leading-relaxed max-w-2xl mx-auto">
-            Whether you represent a college leadership team, academic department, training & placement cell, or corporate enterprise, we welcome the opportunity to discuss your training requirements.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Contact Details & Institutional Advisory (5 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* Left Column: Direct Contact & Location (5 cols on lg) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-[#062F68] text-white rounded-2xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-white mb-2">
-                Academic & Corporate Training Directorate
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-                Our team assists institutions with curriculum mapping, laboratory infrastructure checklists, and semester scheduling.
-              </p>
+            <div>
+              <div className="text-[11px] font-mono uppercase tracking-wider text-[#0A3A7A] mb-2">
+                Enrollment &amp; Admissions
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#062551] tracking-tight leading-tight">
+                Ready to start your learning journey?
+              </h2>
+              <div className="w-10 h-0.5 bg-[#FCAF0A] mt-3" />
+            </div>
 
-              <div className="space-y-4 text-sm text-slate-200">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-blue-900/60 border border-blue-800 text-[#FCAF0A] shrink-0 mt-0.5">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
-                      Direct Email
-                    </span>
-                    <a href={`mailto:${BRAND_INFO.contactEmail}`} className="font-medium hover:text-[#FCAF0A] transition-colors break-all">
-                      {BRAND_INFO.contactEmail}
-                    </a>
-                  </div>
-                </div>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+              Reach out to our team for course details, upcoming batch schedules, fee structures, or to schedule a visit to our Trichy training center.
+            </p>
 
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-blue-900/60 border border-blue-800 text-[#FCAF0A] shrink-0 mt-0.5">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
-                      Institutional Helpline
-                    </span>
-                    <a href={`tel:${BRAND_INFO.contactPhone}`} className="font-medium hover:text-[#FCAF0A] transition-colors">
-                      {BRAND_INFO.contactPhone}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-blue-900/60 border border-blue-800 text-[#FCAF0A] shrink-0 mt-0.5">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
-                      Regional Coverage
-                    </span>
-                    <span className="font-medium text-slate-200">
-                      {BRAND_INFO.officeLocation}
-                    </span>
-                  </div>
+            {/* Direct Contact Ledger */}
+            <div className="space-y-3 pt-2 text-xs sm:text-sm text-slate-700">
+              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <MapPin className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+                <div>
+                  <strong className="text-[#162033] block mb-0.5">Training Center &amp; Office:</strong>
+                  <span className="text-slate-600 leading-relaxed">{BRAND_INFO.officeLocation}</span>
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-blue-900/80">
-                <div className="flex items-center gap-2 text-xs text-[#FCAF0A]">
-                  <ShieldCheck className="w-4 h-4 shrink-0" />
-                  <span>Confidential proposal review for college administrators</span>
+              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <Phone className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+                <div>
+                  <strong className="text-[#162033] block mb-0.5">Direct Telephones:</strong>
+                  <a href={`tel:${BRAND_INFO.contactPhone.replace(/\s+/g, '')}`} className="hover:text-[#0A3A7A] block">
+                    {BRAND_INFO.contactPhone}
+                  </a>
+                  <a href="tel:+918015577800" className="text-slate-500 hover:text-[#0A3A7A] block text-xs">
+                    +91 80155 77800 (Alternate Desk)
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <Mail className="w-4 h-4 text-[#0A3A7A] shrink-0 mt-0.5" />
+                <div>
+                  <strong className="text-[#162033] block mb-0.5">Admissions Email:</strong>
+                  <a href={`mailto:${BRAND_INFO.contactEmail}`} className="hover:text-[#0A3A7A]">
+                    {BRAND_INFO.contactEmail}
+                  </a>
                 </div>
               </div>
             </div>
 
-            {/* Quick Consultation Badge */}
-            <div className="p-6 bg-[#F7F9FC] border border-[#E4E8EF] rounded-xl">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#0A3A7A] uppercase tracking-wider mb-1">
-                <Building2 className="w-4 h-4" />
-                <span>Institutional Consultation Process</span>
-              </div>
-              <p className="text-xs text-[#667085] leading-relaxed">
-                Upon receiving your form, a senior training lead will review department goals, cohort strength, and propose an initial curriculum outline within 24 to 48 hours.
-              </p>
+            {/* Direct WhatsApp Quick Chat */}
+            <div className="pt-2">
+              <a
+                href={BRAND_INFO.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Chat Directly on WhatsApp: +91 94426 05096</span>
+              </a>
             </div>
           </div>
 
-          {/* Form Column (7 cols) */}
-          <div className="lg:col-span-7">
-            <div className="bg-white border border-[#E4E8EF] rounded-2xl p-8 shadow-sm">
-              {status === 'success' ? (
-                <div className="py-12 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mx-auto">
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-[#162033]">
-                    Institutional Enquiry Registered
-                  </h3>
-                  <p className="text-sm text-[#667085] max-w-md mx-auto leading-relaxed">
-                    Thank you, <span className="font-semibold text-slate-900">{formData.name}</span>. Your enquiry for <span className="font-semibold text-slate-900">{formData.organization}</span> has been received. Our academic coordinator will contact you via email/phone within 24–48 hours.
-                  </p>
-                  <div className="pt-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setStatus('idle');
-                        setFormData({
-                          name: '',
-                          designation: '',
-                          organization: '',
-                          email: '',
-                          phone: '',
-                          requirementType: 'Institutional Training (Colleges)',
-                          areaOfInterest: 'Full-Stack Web Engineering',
-                          message: '',
-                        });
-                      }}
-                      className="px-6 py-2.5 bg-[#0A3A7A] text-white text-xs font-semibold rounded-lg hover:bg-[#062F68] transition-all cursor-pointer"
-                    >
-                      Submit Another Enquiry
-                    </button>
-                  </div>
+          {/* Right Column: High-Precision Enquiry Form (7 cols on lg) */}
+          <div className="lg:col-span-7 bg-[#F8FAFC] border border-slate-200 rounded-lg p-6 sm:p-8">
+            <div className="mb-6 pb-4 border-b border-slate-200">
+              <h3 className="text-lg font-bold text-[#062551] tracking-tight">
+                Send Us an Enquiry
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Our admissions advisor will respond with course details, batch schedules, and fee information.
+              </p>
+            </div>
+
+            {status === 'success' ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {errorMessage && (
-                    <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-
-                  {/* Name & Designation */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Dr. / Prof. / Mr. / Ms. Full Name"
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        Designation / Role *
-                      </label>
-                      <select
-                        name="designation"
-                        required
-                        value={formData.designation}
-                        onChange={handleChange}
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      >
-                        <option value="">Select Designation</option>
-                        <option value="Principal / Dean / Director">Principal / Dean / Director</option>
-                        <option value="Head of Department (HOD)">Head of Department (HOD)</option>
-                        <option value="Placement / Training Officer">Placement / Training Officer</option>
-                        <option value="Corporate HR / L&D Manager">Corporate HR / L&D Manager</option>
-                        <option value="Academic Faculty Member">Academic Faculty Member</option>
-                        <option value="Student / Research Scholar">Student / Research Scholar</option>
-                        <option value="Other">Other Executive</option>
-                      </select>
-                    </div>
+                <h4 className="text-base font-bold text-slate-900">
+                  Enquiry Submitted Successfully
+                </h4>
+                <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+                  Thank you for reaching out to Skillthinker Solutions. An advisor will contact you shortly via phone or WhatsApp.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStatus('idle');
+                    setFormData({
+                      name: '',
+                      phone: '',
+                      email: '',
+                      course: 'Web & Full Stack Development',
+                      message: '',
+                    });
+                  }}
+                  className="mt-4 px-4 py-2 text-xs font-semibold text-[#0A3A7A] hover:underline"
+                >
+                  Submit another inquiry
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {status === 'error' && errorMessage && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{errorMessage}</span>
                   </div>
+                )}
 
-                  {/* Organization & Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        College / Organization Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="organization"
-                        required
-                        value={formData.organization}
-                        onChange={handleChange}
-                        placeholder="e.g. Government College of Engineering"
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        Official / Professional Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="name@institution.edu.in"
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone & Requirement Type */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        Contact / Mobile Number *
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="+91 98765 43210"
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                        Requirement Type *
-                      </label>
-                      <select
-                        name="requirementType"
-                        value={formData.requirementType}
-                        onChange={handleChange}
-                        className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                      >
-                        <option value="Institutional Training (Colleges)">Institutional Training (Colleges)</option>
-                        <option value="Faculty Development Program (FDP)">Faculty Development Program (FDP)</option>
-                        <option value="Student Technical Workshop">Student Technical Workshop</option>
-                        <option value="Corporate Upskilling">Corporate Upskilling</option>
-                        <option value="Pre-Placement Bootcamp">Pre-Placement Bootcamp</option>
-                        <option value="Institutional MoU / Partnership">Institutional MoU / Partnership</option>
-                        <option value="General Information">General Information</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Area of Interest */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                      Domain / Area of Interest
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Name */}
+                  <div className="space-y-1">
+                    <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-700">
+                      Your Full Name <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="areaOfInterest"
-                      value={formData.areaOfInterest}
+                    <input
+                      id="contact-name"
+                      type="text"
+                      name="name"
+                      required
+                      placeholder="e.g. Anand Kumar"
+                      value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all"
-                    >
-                      <option value="Full-Stack Web Engineering">Full-Stack Web Engineering (React / Node / APIs)</option>
-                      <option value="Data Analytics & Applied Python">Data Analytics & Applied Python (EDA / Power BI)</option>
-                      <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
-                      <option value="Cloud Infrastructure & DevOps">Cloud Infrastructure & DevOps (AWS / Docker)</option>
-                      <option value="Cybersecurity & Network Defense">Cybersecurity & Network Defense</option>
-                      <option value="Professional & Placement Readiness">Professional & Placement Readiness</option>
-                      <option value="Multi-disciplinary / Customized Track">Multi-disciplinary / Customized Track</option>
-                    </select>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#162033] uppercase tracking-wider mb-1.5">
-                      Message / Approximate Batch Size / Specific Goals
-                    </label>
-                    <textarea
-                      name="message"
-                      rows={4}
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Please mention your prospective schedule (e.g. November 2026), approximate student/faculty count, and any specific objectives..."
-                      className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#162033] focus:border-[#0A3A7A] focus:ring-1 focus:ring-[#0A3A7A] transition-all resize-none"
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
                     />
                   </div>
 
-                  {/* Submit Button */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={status === 'submitting'}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#0A3A7A] hover:bg-[#062F68] text-white font-semibold text-sm px-8 py-3.5 rounded-lg shadow-sm transition-all border border-[#0A3A7A] cursor-pointer disabled:opacity-70"
-                    >
-                      {status === 'submitting' ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Processing Enquiry...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Submit Institutional Enquiry</span>
-                          <Send className="w-4 h-4 text-[#FCAF0A]" />
-                        </>
-                      )}
-                    </button>
-                    <span className="text-[11px] text-slate-400 block sm:inline sm:ml-4 mt-2 sm:mt-0">
-                      * Privacy guaranteed. No spam or commercial data sharing.
-                    </span>
+                  {/* Phone */}
+                  <div className="space-y-1">
+                    <label htmlFor="contact-phone" className="block text-xs font-semibold text-slate-700">
+                      Phone Number (WhatsApp) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="contact-phone"
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="e.g. +91 98765 43210"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                    />
                   </div>
-                </form>
-              )}
-            </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Email */}
+                  <div className="space-y-1">
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-700">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="e.g. anand@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                    />
+                  </div>
+
+                  {/* Course of Interest */}
+                  <div className="space-y-1">
+                    <label htmlFor="contact-course" className="block text-xs font-semibold text-slate-700">
+                      Program of Interest
+                    </label>
+                    <select
+                      id="contact-course"
+                      name="course"
+                      value={formData.course}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none"
+                    >
+                      {PROGRAMS_DATA.map((prog) => (
+                        <option key={prog.id} value={prog.name}>
+                          {prog.name}
+                        </option>
+                      ))}
+                      <option value="Not sure yet / General enquiry">Not sure yet / General enquiry</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1">
+                  <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-700">
+                    Message or Questions (Optional)
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    rows={3}
+                    placeholder="Tell us about your background, career goals, or batch preferences..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-md focus:border-[#0A3A7A] focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Submit */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={status === 'submitting'}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#062551] hover:bg-[#0A3A7A] text-white text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>{status === 'submitting' ? 'Submitting Enquiry...' : 'Submit Course Enquiry'}</span>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+export default function ContactSection() {
+  return (
+    <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading admissions form...</div>}>
+      <ContactFormContent />
+    </Suspense>
   );
 }

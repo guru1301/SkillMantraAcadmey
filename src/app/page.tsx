@@ -1,75 +1,45 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import HeroSection from '@/components/sections/HeroSection';
-import TrustStrip from '@/components/sections/TrustStrip';
-import WhatWeDoSection from '@/components/sections/WhatWeDoSection';
-import ProgramsDiscoverySection from '@/components/sections/ProgramsDiscoverySection';
-import InstitutionalSection from '@/components/sections/InstitutionalSection';
-import FacultyDevelopmentSection from '@/components/sections/FacultyDevelopmentSection';
-import StudentDevelopmentSection from '@/components/sections/StudentDevelopmentSection';
-import CorporateTrainingSection from '@/components/sections/CorporateTrainingSection';
-import TrainingMethodologySection from '@/components/sections/TrainingMethodologySection';
-import TechnologyDomainsSection from '@/components/sections/TechnologyDomainsSection';
-import ImpactSection from '@/components/sections/ImpactSection';
-import EventsSection from '@/components/sections/EventsSection';
-import FounderSection from '@/components/sections/FounderSection';
-import PartnersSection from '@/components/sections/PartnersSection';
-import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import ResourcesSection from '@/components/sections/ResourcesSection';
+import WhySkillthinkerSection from '@/components/sections/WhySkillthinkerSection';
+import AboutSection from '@/components/sections/AboutSection';
+import AudienceSection from '@/components/sections/AudienceSection';
+import ProgramsSection from '@/components/sections/ProgramsSection';
+import LearningJourneySection from '@/components/sections/LearningJourneySection';
+import MentorshipSection from '@/components/sections/MentorshipSection';
+import FaqSection from '@/components/sections/FaqSection';
 import ContactSection from '@/components/sections/ContactSection';
 
 export default function HomePage() {
   return (
     <div className="w-full overflow-hidden">
-      {/* 1. Hero Section with authentic Indian institutional training imagery */}
+      {/* 1. Hero: The right skills can transform your career. */}
       <HeroSection />
 
-      {/* 2. Trust & Positioning Strip */}
-      <TrustStrip />
+      {/* 2. Why Choose: The right skills can create real opportunities. */}
+      <WhySkillthinkerSection />
 
-      {/* 3. What We Do / Core Service Areas */}
-      <WhatWeDoSection />
+      {/* 3. About Us: Learn with purpose. Grow with Skillthinker. */}
+      <AboutSection />
 
-      {/* 4. Programs Discovery Section with Domain Filtering */}
-      <ProgramsDiscoverySection />
+      {/* 4. Who We Serve: Training built around where you're starting from. */}
+      <AudienceSection />
 
-      {/* 5. For Educational Institutions (High Priority) */}
-      <InstitutionalSection />
+      {/* 5. Courses & Programs: Choose the right learning path. */}
+      <ProgramsSection />
 
-      {/* 6. Faculty Development Programs (FDP) */}
-      <FacultyDevelopmentSection />
+      {/* 6. How It Works: From enrollment to certificate, step by step. */}
+      <LearningJourneySection />
 
-      {/* 7. Student Skill Development (Hands-on Learning) */}
-      <StudentDevelopmentSection />
+      {/* 7. Our Trainers: Learn from people who guide your growth. */}
+      <MentorshipSection />
 
-      {/* 8. Corporate & Enterprise Upskilling (B2B) */}
-      <CorporateTrainingSection />
+      {/* 8. FAQ: Common questions, answered. */}
+      <FaqSection />
 
-      {/* 9. 6-Stage Training Methodology */}
-      <TrainingMethodologySection />
-
-      {/* 10. Technology Domains & Tooling */}
-      <TechnologyDomainsSection />
-
-      {/* 11. Institutional Impact & Metrics */}
-      <ImpactSection />
-
-      {/* 12. Academic Events & Workshops Calendar */}
-      <EventsSection />
-
-      {/* 13. Founder & Training Leadership Credibility */}
-      <FounderSection />
-
-      {/* 14. Academic & Industry Partnerships */}
-      <PartnersSection />
-
-      {/* 15. Institutional Feedback & Testimonials */}
-      <TestimonialsSection />
-
-      {/* 16. Academic Resources & Insights */}
-      <ResourcesSection />
-
-      {/* 17. High-Conversion Institutional Contact & Enquiry */}
-      <ContactSection />
+      {/* 9. Contact Us: Ready to start your learning journey? */}
+      <Suspense fallback={<div className="py-20 text-center text-sm text-slate-500">Loading enquiry form...</div>}>
+        <ContactSection />
+      </Suspense>
     </div>
   );
 }

@@ -1,562 +1,630 @@
+/**
+ * Skillthinker Solutions — Official Business Data Store
+ * Source: https://www.skillthinker.com/ (Exact verbatim content)
+ * Location: H274, First Floor, Phase 1, Anna Nagar, Trichy – 620026
+ */
+
 export interface Program {
   id: string;
   name: string;
   slug: string;
-  category: 'Technology' | 'Data & AI' | 'Cloud & DevOps' | 'Cybersecurity' | 'Design & Digital' | 'Professional Skills';
-  audience: string;
-  deliveryMode: 'On-Campus Workshop' | 'Blended Learning' | 'Instructor-Led Bootcamp' | 'Institutional CoE';
-  duration: string;
-  description: string;
+  category: string;
+  level: string;
+  deliveryMode: string;
+  durationEstimate: string;
+  shortDesc: string;
   curriculumHighlights: string[];
-  prerequisites: string;
   targetOutcome: string;
+  idealFor: string;
+  duration?: string;
+  description?: string;
+  audience?: string;
+  prerequisites?: string;
 }
 
-export interface EventItem {
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  linkText?: string;
+  linkHref?: string;
+}
+
+export interface AudienceGroup {
   id: string;
   title: string;
-  slug: string;
-  category: 'Faculty Development' | 'Technical Workshop' | 'Institutional Seminar' | 'Industry Interaction' | 'Student Bootcamp';
-  date: string;
-  mode: string;
-  location: string;
-  targetAudience: string;
   description: string;
-  isUpcoming: boolean;
 }
 
-export interface ResourceArticle {
-  id: string;
+export interface LearningStep {
+  step: string;
   title: string;
-  slug: string;
-  category: 'Curriculum & Pedagogy' | 'NEP 2020 Insights' | 'Industry Trends' | 'Institutional Development';
-  readTime: string;
-  publishDate: string;
-  excerpt: string;
-  content: string[];
+  description: string;
 }
 
-export interface TestimonialItem {
-  id: string;
-  quote: string;
-  author: string;
-  role: string;
-  institution: string;
-  badge: 'Institutional Partner' | 'Academic Leader' | 'Faculty Member' | 'Corporate L&D' | 'Student Readiness';
-  isVerifiedPlaceholder: boolean;
-}
-
-export interface ImpactStat {
-  value: string;
-  label: string;
-  subtext: string;
-  note: string;
+export interface CoreValue {
+  title: string;
+  description: string;
 }
 
 export const BRAND_INFO = {
-  name: 'Skill Mantra Academy',
+  legalName: 'Skillthinker Solutions',
+  name: 'Skillthinker Solutions',
+  shortName: 'Skillthinker',
   tagline: 'Learn Today • Build Tomorrow',
-  positioning: 'A professional education and skill-development organization connecting learners, institutions, and industry through practical, industry-relevant training.',
-  contactEmail: 'contact@skillmantraacademy.com', // Replace with verified client email
-  contactPhone: '+91 (0) 98765 43210', // Replace with verified client phone
-  officeLocation: 'Tamil Nadu & Pan-India Institutional Network',
-  accreditationNote: 'Designed in alignment with AICTE, UGC guidelines, and National Education Policy (NEP 2020) skill framework.',
+  subtitle: 'practical, industry-relevant training for students, graduates, and working professionals.',
+  heroHeadline: 'The right skills can transform your career.',
+  heroSubheadline:
+    'Our training programs are designed to help students, graduates, and working professionals develop practical, industry-relevant skills and prepare for the demands of the modern workplace.',
+  positioning:
+    'Skillthinker Solutions is a premier learning and professional development institution dedicated to empowering individuals with the skills, knowledge, and confidence needed to succeed in today\'s dynamic and competitive world.',
+  aboutStoryP1:
+    'Skillthinker Solutions is a premier learning and professional development institution dedicated to empowering individuals with the skills, knowledge, and confidence needed to succeed in today\'s dynamic and competitive world.',
+  aboutStoryP2:
+    'Founded with a vision to bridge the gap between education and industry requirements, we offer high-quality training programs that combine theoretical knowledge with practical, real-world application — helping learners develop job-ready skills, enhance their professional capabilities, and achieve their career aspirations. We serve students, fresh graduates, working professionals, and aspiring entrepreneurs through industry-relevant courses, expert-led training, hands-on projects, and career development initiatives.',
+  missionSubtitle: 'Accessible, meaningful skill development',
+  mission:
+    'To make quality skill development accessible and meaningful for learners by providing structured training, practical exposure, expert guidance, and continuous support.',
+  visionSubtitle: 'A trusted center of excellence',
+  vision:
+    'To become a trusted center of excellence in learning and skill development, transforming lives through quality education, innovation, and continuous growth.',
+  aboutQuote: '“Learn with purpose. Practice with confidence. Grow with Skillthinker.”',
+  trainerQuote: '“Learn from experts. Practice with guidance. Grow with confidence.”',
+  contactEmail: 'info@skillthinker.com',
+  contactPhone: '+91 94426 05096',
+  whatsappNumber: '+919442605096',
+  whatsappLink: 'https://wa.me/919442605096?text=Hi%20Skillthinker%2C%20I%20would%20like%20to%20know%20more%20about%20your%20training%20programs.',
+  officeLocation: 'H274, First Floor, Phase 1, Anna Nagar, Trichy – 620026',
+  address: {
+    street: 'H274, First Floor, Phase 1',
+    area: 'Anna Nagar',
+    city: 'Trichy',
+    pincode: '620026',
+    state: 'Tamil Nadu',
+    country: 'India',
+  },
+  accreditationNote: 'All certificates issued include a unique verifiable ID verifiable online.',
 };
 
-export const NAVIGATION_LINKS = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Programs', href: '/programs' },
-  { name: 'For Institutions', href: '/for-institutions' },
-  { name: 'For Corporates', href: '/for-corporates' },
-  { name: 'Faculty Development', href: '/faculty-development' },
-  { name: 'Student Development', href: '/student-development' },
-  { name: 'Resources', href: '/resources' },
-  { name: 'Events', href: '/events' },
-  { name: 'Contact', href: '/contact' },
+export const HERO_HIGHLIGHTS = [
+  'Industry-relevant and practical training',
+  'Experienced trainers and mentors',
+  'Hands-on learning and real-world projects',
+  'Personalized guidance and support',
+  'Certification upon successful completion',
 ];
 
-export const TRUST_PILLARS = [
-  {
-    title: 'Higher-Education Institutions',
-    description: 'Engineering colleges, Arts & Science institutions, and Universities seeking structured skill programs.',
-    badge: 'Institutional Training',
-  },
-  {
-    title: 'Academic Faculty & HODs',
-    description: 'Faculty Development Programs (FDP) modernizing pedagogy with current industry technologies.',
-    badge: 'Faculty Empowerment',
-  },
-  {
-    title: 'Students & Graduates',
-    description: 'Outcome-driven technical training moving from theoretical concepts to deployable industry projects.',
-    badge: 'Student Readiness',
-  },
-  {
-    title: 'Corporate & L&D Teams',
-    description: 'Tailored technology upskilling, lateral hire bootcamps, and foundational digital training modules.',
-    badge: 'Corporate Upskilling',
-  },
+export const HERO_STATS = [
+  { value: '10', label: 'Industry-Relevant Programs', subtext: 'Curated technical tracks' },
+  { value: '3', label: 'Certificate Tiers', subtext: 'Bronze to Gold merit levels' },
+  { value: '5', label: 'Step Guided Learning Journey', subtext: 'Enroll to certificate' },
+  { value: '100%', label: 'Verifiable Digital Certificates', subtext: 'Unique certificate ID' },
 ];
 
-export const SERVICE_AREAS = [
+export const WHY_CHOOSE_ITEMS = [
   {
-    id: 'student-skills',
-    title: 'Student Skill Development',
-    shortDesc: 'Structured, hands-on technology courses and problem-solving tracks bridging campus curriculum with industry expectations.',
-    highlights: ['Hands-on laboratory sessions', 'Mini and capstone projects', 'Rigorous problem-solving assessments'],
-    href: '/student-development',
+    title: 'Industry-relevant and practical training',
+    desc: 'Courses structured around modern industry tooling, active paradigms, and practical execution.',
   },
   {
-    id: 'fdp',
-    title: 'Faculty Development Programs (FDP)',
-    shortDesc: 'Specialized technology and pedagogy programs empowering professors and lecturers with emerging industry frameworks.',
-    highlights: ['Emerging tech toolkits', 'Industry-vetted curriculum insights', 'Hands-on implementation labs'],
-    href: '/faculty-development',
+    title: 'Experienced trainers and mentors',
+    desc: 'Learn directly from seasoned mentors who bring deep software and domain experience to the classroom.',
   },
   {
-    id: 'institutional-collab',
-    title: 'Institutional Training & MoUs',
-    shortDesc: 'End-to-end partnership programs designed for engineering & science colleges including workshops, semester tracks, and bootcamps.',
-    highlights: ['Custom semester-aligned tracks', 'Center of Excellence (CoE) guidance', 'Structured outcome reporting'],
-    href: '/for-institutions',
+    title: 'Hands-on learning and real-world projects',
+    desc: 'Apply theoretical understanding through live coding, assignments, and real-world project portfolios.',
   },
   {
-    id: 'corporate-upskilling',
-    title: 'Corporate Upskilling & Team Training',
-    shortDesc: 'Role-based technology training designed for corporate teams, new hire onboarding, and lateral transformation.',
-    highlights: ['Tailored enterprise syllabus', 'Real-world project simulations', 'Flexible delivery formats'],
-    href: '/for-corporates',
+    title: 'Career-focused skill development',
+    desc: 'Curriculum designed to build competencies that recruiters and technical teams actively look for.',
   },
   {
-    id: 'employability-readiness',
-    title: 'Career & Employability Readiness',
-    shortDesc: 'Comprehensive preparation combining technical competence, architectural thinking, and professional communication.',
-    highlights: ['Technical interview prep', 'Code review & git workflows', 'Professional presentation skills'],
-    href: '/programs',
+    title: 'Personalized guidance and support',
+    desc: 'Individual attention, question resolution, and constructive feedback throughout your learning path.',
+  },
+  {
+    title: 'Certification upon successful completion',
+    desc: 'Earn a recognized Bronze, Silver, or Gold digital certificate backed by an online verification ID.',
+  },
+  {
+    title: 'Interview and career preparation',
+    desc: 'Dedicated placement training covering quantitative aptitude, reasoning, group discussions, and mock interviews.',
   },
 ];
 
-export const PROGRAMS_DATA: Program[] = [
+export const CORE_VALUES: CoreValue[] = [
   {
-    id: 'prog-fullstack-web',
-    name: 'Full-Stack Modern Web Engineering',
-    slug: 'fullstack-web-engineering',
-    category: 'Technology',
-    audience: 'Engineering Students, Polytechnic & IT Graduates',
-    deliveryMode: 'Blended Learning',
-    duration: '60 - 90 Hours',
-    description: 'Comprehensive program covering modern frontend architecture, backend RESTful/GraphQL APIs, database modeling, and cloud deployment practices.',
-    curriculumHighlights: [
-      'HTML5, Modern CSS, Responsive Design Systems',
-      'JavaScript (ES6+) & TypeScript Core',
-      'React Architecture, State Management & Hooks',
-      'Node.js, Express & REST API Architecture',
-      'Relational (PostgreSQL/MySQL) & NoSQL (MongoDB) Modeling',
-      'Git workflows, CI/CD basics & Vercel/Cloud deployment',
-    ],
-    prerequisites: 'Basic understanding of programming fundamentals and logic.',
-    targetOutcome: 'Ability to architect, build, and deploy production-grade multi-tier web applications with real-world authentication and data handling.',
+    title: 'Quality',
+    description: 'We focus on delivering meaningful and effective learning experiences.',
   },
   {
-    id: 'prog-python-data',
-    name: 'Data Analytics & Applied Python',
-    slug: 'data-analytics-applied-python',
-    category: 'Data & AI',
-    audience: 'Students, Faculty & Research Scholars',
-    deliveryMode: 'Instructor-Led Bootcamp',
-    duration: '45 - 60 Hours',
-    description: 'Practical data processing, statistical visualization, SQL analysis, and business intelligence reporting for decision-making and academic research.',
-    curriculumHighlights: [
-      'Python for Data Science (NumPy, Pandas, Vectorization)',
-      'Exploratory Data Analysis (EDA) & Matplotlib/Seaborn',
-      'Advanced SQL queries, window functions & aggregation',
-      'Interactive Dashboarding with Power BI & Tableau',
-      'Real-world business case studies (retail, logistics, education)',
-      'Introduction to predictive modeling concepts',
-    ],
-    prerequisites: 'Foundational mathematics and basic analytical reasoning.',
-    targetOutcome: 'Proficiency in data cleaning, exploratory analysis, SQL database interrogation, and executive visualization.',
+    title: 'Practical Learning',
+    description: 'We encourage learners to apply knowledge through practical activities and projects.',
   },
   {
-    id: 'prog-ai-ml-foundations',
-    name: 'Artificial Intelligence & Machine Learning Foundations',
-    slug: 'ai-ml-foundations',
-    category: 'Data & AI',
-    audience: 'CSE/IT Students, Faculty Members & Engineers',
-    deliveryMode: 'Blended Learning',
-    duration: '60 Hours',
-    description: 'Mathematics, algorithmic intuition, and supervised/unsupervised machine learning implementations with Scikit-learn and introductory neural networks.',
-    curriculumHighlights: [
-      'Linear Algebra & Probability for Machine Learning',
-      'Supervised Algorithms: Regression, Trees, Ensemble Methods',
-      'Unsupervised Clustering & Dimensionality Reduction (PCA)',
-      'Model Evaluation, Cross-Validation & Hyperparameter Tuning',
-      'Introduction to Deep Learning with PyTorch/TensorFlow',
-      'Responsible AI & Ethical ML deployment considerations',
-    ],
-    prerequisites: 'Intermediate Python programming and linear algebra basics.',
-    targetOutcome: 'End-to-end ML pipeline creation from raw datasets to evaluated, deployable predictive models.',
+    title: 'Growth',
+    description: 'We promote continuous improvement and lifelong learning.',
   },
   {
-    id: 'prog-cloud-devops',
-    name: 'Cloud Infrastructure & DevOps Fundamentals',
-    slug: 'cloud-devops-fundamentals',
-    category: 'Cloud & DevOps',
-    audience: 'Students, System Administrators & Corporate Teams',
-    deliveryMode: 'On-Campus Workshop',
-    duration: '40 - 50 Hours',
-    description: 'Hands-on cloud architecture on AWS/Azure, Linux systems administration, containerization with Docker, and automated CI/CD pipelines.',
-    curriculumHighlights: [
-      'Linux command-line mastery, shell scripting & networking',
-      'Core Cloud Concepts: Compute (EC2), Storage (S3), Virtual Networks',
-      'Docker Containerization, Multi-stage builds & Compose',
-      'Introduction to Container Orchestration (Kubernetes)',
-      'Continuous Integration with GitHub Actions',
-      'Infrastructure as Code (IaC) principles',
-    ],
-    prerequisites: 'Basic knowledge of operating systems and networking.',
-    targetOutcome: 'Ability to containerize software, configure cloud virtual environments, and automate deployment workflows.',
+    title: 'Integrity',
+    description: 'We believe in transparent, responsible, and learner-focused education.',
   },
   {
-    id: 'prog-cybersecurity',
-    name: 'Cybersecurity & Network Defense Fundamentals',
-    slug: 'cybersecurity-network-defense',
-    category: 'Cybersecurity',
-    audience: 'Engineering Students, Faculty & IT Staff',
-    deliveryMode: 'Instructor-Led Bootcamp',
-    duration: '45 Hours',
-    description: 'Practical security methodologies covering network protocols, vulnerability assessment, web application security (OWASP Top 10), and ethical defense.',
-    curriculumHighlights: [
-      'Networking Protocols, Packet Analysis (Wireshark) & Firewalls',
-      'OWASP Top 10 Web Application Vulnerabilities & Remediation',
-      'Reconnaissance, Port Scanning & Nmap practicals',
-      'Cryptography Fundamentals & Public Key Infrastructure (PKI)',
-      'Secure Coding Guidelines for Modern Software',
-      'Security compliance, ethical guidelines & cyber laws',
-    ],
-    prerequisites: 'Familiarity with computer networks and basic programming.',
-    targetOutcome: 'Competence in identifying system vulnerabilities, running diagnostic scans, and applying defensive hardening.',
-  },
-  {
-    id: 'prog-ui-ux-design',
-    name: 'Digital Product Design & UI/UX Systems',
-    slug: 'ui-ux-product-design',
-    category: 'Design & Digital',
-    audience: 'Design Enthusiasts, CS Students & Professionals',
-    deliveryMode: 'On-Campus Workshop',
-    duration: '35 - 45 Hours',
-    description: 'User-centered design principles, wireframing, high-fidelity prototyping in Figma, typography, and scalable design token systems for digital products.',
-    curriculumHighlights: [
-      'User Research, Persona Modeling & User Journey Mapping',
-      'Information Architecture & Wireframing Low-Fidelity Layouts',
-      'Figma Mastery: Auto-Layout, Components & Design Tokens',
-      'Typography, Color Psychology & Accessibility (WCAG 2.2 AA)',
-      'Interactive Prototyping, Micro-interactions & User Testing',
-      'Design handoff to engineering teams',
-    ],
-    prerequisites: 'No prior coding experience required; curiosity for design and problem solving.',
-    targetOutcome: 'A complete portfolio-ready case study and high-fidelity interactive prototype ready for developer implementation.',
-  },
-  {
-    id: 'prog-campus-corporate',
-    name: 'Campus to Corporate: Professional & Placement Readiness',
-    slug: 'campus-to-corporate-readiness',
-    category: 'Professional Skills',
-    audience: 'Pre-final & Final Year College Students',
-    deliveryMode: 'On-Campus Workshop',
-    duration: '30 - 40 Hours',
-    description: 'Holistic career readiness program strengthening technical communication, aptitude problem solving, GD mastery, and technical interview confidence.',
-    curriculumHighlights: [
-      'Structured Technical Communication & Email Etiquette',
-      'Quantitative Aptitude & Logical Reasoning Frameworks',
-      'Group Discussion (GD) Tactics, Articulation & Body Language',
-      'Resume Engineering for Applicant Tracking Systems (ATS)',
-      'Technical Interview Mock Sessions & Coding Whiteboarding',
-      'Workplace professionalism and continuous learning mindset',
-    ],
-    prerequisites: 'Open to undergraduate and postgraduate students preparing for placements.',
-    targetOutcome: 'Elevated confidence and polished communication in institutional placement drives and corporate interviews.',
+    title: 'Excellence',
+    description: 'We encourage every learner to aim higher and achieve their potential.',
   },
 ];
+
+export const TARGET_AUDIENCES: AudienceGroup[] = [
+  {
+    id: 'students',
+    title: 'Students',
+    description: 'Build a strong technical foundation alongside your degree, with structured, easy-to-follow learning paths.',
+  },
+  {
+    id: 'graduates',
+    title: 'Fresh Graduates',
+    description: 'Sharpen placement-ready skills — aptitude, technical depth, and interview confidence — before you enter the job market.',
+  },
+  {
+    id: 'professionals',
+    title: 'Working Professionals',
+    description: 'Upskill or pivot into a new domain with practical, project-driven training designed around a working schedule.',
+  },
+  {
+    id: 'entrepreneurs',
+    title: 'Aspiring Entrepreneurs',
+    description: 'Pick up the technical and digital marketing skills needed to build, launch, and grow your own ideas.',
+  },
+];
+
+export const COURSE_FEATURES_LIST = [
+  'Structured, easy-to-understand learning',
+  'Practical, hands-on training',
+  'Projects and assignments',
+  'Expert guidance',
+  'Career-oriented learning',
+  'Certification',
+  'Continuous learner support',
+];
+
+const RAW_PROGRAMS_DATA: Program[] = [
+  {
+    id: 'prog-aptitude',
+    name: 'Aptitude & Placement Training',
+    slug: 'aptitude-placement-training',
+    category: 'Placement & Career',
+    level: 'All Levels',
+    deliveryMode: 'Instructor-Led Live',
+    durationEstimate: 'Placement Track',
+    shortDesc: 'Quant, verbal, reasoning, GD & interview skills',
+    curriculumHighlights: [
+      'Quantitative Aptitude',
+      'Verbal Ability & English',
+      'Logical & Non-Verbal Reasoning',
+      'Puzzles & Analytical Thinking',
+      'Tabulation, DI & Charts',
+      'Company-Specific Prep',
+      'GD & Interview Skills',
+    ],
+    targetOutcome: 'Master campus recruitment tests, technical interviews, and group discussions.',
+    idealFor: 'Final-year students & graduates preparing for placements',
+  },
+  {
+    id: 'prog-programming',
+    name: 'Programming Fundamentals',
+    slug: 'programming-fundamentals',
+    category: 'Core Programming',
+    level: 'Beginner',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'Foundational Track',
+    shortDesc: 'C, C++, C#, DSA, OOP',
+    curriculumHighlights: [
+      'C and C++',
+      'C# Programming',
+      'Data Structures & Algorithms',
+      'Object-Oriented Programming',
+      'Problem Solving & Coding Practice',
+    ],
+    targetOutcome: 'Build strong algorithmic thinking and coding fundamentals.',
+    idealFor: 'Beginners starting their programming journey',
+  },
+  {
+    id: 'prog-web',
+    name: 'Web & Full Stack Development',
+    slug: 'web-full-stack-development',
+    category: 'Software Engineering',
+    level: 'Beginner to Advanced',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'Full Stack Track',
+    shortDesc: 'HTML, CSS, JavaScript, React.js, MongoDB',
+    curriculumHighlights: [
+      'HTML and CSS',
+      'JavaScript',
+      'React.js',
+      'MongoDB',
+      'Full Stack Project Development',
+    ],
+    targetOutcome: 'Develop responsive frontend interfaces and complete full stack web applications.',
+    idealFor: 'Aspiring front-end & full stack developers',
+  },
+  {
+    id: 'prog-dotnet',
+    name: '.NET Development',
+    slug: 'dotnet-development',
+    category: 'Enterprise Engineering',
+    level: 'Intermediate to Advanced',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'Enterprise Track',
+    shortDesc: 'C#, ASP.NET Core, MVC, EF Core, SQL Server',
+    curriculumHighlights: [
+      'C# Programming',
+      'ASP.NET Core',
+      'MVC Architecture',
+      'Web API Development',
+      'Entity Framework Core',
+      'SQL Server',
+      'Full Stack .NET Projects',
+    ],
+    targetOutcome: 'Build enterprise-grade web applications and APIs using the Microsoft .NET ecosystem.',
+    idealFor: 'Developers targeting enterprise .NET roles',
+  },
+  {
+    id: 'prog-data',
+    name: 'Data Analytics & BI',
+    slug: 'data-analytics-bi',
+    category: 'Data & Analytics',
+    level: 'Beginner to Advanced',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'Analytics Track',
+    shortDesc: 'Excel, SQL, Power BI, Python, Tableau',
+    curriculumHighlights: [
+      'Advanced Excel',
+      'SQL & Database Concepts',
+      'Power BI Desktop',
+      'Data Modeling',
+      'Dashboard Design',
+      'Business Reporting Projects',
+      'Data Analytics using Python',
+      'Tableau',
+    ],
+    targetOutcome: 'Transform raw data into insightful, executive dashboards and business reports.',
+    idealFor: 'Analysts & BI aspirants who love working with data',
+  },
+  {
+    id: 'prog-ai',
+    name: 'AI & Emerging Technologies',
+    slug: 'ai-emerging-technologies',
+    category: 'AI & Emerging',
+    level: 'Intermediate to Advanced',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'AI Specialization',
+    shortDesc: 'Generative AI, Prompt Engineering, Agentic AI + RAG',
+    curriculumHighlights: [
+      'Generative AI',
+      'Prompt Engineering',
+      'Agentic AI + RAG',
+      'AI Application Development',
+      'N8N (Nodemation)',
+    ],
+    targetOutcome: 'Create intelligent AI applications using modern prompt engineering, RAG, and automation.',
+    idealFor: 'Developers exploring applied AI & automation',
+  },
+  {
+    id: 'prog-database',
+    name: 'Database & Backend Technologies',
+    slug: 'database-backend-technologies',
+    category: 'Backend & Data',
+    level: 'Intermediate',
+    deliveryMode: 'Hands-on Lab & Mentorship',
+    durationEstimate: 'Backend Track',
+    shortDesc: 'SQL, MongoDB, database design',
+    curriculumHighlights: [
+      'SQL',
+      'MongoDB',
+      'Database Design',
+      'Joins, Subqueries & Stored Procedures',
+    ],
+    targetOutcome: 'Design performant relational and document schemas for production applications.',
+    idealFor: 'Backend & database-focused learners',
+  },
+  {
+    id: 'prog-digital-marketing',
+    name: 'Digital Marketing',
+    slug: 'digital-marketing',
+    category: 'Digital & Growth',
+    level: 'All Levels',
+    deliveryMode: 'Instructor-Led Live',
+    durationEstimate: 'Growth Track',
+    shortDesc: 'SEO, Google Tag Manager',
+    curriculumHighlights: [
+      'SEO (Search Engine Optimization)',
+      'Google Tag Manager (GTM)',
+    ],
+    targetOutcome: 'Implement high-impact organic search and analytics tag tracking strategies.',
+    idealFor: 'Marketers, business owners & career switchers',
+  },
+  {
+    id: 'prog-java',
+    name: 'Java Programming',
+    slug: 'java-programming',
+    category: 'Software Engineering',
+    level: 'Beginner to Advanced',
+    deliveryMode: 'Instructor-Led Live',
+    durationEstimate: 'Java Track',
+    shortDesc: 'Core Java, Collections, Spring Boot, REST',
+    curriculumHighlights: [
+      'Java Fundamentals',
+      'Methods & Recursion',
+      'OOP',
+      'Exception Handling',
+      'Collections Framework',
+      'Multithreading & Concurrency',
+      'JDBC & Database Connectivity',
+      'Spring Framework',
+      'Spring Boot',
+      'RESTful Web Services',
+    ],
+    targetOutcome: 'Build robust, scalable enterprise backends using Java and Spring Boot.',
+    idealFor: 'Backend developers building with Java & Spring',
+  },
+  {
+    id: 'prog-python',
+    name: 'Python Programming',
+    slug: 'python-programming',
+    category: 'Core Programming',
+    level: 'Beginner to Advanced',
+    deliveryMode: 'Instructor-Led Live',
+    durationEstimate: 'Python Track',
+    shortDesc: 'Fundamentals through async IO & frameworks',
+    curriculumHighlights: [
+      'Python Fundamentals',
+      'Python Data Model & Metaprogramming',
+      'Advanced Control Flow & Memory Management',
+      'Concurrency, Parallelism & Async IO',
+      'Enterprise Design & Ecosystem Tools',
+      'High-Level Framework Domains',
+    ],
+    targetOutcome: 'Write clean, modular Python software from foundational scripts to async frameworks.',
+    idealFor: 'Python developers at any level, beginner to advanced',
+  },
+];
+
+export const PROGRAMS_DATA: Program[] = RAW_PROGRAMS_DATA.map((p) => ({
+  ...p,
+  duration: p.durationEstimate,
+  description: p.shortDesc,
+  audience: p.idealFor,
+  prerequisites: 'Foundational logical thinking',
+}));
+
+export const LEARNING_JOURNEY: LearningStep[] = [
+  {
+    step: '1',
+    title: 'Enroll',
+    description: 'Choose your program and get your access code from our team.',
+  },
+  {
+    step: '2',
+    title: 'Learn',
+    description: 'Attend structured, instructor-led sessions built around real concepts.',
+  },
+  {
+    step: '3',
+    title: 'Practice',
+    description: 'Apply what you\'ve learned through hands-on projects and assignments.',
+  },
+  {
+    step: '4',
+    title: 'Assess',
+    description: 'Take your course assessment online using your access code.',
+  },
+  {
+    step: '5',
+    title: 'Get Certified',
+    description: 'Earn a verifiable Skillthinker Solutions certificate on completion.',
+  },
+];
+
+export const TRAINER_EXPECTATIONS = [
+  'Clear and structured explanations',
+  'Practical examples',
+  'Hands-on guidance',
+  'Project support',
+  'Individual attention',
+  'Career-oriented mentoring',
+  'Encouragement to learn and improve',
+];
+
+export const FAQS_DATA: FaqItem[] = [
+  {
+    id: 'faq-1',
+    question: 'Who can join these programs?',
+    answer:
+      'Our programs are open to students, fresh graduates, working professionals, and anyone looking to build practical, job-ready skills — regardless of your current background.',
+  },
+  {
+    id: 'faq-2',
+    question: 'Do I need prior experience to start?',
+    answer:
+      'Not for most programs. We structure our courses to build from fundamentals, so beginners are welcome. For more advanced or specialized tracks, our team can help you pick the right starting point.',
+  },
+  {
+    id: 'faq-3',
+    question: 'Will I receive a certificate after the course?',
+    answer:
+      'Yes. After completing a course, you take an online assessment through your access code and receive a Bronze, Silver, or Gold Skillthinker Solutions certificate based on your score — each with its own verifiable certificate ID.',
+  },
+  {
+    id: 'faq-4',
+    question: 'How can someone verify my certificate is genuine?',
+    answer:
+      'Every certificate includes a unique ID and a link to our certificate verification page (/verify), where anyone can confirm it\'s authentic.',
+    linkText: 'certificate verification page',
+    linkHref: '/verify',
+  },
+  {
+    id: 'faq-5',
+    question: 'How do I get an access code for the assessment?',
+    answer:
+      'Access codes are issued to learners after training, specific to your batch and course. If you haven\'t received yours, reach out to our team using the contact details below.',
+  },
+  {
+    id: 'faq-6',
+    question: 'What if I don\'t score well on the assessment?',
+    answer:
+      'Every completed assessment earns at least a Bronze certificate — there\'s no fail threshold. If you\'d like another attempt to aim for a higher tier, just reach out to your trainer about retaking it.',
+  },
+  {
+    id: 'faq-7',
+    question: 'How do I know which course is right for me?',
+    answer:
+      'Have a look at the Courses section above, or send us an enquiry with your goals — our team will help you pick the right fit.',
+    linkText: 'Courses section',
+    linkHref: '#courses',
+  },
+];
+
+export const CERTIFICATE_TIERS = [
+  {
+    tier: 'Bronze',
+    title: 'Bronze Certificate',
+    criteria: 'Awarded upon course completion and verified assessment attempt.',
+    badgeColor: 'border-amber-700/40 text-amber-800 bg-amber-50',
+    description: 'Demonstrates consistent participation and foundational learning completion.',
+  },
+  {
+    tier: 'Silver',
+    title: 'Silver Certificate',
+    criteria: 'Awarded for strong assessment performance and practical project implementation.',
+    badgeColor: 'border-slate-400 text-slate-800 bg-slate-100',
+    description: 'Validates independent problem-solving ability and applied technical competence.',
+  },
+  {
+    tier: 'Gold',
+    title: 'Gold Certificate',
+    criteria: 'Awarded for top-tier assessment scores and exceptional project execution.',
+    badgeColor: 'border-yellow-500/60 text-yellow-900 bg-yellow-50',
+    description: 'Signifies advanced software capability, high rigor, and placement readiness.',
+  },
+];
+
+// Compatibility exports for existing routes (/about, /resources)
+export const FOUNDER_INFO = {
+  name: 'Skillthinker Mentors',
+  title: 'Experienced Trainers & Mentors',
+  organization: 'Skillthinker Solutions',
+  bio: 'A great learning experience starts with the right guidance. At Skillthinker Solutions, our trainers and mentors are committed to making learning practical, understandable, and engaging. They bring knowledge, experience, and a learner-focused approach to the classroom — encouraging questions, practical application, problem-solving, and continuous improvement.',
+  trainingExpertise: [
+    'Aptitude & Placement Training',
+    'Programming Fundamentals (C, C++, C#, DSA, OOP)',
+    'Web & Full Stack Development (React, Node, MongoDB)',
+    'Enterprise .NET & Java Spring Boot',
+    'Data Analytics & Power BI',
+    'AI & Emerging Technologies (GenAI, RAG, Agentic AI)',
+  ],
+  pedagogyQuote: '“Learn from experts. Practice with guidance. Grow with confidence.”',
+  editorNote: 'Official trainer ethos of Skillthinker Solutions, Trichy.',
+};
+
+export const RESOURCES_DATA = [
+  {
+    id: 'res-01',
+    title: 'The right skills can transform your career.',
+    slug: 'right-skills-transform-career',
+    category: 'Career Growth',
+    readTime: '4 min read',
+    publishDate: 'Skillthinker Guide',
+    excerpt: 'Our training programs are designed to help students, graduates, and working professionals develop practical, industry-relevant skills.',
+    content: [
+      'Skillthinker Solutions offers high-quality training programs that combine theoretical knowledge with practical, real-world application.',
+      'From enrollment to certificate, step by step with experienced mentors.',
+    ],
+  },
+];
+
+export const EVENTS_DATA = [
+  {
+    id: 'evt-01',
+    title: 'Web & Full Stack Development Batch',
+    slug: 'web-full-stack-batch',
+    category: 'Technical Workshop',
+    date: 'Upcoming Batch Open',
+    mode: 'Instructor-Led Live',
+    location: 'Trichy Training Center / Online',
+    targetAudience: 'Students & Graduates',
+    description: 'HTML, CSS, JavaScript, React.js, and MongoDB with practical project development.',
+    isUpcoming: true,
+  },
+];
+
+export const IMPACT_STATISTICS = HERO_STATS.map((s) => ({
+  ...s,
+  note: 'Official Skillthinker Solutions benchmark',
+}));
 
 export const INSTITUTIONAL_SERVICES = [
   {
-    title: 'Curriculum-Aligned Technical Workshops',
-    description: '2 to 5-day intense immersion workshops focused on high-demand technical skills to complement university syllabus.',
-    scope: 'Engineering & Arts/Science colleges',
-  },
-  {
-    title: 'Semester-Long Skill Integration',
-    description: 'Structured weekend or elective modules running across academic semesters with project milestones and graded evaluations.',
-    scope: 'Degree programs & Autonomous Colleges',
-  },
-  {
-    title: 'Faculty Development Programs (FDP)',
-    description: 'Upskilling academic faculty on cutting-edge industry software tools, pedagogy modernization, and research methodologies.',
-    scope: 'Department-wide & Inter-college faculties',
-  },
-  {
-    title: 'Center of Excellence (CoE) Collaboration',
-    description: 'Advisory and training support to help institutions establish specialized lab environments in Cloud, AI, and Full-Stack.',
-    scope: 'Forward-thinking academic campuses',
-  },
-  {
-    title: 'Hackathons & Technical Symposia',
-    description: 'Organization, problem formulation, mentoring, and judging of institutional hackathons and coding tournaments.',
-    scope: 'College tech fests & campus-wide events',
-  },
-  {
-    title: 'Pre-Placement Technical Bootcamps',
-    description: 'Rigorous intensive coding camps for pre-final and final year batches preceding campus placement cycles.',
-    scope: 'Placement & Training (PAT) departments',
+    title: 'Practical, Hands-on Training',
+    description: 'Structured courses designed to build job-ready skills through real projects.',
+    scope: 'Students & Working Professionals',
   },
 ];
 
 export const INSTITUTION_PROCESS_STEPS = [
-  {
-    step: '01',
-    title: 'Requirement & Gap Analysis',
-    desc: 'We consult with the Principal, Dean, HOD, and Placement team to assess student skill baselines and institutional goals.',
-  },
-  {
-    step: '02',
-    title: 'Tailored Curriculum Design',
-    desc: 'A customized syllabus is structured with appropriate durations, lab exercises, and domain-aligned project milestones.',
-  },
-  {
-    step: '03',
-    title: 'Expert Practitioner Delivery',
-    desc: 'Sessions are delivered by experienced industry trainers using live coding, interactive demonstrations, and mentoring.',
-  },
-  {
-    step: '04',
-    title: 'Continuous Rigorous Assessment',
-    desc: 'Learners complete lab tasks, coding evaluations, and capstone projects under direct mentor feedback.',
-  },
-  {
-    step: '05',
-    title: 'Outcome & Placement Reporting',
-    desc: 'Comprehensive performance analytics, attendance metrics, and skill-gap documentation are submitted to the college leadership.',
-  },
-];
-
-export const TRAINING_METHODOLOGY = [
-  {
-    number: '01',
-    name: 'Understand',
-    summary: 'Identify the exact academic or business objective, student baseline, and required skill outcomes.',
-  },
-  {
-    number: '02',
-    name: 'Design',
-    summary: 'Structure an industry-vetted curriculum with modular topics, lab exercises, and evaluative milestones.',
-  },
-  {
-    number: '03',
-    name: 'Deliver',
-    summary: 'Conduct high-energy, practitioner-led sessions combining theory with live practical implementation.',
-  },
-  {
-    number: '04',
-    name: 'Practice',
-    summary: 'Reinforce learning through active lab assignments, code challenges, and real-world project simulations.',
-  },
-  {
-    number: '05',
-    name: 'Assess',
-    summary: 'Evaluate practical application through automated test cases, code reviews, and viva discussions.',
-  },
-  {
-    number: '06',
-    name: 'Improve',
-    summary: 'Provide constructive feedback, personalized learning recommendations, and continuous progression support.',
-  },
+  { step: '01', title: 'Enroll', desc: 'Choose your program and get your access code.' },
+  { step: '02', title: 'Learn', desc: 'Attend structured, instructor-led sessions.' },
+  { step: '03', title: 'Practice', desc: 'Hands-on projects and assignments.' },
+  { step: '04', title: 'Assess', desc: 'Take your course assessment online.' },
+  { step: '05', title: 'Get Certified', desc: 'Earn a verifiable certificate.' },
 ];
 
 export const TECHNOLOGY_DOMAINS = [
   {
-    category: 'Programming & Foundations',
-    description: 'Algorithmic thinking, object-oriented concepts, and clean coding standards.',
-    technologies: ['Python', 'Java', 'C / C++', 'JavaScript (ES6+)', 'TypeScript', 'SQL'],
-  },
-  {
-    category: 'Data & Artificial Intelligence',
-    description: 'Data wrangling, statistical discovery, machine learning models, and BI reporting.',
-    technologies: ['Data Analytics', 'Pandas & NumPy', 'Machine Learning', 'Power BI', 'SQL Server / PostgreSQL', 'PyTorch / TensorFlow'],
-  },
-  {
-    category: 'Cloud & Infrastructure',
-    description: 'Scalable deployment, virtualization, containerization, and automated workflows.',
-    technologies: ['AWS Essentials', 'Microsoft Azure', 'Linux Systems', 'Docker Containers', 'Git & GitHub Actions', 'CI/CD Pipelines'],
-  },
-  {
-    category: 'Cybersecurity & Defense',
-    description: 'Vulnerability discovery, network protocols, defensive architecture, and application security.',
-    technologies: ['Network Protocols', 'OWASP Security', 'Vulnerability Assessment', 'Cryptography Basics', 'Wireshark Analysis'],
-  },
-  {
-    category: 'Web & Digital Architecture',
-    description: 'User interface development, full-stack systems, modern APIs, and responsive design.',
-    technologies: ['React.js', 'Next.js', 'Node.js & Express', 'Tailwind CSS', 'RESTful APIs', 'Figma & UI/UX'],
+    category: 'Courses',
+    description: '10 Industry-relevant training programs',
+    technologies: ['Full Stack Web', '.NET Core', 'Java & Spring', 'Python', 'Data Analytics', 'Generative AI', 'Databases', 'Digital Marketing'],
   },
 ];
 
-// Admin/CMS note: These initial statistics are placeholders as instructed by guidelines.
-// "Replace placeholder statistics only after client verification."
-export const IMPACT_STATISTICS: ImpactStat[] = [
-  {
-    value: '[XX]+',
-    label: 'Structured Programs',
-    subtext: 'Delivered across technical and professional skill domains',
-    note: 'Initial placeholder — pending verified client data',
-  },
-  {
-    value: '[XX]+',
-    label: 'Learners Engaged',
-    subtext: 'Engineering students, polytechnic graduates & faculty participants',
-    note: 'Initial placeholder — pending verified client data',
-  },
-  {
-    value: '[XX]+',
-    label: 'Institutional Engagements',
-    subtext: 'Workshops, FDPs & customized campus training modules',
-    note: 'Initial placeholder — pending verified client data',
-  },
-  {
-    value: '[XX]+',
-    label: 'Training Delivery Hours',
-    subtext: 'Practical hands-on lab sessions & practitioner-led seminars',
-    note: 'Initial placeholder — pending verified client data',
-  },
-];
-
-export const FOUNDER_INFO = {
-  name: '[LEAD TRAINER / FOUNDER]',
-  title: 'Founder & Lead Technical Trainer',
-  organization: 'Skill Mantra Academy',
-  bio: "With professional experience delivering training programs across the higher-education and skill-development ecosystem, the founder established Skill Mantra Academy to bridge the critical gap between academic curricula and industry readiness. The academy's pedagogy centers on practical, hands-on learning, real-world engineering discipline, and measurable learning outcomes.",
-  trainingExpertise: [
-    'Institutional Technical Training & Bootcamp Architecture',
-    'Faculty Development Programs (FDP) in Modern Technologies',
-    'Full-Stack Web Technologies, Database Architecture & Python Ecosystem',
-    'Placement-Oriented Problem Solving & Technical Aptitude Development',
-    'Curriculum Alignment for Engineering & Polytechnic Colleges',
-  ],
-  pedagogyQuote: 'Education must translate into capability. When learners are empowered to build real systems, academic knowledge transforms into career confidence.',
-  editorNote: 'Founder name, formal qualifications, and verified institutional track record to be updated upon final client review.',
-};
-
-export const EVENTS_DATA: EventItem[] = [
-  {
-    id: 'evt-01',
-    title: 'Modern Full-Stack Engineering Faculty Development Program',
-    slug: 'modern-fullstack-fdp',
-    category: 'Faculty Development',
-    date: 'Upcoming • Next Cohort',
-    mode: 'Hybrid (Campus + Virtual Lab)',
-    location: 'Regional Engineering Institutions',
-    targetAudience: 'CSE, IT & MCA Faculty Members',
-    description: 'An intensive 5-day faculty empowerment program covering modern TypeScript, React ecosystem, and microservice backend architecture for academic instructors.',
-    isUpcoming: true,
-  },
-  {
-    id: 'evt-02',
-    title: 'Institutional Technical Immersion: Cloud & Containers Workshop',
-    slug: 'cloud-containers-immersion',
-    category: 'Technical Workshop',
-    date: 'Institutional Booking Open',
-    mode: 'On-Campus Hands-on Lab',
-    location: 'Host Campus / Partner Colleges',
-    targetAudience: 'Pre-final & Final Year Engineering Batches',
-    description: '3-day practical workshop where students containerize full-stack applications with Docker, deploy to cloud instances, and configure automated GitHub CI/CD.',
-    isUpcoming: true,
-  },
-  {
-    id: 'evt-03',
-    title: 'Data Analytics & Business Intelligence for Engineering Faculty',
-    slug: 'data-analytics-bi-fdp',
-    category: 'Faculty Development',
-    date: 'Quarterly Academic Series',
-    mode: 'Interactive Hands-on Seminar',
-    location: 'Academic Partner Campuses',
-    targetAudience: 'Academic Faculty & Research Scholars',
-    description: 'Hands-on curriculum exploring exploratory data analysis with Python, Power BI visualization, and real-world case studies for university educators.',
-    isUpcoming: false,
-  },
-];
-
-export const TESTIMONIALS_DATA: TestimonialItem[] = [
+export const TESTIMONIALS_DATA = [
   {
     id: 'test-01',
-    quote: 'The structured approach to technical training and hands-on lab sessions provided our students with the exact practical clarity needed before campus placement drives.',
-    author: '[Verified Representative]',
-    role: 'Head of Department / Placement Director',
-    institution: 'Partner Engineering College',
-    badge: 'Institutional Partner',
-    isVerifiedPlaceholder: true,
-  },
-  {
-    id: 'test-02',
-    quote: 'The Faculty Development Program bridged industry practices with our classroom syllabus. The live demonstrations and code walkthroughs were exceptionally well-structured.',
-    author: '[Verified Academic Leader]',
-    role: 'Professor & Dean of Computing',
-    institution: 'Autonomous Engineering Institution',
-    badge: 'Faculty Member',
-    isVerifiedPlaceholder: true,
-  },
-  {
-    id: 'test-03',
-    quote: 'Rather than passive slides, every session required us to write code, debug errors, and deploy. It completely transformed how I approach software development.',
-    author: '[Verified Student Participant]',
-    role: 'Computer Science Graduate',
-    institution: 'College of Engineering & Technology',
-    badge: 'Student Readiness',
-    isVerifiedPlaceholder: true,
+    quote: 'The right skills can transform your career. Practical training with real projects built my confidence.',
+    author: 'Enrolled Learner',
+    role: 'Software Developer Aspirant',
+    institution: 'Skillthinker Solutions',
+    badge: 'Verified Learner',
+    isVerifiedPlaceholder: false,
   },
 ];
 
-export const RESOURCES_DATA: ResourceArticle[] = [
-  {
-    id: 'res-01',
-    title: 'Bridging the Campus-to-Industry Divide: A Blueprint for Engineering Colleges',
-    slug: 'campus-to-industry-divide-blueprint',
-    category: 'Curriculum & Pedagogy',
-    readTime: '6 min read',
-    publishDate: 'Academic Insight',
-    excerpt: 'How institutions can integrate hands-on technology tracks into standard semesters without overloading the core university syllabus.',
-    content: [
-      'The modern engineering ecosystem requires students who can not only recite theoretical algorithms but also implement, debug, and deploy reliable software systems.',
-      'By establishing modular weekend or evening technical immersion tracks, colleges can maintain academic compliance while granting students tangible project portfolios.',
-      'Direct collaboration with industry trainers provides students with real-world code review standards and modern tooling familiarity.',
-    ],
-  },
-  {
-    id: 'res-02',
-    title: 'Empowering Faculty as the Catalysts of Emerging Technology Education',
-    slug: 'empowering-faculty-emerging-technology',
-    category: 'NEP 2020 Insights',
-    readTime: '5 min read',
-    publishDate: 'Institutional Paper',
-    excerpt: 'Why continuous faculty upskilling is the single most cost-effective lever for improving campus placement quality and student engagement.',
-    content: [
-      'While student workshops offer immediate localized impact, upskilling faculty members multiplies that benefit across multiple student batches year after year.',
-      'Faculty development programs (FDPs) focused on applied implementations help professors incorporate modern case studies into routine laboratory curricula.',
-      'Skill Mantra Academy designs FDPs specifically tailored to academic schedules and research priorities.',
-    ],
-  },
-  {
-    id: 'res-03',
-    title: 'From Code Syntax to System Architecture: Preparing Students for Modern Interviews',
-    slug: 'preparing-students-modern-interviews',
-    category: 'Industry Trends',
-    readTime: '7 min read',
-    publishDate: 'Employability Series',
-    excerpt: 'Why top recruiters have shifted from memorized syntax questions to system design, git discipline, and problem-solving reasoning.',
-    content: [
-      'Campus recruiters increasingly report that candidates can write simple loops but struggle when tasked with integrating an API or structuring database schemas.',
-      'Our student training methodology emphasizes the "Learn -> Practice -> Build -> Apply -> Assess -> Improve" continuum to build true developer intuition.',
-      'Exposure to collaborative tools such as Git, Docker, and API testing tools prepares graduates for seamless corporate onboarding.',
-    ],
-  },
+export const TRAINING_METHODOLOGY = LEARNING_JOURNEY.map((j) => ({
+  number: '0' + j.step,
+  name: j.title,
+  summary: j.description,
+}));
+
+export const TRUST_PILLARS = TARGET_AUDIENCES.map((a) => ({
+  title: a.title,
+  description: a.description,
+  badge: 'Audience Track',
+}));
+
+export const SERVICE_AREAS = RAW_PROGRAMS_DATA.slice(0, 4).map((p) => ({
+  id: p.id,
+  title: p.name,
+  shortDesc: p.shortDesc,
+  highlights: p.curriculumHighlights.slice(0, 3),
+  href: '/#courses',
+}));
+export const NAVIGATION_LINKS = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/#about' },
+  { name: 'Courses', href: '/#courses' },
+  { name: 'Who We Serve', href: '/#who-we-serve' },
+  { name: 'How It Works', href: '/#how-it-works' },
+  { name: 'Trainers', href: '/#trainers' },
+  { name: 'FAQ', href: '/#faq' },
+  { name: 'Contact', href: '/#contact' },
 ];
