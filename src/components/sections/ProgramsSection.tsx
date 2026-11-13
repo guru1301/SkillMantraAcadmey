@@ -36,7 +36,8 @@ export default function ProgramsSection() {
     : PROGRAMS_DATA.filter((p) => p.category === selectedCategory);
 
   return (
-    <section id="programs" className="py-20 lg:py-28 bg-[#F8FAFC] border-b border-slate-200">
+    <section id="programs" className="relative py-20 lg:py-28 bg-[#F8FAFC] border-b border-slate-200">
+      <div id="courses" className="absolute -top-24 left-0 pointer-events-none" />
       <div className="container-custom">
         
         {/* Section Header */}
