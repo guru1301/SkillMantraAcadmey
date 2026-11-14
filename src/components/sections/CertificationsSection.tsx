@@ -1,27 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import Image from 'next/image';
-import { Award, ShieldCheck, CheckCircle2, Search, ArrowRight, Sparkles } from 'lucide-react';
-import { CERTIFICATE_TIERS, BRAND_INFO } from '@/data/siteData';
+import { Award, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { CERTIFICATE_TIERS } from '@/data/siteData';
 
 export default function CertificationsSection() {
-  const router = useRouter();
-  const [certCode, setCertCode] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const handleVerify = (e: React.FormEvent) => {
-    e.preventDefault();
-    const clean = certCode.trim();
-    if (!clean) {
-      setErrorMsg('Please enter a valid certificate code');
-      return;
-    }
-    setErrorMsg('');
-    router.push(`/verify/${encodeURIComponent(clean)}`);
-  };
-
   return (
     <section id="certifications" className="py-20 lg:py-28 bg-white border-b border-slate-200">
       <div className="container-custom">
@@ -42,7 +26,7 @@ export default function CertificationsSection() {
         </div>
 
         {/* Certificate Visual Showcase + Merit Tiers Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           
           {/* Left: Certificate Mockup Card (5 cols) */}
           <div className="lg:col-span-5 relative group">
@@ -135,56 +119,6 @@ export default function CertificationsSection() {
             ))}
           </div>
 
-        </div>
-
-        {/* Real-Time Certificate Verification Form Terminal */}
-        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-8 sm:p-10 shadow-xs max-w-3xl mx-auto">
-          <div className="text-center max-w-xl mx-auto mb-6">
-            <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-[#0A3A7A] mx-auto mb-3">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-[#06284F]">
-              Instant Certificate Verification Portal
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Enter any issued Skillthinker credential code below to authenticate candidate name, program track, issue date, and merit tier.
-            </p>
-          </div>
-
-          <form onSubmit={handleVerify} className="max-w-md mx-auto space-y-3">
-            <div className="flex flex-col sm:flex-row gap-2.5">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="e.g. SKT-2026-FSD-0842"
-                  value={certCode}
-                  onChange={(e) => {
-                    setCertCode(e.target.value);
-                    if (errorMsg) setErrorMsg('');
-                  }}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:border-[#0A3A7A] focus:outline-none shadow-2xs"
-                  aria-label="Certificate Code"
-                />
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-              </div>
-
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-[#0A3A7A] hover:bg-[#06284F] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <span>Verify</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {errorMsg && (
-              <p className="text-xs text-rose-600 text-center font-medium">{errorMsg}</p>
-            )}
-
-            <div className="text-center text-[11px] text-slate-400 pt-1">
-              Public registry endpoint: <span className="font-mono text-[#0A3A7A]">/verify/[code]</span>
-            </div>
-          </form>
         </div>
 
       </div>
