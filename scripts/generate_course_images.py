@@ -1,309 +1,317 @@
 import os
 import math
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 os.makedirs('public/images/courses', exist_ok=True)
 
-WIDTH = 800
-HEIGHT = 450
+WIDTH = 640
+HEIGHT = 360  # Exact 16:9
 
 COURSES = [
     {
         'id': 'java',
         'title': 'Java Programming',
-        'category': 'ENTERPRISE ENGINEERING',
-        'tagline': 'Spring Boot & Microservices',
+        'subtitle': 'Spring Boot 3.2 & Microservices Architecture',
+        'badge': 'ENTERPRISE',
         'logo': 'public/images/tech/java.png',
-        'bg_accent': (23, 105, 210),  # blue
-        'highlight': (255, 176, 0),   # gold
-        'diagram_type': 'microservices'
+        'color1': (10, 25, 48),
+        'color2': (20, 60, 110),
+        'accent': (255, 176, 0),
+        'accent2': (23, 105, 210),
+        'pattern': 'server_nodes'
     },
     {
         'id': 'python',
         'title': 'Python Programming',
-        'category': 'CORE PROGRAMMING',
-        'tagline': 'Async IO & Data Pipelines',
+        'subtitle': 'FastAPI, Async IO & Software Engineering',
+        'badge': 'CORE PROGRAMMING',
         'logo': 'public/images/tech/python.png',
-        'bg_accent': (53, 114, 165),
-        'highlight': (255, 212, 59),
-        'diagram_type': 'async_pipeline'
+        'color1': (12, 30, 50),
+        'color2': (25, 75, 120),
+        'accent': (255, 212, 59),
+        'accent2': (55, 118, 171),
+        'pattern': 'async_loop'
     },
     {
         'id': 'web',
-        'title': 'Web & Full Stack Development',
-        'category': 'SOFTWARE ENGINEERING',
-        'tagline': 'React, Node.js & Cloud APIs',
+        'title': 'Web & Full Stack',
+        'subtitle': 'React.js, Node.js, Tailwind & Cloud Deploy',
+        'badge': 'FULL STACK',
         'logo': 'public/images/tech/react.png',
-        'bg_accent': (0, 150, 214),
-        'highlight': (97, 218, 251),
-        'diagram_type': 'browser_stack'
+        'color1': (8, 28, 48),
+        'color2': (15, 65, 105),
+        'accent': (97, 218, 251),
+        'accent2': (0, 150, 214),
+        'pattern': 'browser_code'
     },
     {
         'id': 'dotnet',
         'title': '.NET Development',
-        'category': 'ENTERPRISE ENGINEERING',
-        'tagline': 'ASP.NET Core & Cloud Services',
+        'subtitle': 'ASP.NET Core, EF Core & Azure Microservices',
+        'badge': 'ENTERPRISE',
         'logo': 'public/images/tech/dotnet.png',
-        'bg_accent': (81, 43, 212),
-        'highlight': (160, 130, 255),
-        'diagram_type': 'cloud_api'
+        'color1': (16, 20, 50),
+        'color2': (45, 30, 100),
+        'accent': (170, 130, 255),
+        'accent2': (81, 43, 212),
+        'pattern': 'cloud_api'
     },
     {
         'id': 'analytics',
         'title': 'Data Analytics & BI',
-        'category': 'DATA & ANALYTICS',
-        'tagline': 'Power BI & Executive Intelligence',
+        'subtitle': 'Power BI, Advanced SQL, DAX & Dashboards',
+        'badge': 'ANALYTICS',
         'logo': 'public/images/tech/powerbi.png',
-        'bg_accent': (242, 200, 17),
-        'highlight': (255, 176, 0),
-        'diagram_type': 'bi_dashboard'
+        'color1': (18, 28, 40),
+        'color2': (65, 55, 20),
+        'accent': (255, 185, 0),
+        'accent2': (242, 200, 17),
+        'pattern': 'bi_charts'
     },
     {
         'id': 'ai',
-        'title': 'AI & Emerging Technologies',
-        'category': 'AI & EMERGING',
-        'tagline': 'Generative AI & Agentic RAG',
+        'title': 'AI & Emerging Tech',
+        'subtitle': 'Generative AI, LangChain, RAG & Agents',
+        'badge': 'AI SPECIALIZATION',
         'logo': 'public/images/tech/ai.png',
-        'bg_accent': (120, 80, 220),
-        'highlight': (180, 140, 255),
-        'diagram_type': 'neural_rag'
+        'color1': (15, 18, 45),
+        'color2': (40, 25, 90),
+        'accent': (210, 150, 255),
+        'accent2': (140, 80, 240),
+        'pattern': 'neural_rag'
     },
     {
         'id': 'database',
-        'title': 'Database & Backend Tech',
-        'category': 'BACKEND & DATA',
-        'tagline': 'Relational & NoSQL Architecture',
+        'title': 'Database & Backend',
+        'subtitle': 'PostgreSQL, MongoDB, Indexing & DDL',
+        'badge': 'BACKEND',
         'logo': 'public/images/tech/database.png',
-        'bg_accent': (51, 103, 145),
-        'highlight': (78, 170, 230),
-        'diagram_type': 'schema_ddl'
+        'color1': (10, 26, 44),
+        'color2': (20, 65, 95),
+        'accent': (78, 180, 240),
+        'accent2': (51, 103, 145),
+        'pattern': 'schema_tables'
     },
     {
         'id': 'cpp',
-        'title': 'Programming Fundamentals',
-        'category': 'CORE PROGRAMMING',
-        'tagline': 'Memory Models & Data Structures',
+        'title': 'Programming Logic',
+        'subtitle': 'C, C++, Data Structures & Memory Models',
+        'badge': 'FOUNDATIONS',
         'logo': 'public/images/tech/cpp.png',
-        'bg_accent': (0, 89, 156),
-        'highlight': (101, 154, 210),
-        'diagram_type': 'memory_nodes'
+        'color1': (8, 25, 45),
+        'color2': (18, 55, 95),
+        'accent': (120, 180, 255),
+        'accent2': (0, 89, 156),
+        'pattern': 'memory_nodes'
     },
     {
         'id': 'aptitude',
-        'title': 'Aptitude & Placement Training',
-        'category': 'PLACEMENT & CAREER',
-        'tagline': 'Quantitative & Technical Readiness',
+        'title': 'Placement Training',
+        'subtitle': 'Speed Math, Logical Puzzles & Mock Interviews',
+        'badge': 'CAREER & HIRING',
         'logo': 'public/images/tech/aptitude.png',
-        'bg_accent': (16, 185, 129),
-        'highlight': (52, 211, 153),
-        'diagram_type': 'placement_matrix'
+        'color1': (10, 30, 35),
+        'color2': (15, 70, 60),
+        'accent': (52, 211, 153),
+        'accent2': (16, 185, 129),
+        'pattern': 'placement_matrix'
     },
     {
         'id': 'marketing',
         'title': 'Digital Marketing',
-        'category': 'DIGITAL & GROWTH',
-        'tagline': 'Technical SEO & Tag Tracking',
+        'subtitle': 'Technical SEO, GTM Telemetry & User Funnels',
+        'badge': 'GROWTH',
         'logo': 'public/images/tech/marketing.png',
-        'bg_accent': (234, 88, 12),
-        'highlight': (251, 146, 60),
-        'diagram_type': 'analytics_funnel'
+        'color1': (25, 20, 25),
+        'color2': (80, 45, 20),
+        'accent': (251, 146, 60),
+        'accent2': (234, 88, 12),
+        'pattern': 'analytics_funnel'
     }
 ]
 
-def create_card_image(cfg):
-    # Base deep navy
-    img = Image.new('RGB', (WIDTH, HEIGHT), color=(7, 24, 43))
+def render_thumbnail(c):
+    # Base image with vibrant dark gradient
+    img = Image.new('RGB', (WIDTH, HEIGHT), color=c['color1'])
     draw = ImageDraw.Draw(img)
 
-    # Gradient background simulation
+    c1 = c['color1']
+    c2 = c['color2']
+    # Smooth diagonal gradient
     for y in range(HEIGHT):
-        factor = y / HEIGHT
-        r = int(7 + (13 - 7) * factor)
-        g = int(24 + (35 - 24) * factor)
-        b = int(43 + (59 - 43) * factor)
-        draw.line([(0, y), (WIDTH, y)], fill=(r, g, b))
+        for x in range(0, WIDTH, 4):
+            factor = (x / WIDTH * 0.7) + (y / HEIGHT * 0.3)
+            r = int(c1[0] + (c2[0] - c1[0]) * factor)
+            g = int(c1[1] + (c2[1] - c1[1]) * factor)
+            b = int(c1[2] + (c2[2] - c1[2]) * factor)
+            draw.rectangle([x, y, x + 4, y + 1], fill=(r, g, b))
 
-    # Architectural grid lines
-    grid_color = (25, 45, 70)
-    for x in range(0, WIDTH, 50):
-        draw.line([(x, 0), (x, HEIGHT)], fill=grid_color, width=1)
-    for y in range(0, HEIGHT, 50):
-        draw.line([(0, y), (WIDTH, y)], fill=grid_color, width=1)
+    # Grid lines for high-tech aesthetic
+    grid_col = (255, 255, 255, 12)
+    for gx in range(0, WIDTH, 32):
+        draw.line([(gx, 0), (gx, HEIGHT)], fill=(30, 50, 75))
+    for gy in range(0, HEIGHT, 32):
+        draw.line([(0, gy), (WIDTH, gy)], fill=(30, 50, 75))
 
-    # Subtle ambient glow in center-right
-    glow_color = cfg['bg_accent']
-    for rad in range(180, 20, -10):
-        alpha_mult = (180 - rad) / 180.0
-        gr = int(7 + (glow_color[0] - 7) * 0.18 * alpha_mult)
-        gg = int(24 + (glow_color[1] - 24) * 0.18 * alpha_mult)
-        gb = int(43 + (glow_color[2] - 43) * 0.18 * alpha_mult)
-        draw.ellipse([540 - rad, 225 - rad, 540 + rad, 225 + rad], fill=(gr, gg, gb))
+    # Ambient glow on the right
+    glow_col = c['accent2']
+    for rad in range(160, 20, -12):
+        factor = (160 - rad) / 160.0
+        gr = int(c1[0] + (glow_col[0] - c1[0]) * 0.35 * factor)
+        gg = int(c1[1] + (glow_col[1] - c1[1]) * 0.35 * factor)
+        gb = int(c1[2] + (glow_col[2] - c1[2]) * 0.35 * factor)
+        draw.ellipse([460 - rad, 180 - rad, 460 + rad, 180 + rad], fill=(gr, gg, gb))
 
-    # Discipline Diagram Drawing (Geometric & Technical)
-    dtype = cfg['diagram_type']
+    # Graphic patterns on the right half
+    pat = c['pattern']
+    if pat == 'server_nodes':
+        # Server architecture nodes
+        boxes = [(380, 80, 'REST API'), (500, 50, 'Spring Boot'), (500, 150, 'Auth JWT'), (500, 250, 'JPA Data')]
+        for bx, by, text in boxes:
+            draw.rounded_rectangle([bx, by, bx + 110, by + 45], radius=6, fill=(15, 35, 60), outline=c['accent'], width=2)
+            draw.text((bx + 10, by + 16), text, fill=(255, 255, 255))
+        draw.line([(490, 102), (500, 72)], fill=(120, 170, 230), width=2)
+        draw.line([(490, 102), (500, 172)], fill=(120, 170, 230), width=2)
+        draw.line([(555, 195), (555, 250)], fill=(120, 170, 230), width=2)
 
-    if dtype == 'microservices':
-        # Service cluster blocks
-        nodes = [(420, 140, 'API Gateway'), (620, 100, 'Order Service'), (620, 220, 'Auth Service'), (620, 340, 'JPA Repository')]
-        for x, y, name in nodes:
-            draw.rounded_rectangle([x, y, x + 140, y + 50], radius=8, fill=(16, 42, 69), outline=cfg['highlight'], width=2)
-            draw.text((x + 15, y + 18), name, fill=(240, 245, 255))
-        draw.line([(560, 165), (620, 125)], fill=(100, 150, 220), width=2)
-        draw.line([(560, 165), (620, 245)], fill=(100, 150, 220), width=2)
-        draw.line([(690, 270), (690, 340)], fill=(100, 150, 220), width=2)
+    elif pat == 'async_loop':
+        # Async event loop
+        draw.arc([360, 60, 580, 280], start=0, end=360, fill=c['accent'], width=3)
+        draw.rounded_rectangle([400, 140, 540, 200], radius=8, fill=(18, 45, 75), outline=(100, 160, 230), width=2)
+        draw.text((420, 162), 'AsyncIO Loop', fill=(255, 255, 255))
+        for deg in [45, 135, 225, 315]:
+            rad = math.radians(deg)
+            nx = 470 + int(110 * math.cos(rad))
+            ny = 170 + int(110 * math.sin(rad))
+            draw.ellipse([nx - 10, ny - 10, nx + 10, ny + 10], fill=c['accent'])
 
-    elif dtype == 'async_pipeline':
-        # Async stream lines & worker nodes
-        draw.arc([400, 100, 720, 350], start=0, end=360, fill=cfg['highlight'], width=3)
-        draw.rounded_rectangle([440, 190, 680, 260], radius=10, fill=(16, 42, 69), outline=(100, 150, 220), width=2)
-        draw.text((470, 215), 'AsyncIO Event Loop: Active', fill=(255, 255, 255))
-        for angle in [30, 90, 150, 210, 270, 330]:
-            rad = math.radians(angle)
-            nx = 560 + int(140 * math.cos(rad))
-            ny = 225 + int(110 * math.sin(rad))
-            draw.ellipse([nx - 10, ny - 10, nx + 10, ny + 10], fill=cfg['highlight'])
+    elif pat == 'browser_code':
+        # Browser preview with React components
+        draw.rounded_rectangle([360, 60, 600, 290], radius=8, fill=(16, 40, 65), outline=(60, 120, 180), width=2)
+        draw.rectangle([360, 60, 600, 88], fill=(25, 55, 90))
+        draw.ellipse([372, 70, 382, 80], fill=(239, 68, 68))
+        draw.ellipse([388, 70, 398, 80], fill=(245, 158, 11))
+        draw.ellipse([404, 70, 414, 80], fill=(16, 185, 129))
+        draw.text((430, 68), 'react-app.tsx', fill=(180, 205, 235))
+        # UI blocks
+        draw.rounded_rectangle([375, 105, 470, 270], radius=4, fill=(10, 28, 48))
+        draw.rounded_rectangle([485, 105, 585, 175], radius=4, fill=(20, 50, 80))
+        draw.rounded_rectangle([485, 190, 585, 270], radius=4, fill=(20, 50, 80))
 
-    elif dtype == 'browser_stack':
-        # Miniature browser window & React component hierarchy
-        draw.rounded_rectangle([400, 90, 740, 360], radius=12, fill=(16, 42, 69), outline=(60, 100, 150), width=2)
-        draw.rectangle([400, 90, 740, 125], fill=(24, 55, 88))
-        draw.ellipse([415, 103, 427, 115], fill=(239, 68, 68))
-        draw.ellipse([435, 103, 447, 115], fill=(245, 158, 11))
-        draw.ellipse([455, 103, 467, 115], fill=(16, 185, 129))
-        draw.text((480, 101), 'https://react-tanstack.app', fill=(184, 198, 216))
-        # Inner wireframe
-        draw.rounded_rectangle([420, 145, 540, 340], radius=6, fill=(10, 30, 50))
-        draw.rounded_rectangle([555, 145, 720, 230], radius=6, fill=(20, 50, 80))
-        draw.rounded_rectangle([555, 245, 720, 340], radius=6, fill=(20, 50, 80))
+    elif pat == 'cloud_api':
+        draw.rounded_rectangle([370, 70, 590, 280], radius=10, fill=(25, 25, 65), outline=c['accent'], width=2)
+        draw.text((390, 85), 'ASP.NET Core Cloud APIs', fill=c['accent'])
+        draw.rounded_rectangle([390, 115, 480, 175], radius=6, fill=(40, 35, 90))
+        draw.text((400, 138), 'C# Web API', fill=(255, 255, 255))
+        draw.rounded_rectangle([495, 115, 575, 175], radius=6, fill=(40, 35, 90))
+        draw.text((505, 138), 'EF Core', fill=(255, 255, 255))
+        draw.rounded_rectangle([390, 195, 575, 260], radius=6, fill=(30, 45, 95))
+        draw.text((420, 220), 'SQL Server Enterprise', fill=(180, 205, 240))
 
-    elif dtype == 'cloud_api':
-        # ASP.NET Cloud infrastructure blocks
-        draw.rounded_rectangle([420, 110, 720, 340], radius=12, fill=(16, 42, 69), outline=cfg['highlight'], width=2)
-        draw.text((440, 130), 'Microsoft .NET Enterprise Service', fill=cfg['highlight'])
-        blocks = [(440, 170, 'C# Web API'), (580, 170, 'EF Core ORM'), (440, 250, 'SQL Server'), (580, 250, 'Azure Cloud')]
-        for bx, by, bt in blocks:
-            draw.rounded_rectangle([bx, by, bx + 120, by + 60], radius=8, fill=(26, 60, 96), outline=(90, 120, 170), width=1)
-            draw.text((bx + 15, by + 22), bt, fill=(255, 255, 255))
-
-    elif dtype == 'bi_dashboard':
-        # Power BI charts & telemetry
-        draw.rounded_rectangle([400, 90, 740, 360], radius=12, fill=(16, 42, 69), outline=cfg['highlight'], width=2)
-        # Bar chart
-        bars = [60, 110, 150, 95, 170, 130, 190]
+    elif pat == 'bi_charts':
+        draw.rounded_rectangle([360, 60, 600, 290], radius=8, fill=(22, 35, 48), outline=c['accent'], width=2)
+        # Power BI style bar chart
+        bars = [40, 80, 120, 75, 140, 100, 160]
         for i, h in enumerate(bars):
-            bx = 430 + i * 40
-            by = 330 - h
-            draw.rounded_rectangle([bx, by, bx + 26, 330], radius=4, fill=cfg['highlight'])
-        # Metric card
-        draw.rounded_rectangle([430, 110, 550, 160], radius=6, fill=(10, 30, 50))
-        draw.text((445, 120), 'GROSS RETURN', fill=(143, 165, 194))
-        draw.text((445, 135), '+42.8% YOY', fill=(16, 185, 129))
+            bx = 385 + i * 30
+            by = 260 - h
+            draw.rounded_rectangle([bx, by, bx + 20, 260], radius=3, fill=c['accent'])
+        draw.rounded_rectangle([385, 75, 490, 110], radius=4, fill=(10, 25, 40))
+        draw.text((395, 85), 'KPI: +38.5% DAX', fill=(16, 185, 129))
 
-    elif dtype == 'neural_rag':
-        # Neural nodes & Vector embeddings path
+    elif pat == 'neural_rag':
         layers = [
-            [(430, 130), (430, 220), (430, 310)],
-            [(540, 100), (540, 180), (540, 260), (540, 340)],
-            [(650, 150), (650, 240), (650, 320)],
-            [(720, 225)]
+            [(380, 90), (380, 170), (380, 250)],
+            [(470, 70), (470, 135), (470, 205), (470, 270)],
+            [(560, 110), (560, 180), (560, 240)]
         ]
         for i in range(len(layers) - 1):
             for n1 in layers[i]:
                 for n2 in layers[i+1]:
-                    draw.line([n1, n2], fill=(40, 70, 110), width=1)
+                    draw.line([n1, n2], fill=(60, 45, 110), width=1)
         for l in layers:
             for x, y in l:
-                draw.ellipse([x - 10, y - 10, x + 10, y + 10], fill=(16, 42, 69), outline=cfg['highlight'], width=2)
+                draw.ellipse([x - 8, y - 8, x + 8, y + 8], fill=(25, 20, 60), outline=c['accent'], width=2)
 
-    elif dtype == 'schema_ddl':
-        # Database tables with relational connectors
-        draw.rounded_rectangle([420, 100, 580, 220], radius=8, fill=(16, 42, 69), outline=(78, 170, 230), width=2)
-        draw.rectangle([420, 100, 580, 130], fill=(28, 64, 100))
-        draw.text((435, 108), 'TABLE: accounts (PK)', fill=(255, 255, 255))
-        draw.text((435, 140), 'id: UUID PRIMARY', fill=(184, 198, 216))
-        draw.text((435, 165), 'email: VARCHAR(255)', fill=(184, 198, 216))
-        draw.text((435, 190), 'created_at: TIMESTAMP', fill=(184, 198, 216))
+    elif pat == 'schema_tables':
+        draw.rounded_rectangle([370, 70, 490, 170], radius=6, fill=(16, 40, 65), outline=c['accent'], width=2)
+        draw.rectangle([370, 70, 490, 95], fill=(28, 65, 105))
+        draw.text((380, 76), 'accounts_pk', fill=(255, 255, 255))
+        draw.text((380, 105), 'id: uuid (pk)', fill=(180, 200, 225))
+        draw.text((380, 130), 'user_id: text', fill=(180, 200, 225))
 
-        draw.rounded_rectangle([560, 230, 720, 350], radius=8, fill=(16, 42, 69), outline=(78, 170, 230), width=2)
-        draw.rectangle([560, 230, 720, 260], fill=(28, 64, 100))
-        draw.text((575, 238), 'TABLE: transactions', fill=(255, 255, 255))
-        draw.text((575, 270), 'account_id: FK_USER', fill=(255, 212, 59))
-        draw.text((575, 295), 'amount: NUMERIC(12,2)', fill=(184, 198, 216))
-        draw.text((575, 320), 'status: ENUM_ACTIVE', fill=(184, 198, 216))
-        draw.line([(500, 220), (500, 280), (560, 280)], fill=(255, 212, 59), width=2)
+        draw.rounded_rectangle([480, 160, 600, 270], radius=6, fill=(16, 40, 65), outline=c['accent'], width=2)
+        draw.rectangle([480, 160, 600, 185], fill=(28, 65, 105))
+        draw.text((490, 166), 'orders_fk', fill=(255, 255, 255))
+        draw.text((490, 195), 'account_id: fk', fill=(255, 212, 59))
+        draw.text((490, 220), 'amount: numeric', fill=(180, 200, 225))
+        draw.line([(430, 170), (430, 210), (480, 210)], fill=(255, 212, 59), width=2)
 
-    elif dtype == 'memory_nodes':
-        # Linked list pointer addresses & memory blocks
-        ptrs = [('HEAD: 0x7ffd10', 410, 140), ('NODE: 0x7ffd28', 520, 200), ('TAIL: 0x7ffd40', 630, 260)]
-        for label, px, py in ptrs:
-            draw.rounded_rectangle([px, py, px + 120, py + 70], radius=8, fill=(16, 42, 69), outline=cfg['highlight'], width=2)
-            draw.text((px + 10, py + 12), label, fill=cfg['highlight'])
-            draw.text((px + 10, py + 38), 'val: int | next*', fill=(255, 255, 255))
-        draw.line([(530, 175), (550, 175), (550, 200)], fill=(100, 160, 230), width=2)
-        draw.line([(640, 235), (660, 235), (660, 260)], fill=(100, 160, 230), width=2)
+    elif pat == 'memory_nodes':
+        ptrs = [('0x7ffd10', 370, 90), ('0x7ffd28', 450, 150), ('0x7ffd40', 530, 210)]
+        for addr, px, py in ptrs:
+            draw.rounded_rectangle([px, py, px + 85, py + 50], radius=6, fill=(16, 38, 65), outline=c['accent'], width=2)
+            draw.text((px + 8, py + 8), addr, fill=c['accent'])
+            draw.text((px + 8, py + 26), 'data | *next', fill=(255, 255, 255))
+        draw.line([(455, 115), (470, 115), (470, 150)], fill=(100, 160, 230), width=2)
+        draw.line([(535, 175), (550, 175), (550, 210)], fill=(100, 160, 230), width=2)
 
-    elif dtype == 'placement_matrix':
-        # Campus placement diagnostic scorecard
-        draw.rounded_rectangle([410, 100, 730, 350], radius=12, fill=(16, 42, 69), outline=(16, 185, 129), width=2)
-        draw.text((435, 120), 'CAMPUS READINESS EVALUATION', fill=(16, 185, 129))
-        skills = [('Quantitative Aptitude', 92), ('Logical Reasoning', 88), ('Verbal & Communication', 95), ('Coding Round Technical', 90)]
-        for i, (name, pct) in enumerate(skills):
-            sy = 160 + i * 45
-            draw.text((435, sy), name, fill=(220, 230, 245))
-            draw.rounded_rectangle([435, sy + 20, 700, sy + 28], radius=4, fill=(10, 30, 50))
-            draw.rounded_rectangle([435, sy + 20, 435 + int(2.65 * pct), sy + 28], radius=4, fill=(16, 185, 129))
+    elif pat == 'placement_matrix':
+        draw.rounded_rectangle([360, 65, 600, 290], radius=10, fill=(15, 45, 45), outline=c['accent'], width=2)
+        draw.text((380, 80), 'CAMPUS READINESS MATRIX', fill=c['accent'])
+        metrics = [('Quantitative Aptitude', 94), ('Logical Reasoning', 90), ('Coding Technical Round', 92), ('Mock Interview Readiness', 96)]
+        for idx, (mname, pct) in enumerate(metrics):
+            my = 115 + idx * 40
+            draw.text((380, my), mname, fill=(210, 235, 230))
+            draw.rounded_rectangle([380, my + 16, 580, my + 24], radius=3, fill=(10, 28, 28))
+            draw.rounded_rectangle([380, my + 16, 380 + int(2.0 * pct), my + 24], radius=3, fill=c['accent'])
 
-    elif dtype == 'analytics_funnel':
-        # Marketing conversion funnel & Core Web Vitals
-        draw.polygon([(420, 120), (720, 120), (660, 170), (480, 170)], fill=(234, 88, 12))
-        draw.text((520, 138), 'Impressions: 124,000', fill=(255, 255, 255))
-        draw.polygon([(480, 180), (660, 180), (620, 230), (520, 230)], fill=(249, 115, 22))
-        draw.text((530, 198), 'Site Traffic: 42,500', fill=(255, 255, 255))
-        draw.polygon([(520, 240), (620, 240), (590, 290), (550, 290)], fill=(251, 146, 60))
-        draw.text((540, 258), 'Qualified: 6,800', fill=(255, 255, 255))
-        draw.rounded_rectangle([545, 300, 595, 340], radius=6, fill=(254, 215, 170))
-        draw.text((552, 314), 'Enroll', fill=(154, 52, 18))
+    elif pat == 'analytics_funnel':
+        draw.polygon([(380, 80), (590, 80), (545, 130), (425, 130)], fill=(234, 88, 12))
+        draw.text((450, 98), 'Traffic: 140,000', fill=(255, 255, 255))
+        draw.polygon([(425, 140), (545, 140), (510, 190), (455, 190)], fill=(249, 115, 22))
+        draw.text((455, 158), 'Qualified: 28,000', fill=(255, 255, 255))
+        draw.polygon([(455, 200), (510, 200), (490, 250), (475, 250)], fill=(251, 146, 60))
+        draw.text((465, 218), 'Enroll', fill=(255, 255, 255))
 
-    # Left content overlay panel
-    # Subtle dark gradient on left to ensure high readability
-    for x in range(0, 450):
-        fade = max(0, 1.0 - (x / 450.0))
-        alpha_val = int(240 * fade)
-        draw.line([(x, 0), (x, HEIGHT)], fill=(7, 24, 43))
+    # Left Dark Vignette / Gradient for text readability
+    for x in range(0, 380):
+        fade = max(0.0, 1.0 - (x / 380.0))
+        alpha_v = int(245 * fade)
+        draw.line([(x, 0), (x, HEIGHT)], fill=(c1[0], c1[1], c1[2]))
 
-    # Category Tag
-    draw.rounded_rectangle([40, 45, 280, 75], radius=6, fill=(16, 42, 69), outline=(40, 70, 110), width=1)
-    draw.text((55, 52), cfg['category'], fill=cfg['highlight'])
+    # Top badge (e.g. ENTERPRISE)
+    draw.rounded_rectangle([30, 35, 175, 60], radius=4, fill=(18, 42, 70), outline=c['accent'], width=1)
+    draw.text((42, 41), c['badge'], fill=c['accent'])
 
-    # Title
-    draw.text((40, 95), cfg['title'], fill=(255, 255, 255))
+    # Course Title
+    draw.text((30, 75), c['title'], fill=(255, 255, 255))
 
-    # Tagline
-    draw.text((40, 135), cfg['tagline'], fill=(184, 198, 216))
+    # Course Subtitle
+    draw.text((30, 105), c['subtitle'], fill=(180, 200, 225))
 
-    # Overlay Official Logo on Left
-    if os.path.exists(cfg['logo']):
-        logo = Image.open(cfg['logo']).convert('RGBA')
-        logo.thumbnail((90, 90), Image.Resampling.LANCZOS)
-        # Background plate for logo
-        draw.rounded_rectangle([40, 190, 150, 300], radius=16, fill=(16, 42, 69), outline=(40, 70, 110), width=1)
-        # Paste centered
-        lx = 40 + (110 - logo.width) // 2
-        ly = 190 + (110 - logo.height) // 2
+    # Technology Emblem Placed on bottom-left
+    if os.path.exists(c['logo']):
+        logo = Image.open(c['logo']).convert('RGBA')
+        logo.thumbnail((70, 70), Image.Resampling.LANCZOS)
+        # Circular / rounded base for emblem
+        draw.rounded_rectangle([30, 155, 115, 240], radius=12, fill=(15, 36, 62), outline=(40, 75, 115), width=1)
+        lx = 30 + (85 - logo.width) // 2
+        ly = 155 + (85 - logo.height) // 2
         img.paste(logo, (lx, ly), logo)
 
-    # Footprint badge
-    draw.text((40, 340), 'Skillthinker Institutional Curriculum', fill=(143, 165, 194))
-    draw.text((40, 365), 'Trichy Campus Technical Lab', fill=(255, 176, 0))
+    # Campus & Credentials footer watermark
+    draw.text((30, 280), 'Skillthinker Lab Series', fill=(140, 165, 195))
+    draw.text((30, 305), 'Anna Nagar, Trichy Hub', fill=(255, 176, 0))
 
     # Border
-    draw.rectangle([0, 0, WIDTH - 1, HEIGHT - 1], outline=(30, 58, 95), width=1)
+    draw.rectangle([0, 0, WIDTH - 1, HEIGHT - 1], outline=(35, 65, 105), width=1)
 
-    out_path = f"public/images/courses/{cfg['id']}.jpg"
-    img.save(out_path, 'JPEG', quality=95)
-    print(f"Saved: {out_path}")
+    out_file = f"public/images/courses/{c['id']}.jpg"
+    img.save(out_file, 'JPEG', quality=95)
+    print(f"Rendered: {out_file}")
 
-for c in COURSES:
-    create_card_image(c)
+for item in COURSES:
+    render_thumbnail(item)
 
-print('All 10 course images generated successfully.')
+print('All 10 thumbnails rendered successfully.')
