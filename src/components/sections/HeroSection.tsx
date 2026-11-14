@@ -10,7 +10,7 @@ export default function HeroSection() {
   const { openModal } = useAdvisorModal();
 
   return (
-    <section className="relative bg-[#041427] text-white overflow-hidden flex items-center pt-20 pb-8 sm:pt-22 sm:pb-10 lg:pt-24 lg:pb-10">
+    <section className="relative min-h-[100dvh] w-full bg-[#041427] text-white overflow-hidden flex flex-col justify-center pt-18 pb-6 sm:pt-20 sm:pb-8">
       {/* Background cinematic photograph with multi-layer deep gradient */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -31,8 +31,8 @@ export default function HeroSection() {
       <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#0A3A7A]/30 rounded-full blur-3xl pointer-events-none -z-0" />
       <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-[#FCAF0A]/10 rounded-full blur-3xl pointer-events-none -z-0" />
 
-      {/* Primary Hero Stage - Compact, fits 100% inside laptop & desktop screens */}
-      <div className="relative z-10 container-custom w-full">
+      {/* Primary Hero Stage - Centered vertically so dark covers 100% of viewport with zero white space */}
+      <div className="relative z-10 container-custom w-full my-auto">
         <div className="max-w-3xl xl:max-w-4xl">
           
           {/* Brand Eyebrow Badge */}
@@ -43,7 +43,7 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Master Headline - Executive, sharp, non-kid typography */}
+          {/* Master Headline - Executive, sharp typography */}
           <h1 className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[52px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white mb-3 sm:mb-4">
             The right skills<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCAF0A] via-[#FFD066] to-[#F5A800]">
