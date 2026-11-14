@@ -1,109 +1,244 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowRight, Laptop, MessageCircle, HelpCircle } from 'lucide-react';
-import { PROGRAMS_DATA } from '@/data/siteData';
+import { ArrowRight, Laptop, Clock, CheckCircle2, Award, MessageCircle, HelpCircle, ChevronRight } from 'lucide-react';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 import TechLogo from '@/components/ui/TechLogos';
 
-const CATEGORIES = [
-  'All Tracks',
-  'Software Engineering',
-  'Core Programming',
-  'Data & Analytics',
-  'AI & Emerging',
-  'Backend & Data',
-  'Placement & Career',
-  'Digital & Growth',
-];
-
-interface ProgramMeta {
+interface CurriculumTrack {
+  id: string;
+  number: string;
+  name: string;
+  category: string;
   logoKey: string;
-  tags: string[];
-  trackLabel: string;
-  description: string;
+  duration: string;
+  mode: string;
+  level: string;
+  summary: string;
+  milestones: { title: string; desc: string }[];
+  techStack: string[];
+  idealFor: string;
+  keyOutcome: string;
 }
 
-const PROGRAM_METAS: Record<string, ProgramMeta> = {
-  'prog-java': {
+const TRACKS_CATALOG: CurriculumTrack[] = [
+  {
+    id: 'prog-java',
+    number: '01',
+    name: 'Java Programming',
+    category: 'Software Engineering',
     logoKey: 'java',
-    trackLabel: 'Enterprise Java',
-    description:
-      'Master enterprise backend architecture with Core Java, Spring Boot, multithreading, and RESTful web services. Build scalable microservices backed by database persistence.',
-    tags: ['Core Java', 'Spring Boot', 'Spring Framework', 'JDBC', 'Multithreading', 'REST APIs'],
+    duration: '8–12 Weeks',
+    mode: 'Instructor-Led Live & Lab',
+    level: 'Beginner to Enterprise',
+    summary:
+      'Master enterprise backend architecture with Core Java, Spring Boot, multithreading, and RESTful web services. Build scalable microservices backed by relational database persistence.',
+    milestones: [
+      { title: 'Core Java & OOP', desc: 'Syntax, memory model, recursion, OOP patterns, and Exception Handling.' },
+      { title: 'Collections & Concurrency', desc: 'Generics, Collections Framework, Multithreading, and Thread Synchronization.' },
+      { title: 'Spring Boot Ecosystem', desc: 'Dependency Injection, Spring MVC, Spring Data JPA, and Hibernate.' },
+      { title: 'Enterprise Capstone', desc: 'Production RESTful API with authentication, testing, and SQL persistence.' },
+    ],
+    techStack: ['Core Java', 'Spring Boot', 'Spring Framework', 'JDBC', 'Hibernate', 'RESTful APIs', 'Maven'],
+    idealFor: 'Backend developers and graduates targeting Java enterprise software engineering roles.',
+    keyOutcome: 'Build deployable, production-ready enterprise backends and REST microservices.',
   },
-  'prog-python': {
+  {
+    id: 'prog-python',
+    number: '02',
+    name: 'Python Programming',
+    category: 'Core Programming',
     logoKey: 'python',
-    trackLabel: 'Python Mastery',
-    description:
+    duration: '8–12 Weeks',
+    mode: 'Instructor-Led Live & Lab',
+    level: 'Beginner to Advanced',
+    summary:
       'From foundational scripting and data structures to advanced metaprogramming and asynchronous frameworks. Write clean, idiomatic Python for automation, backends, and data tasks.',
-    tags: ['Python 3', 'Async IO & Concurrency', 'OOP & Data Model', 'Metaprogramming', 'REST APIs'],
+    milestones: [
+      { title: 'Pythonic Fundamentals', desc: 'Data structures, control flow, functions, modules, and error handling.' },
+      { title: 'OOP & Data Model', desc: 'Classes, dunder methods, decorators, generators, and memory architecture.' },
+      { title: 'Async & Concurrency', desc: 'Multiprocessing, Threading, and Async IO for high-performance I/O.' },
+      { title: 'Live Framework Project', desc: 'REST API backend and automated data pipelines using modern Python.' },
+    ],
+    techStack: ['Python 3', 'Async IO', 'OOP & Data Model', 'FastAPI', 'Data Structures', 'Automation'],
+    idealFor: 'Developers, automation engineers, and students looking for comprehensive Python depth.',
+    keyOutcome: 'Develop asynchronous Python web services and robust automated software pipelines.',
   },
-  'prog-web': {
+  {
+    id: 'prog-web',
+    number: '03',
+    name: 'Web & Full Stack Development',
+    category: 'Software Engineering',
     logoKey: 'fullstack',
-    trackLabel: 'Full Stack Web',
-    description:
-      'Build modern responsive web applications from interface to database. Master component architectures, state management, REST APIs, and full-stack deployment.',
-    tags: ['React.js', 'JavaScript (ES6+)', 'HTML5 / CSS3', 'MongoDB', 'REST APIs', 'Full Stack Build'],
+    duration: '10–14 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'Beginner to Full Stack',
+    summary:
+      'Build modern responsive web applications from interface to database. Master component architectures, state management, REST APIs, and full-stack deployment on modern clouds.',
+    milestones: [
+      { title: 'Modern UI Engineering', desc: 'Semantic HTML5, modern CSS3, responsive layouts, and Tailwind.' },
+      { title: 'JavaScript Mastery', desc: 'ES6+ syntax, closures, event loop, Promises, and asynchronous DOM.' },
+      { title: 'React Frontend Arch', desc: 'Components, hooks, state management, client routing, and API integration.' },
+      { title: 'Full Stack Deployment', desc: 'Node.js backend, MongoDB database schemas, and live cloud deployment.' },
+    ],
+    techStack: ['React.js', 'JavaScript (ES6+)', 'Node.js', 'HTML5 / CSS3', 'MongoDB', 'REST APIs', 'Git'],
+    idealFor: 'Aspiring frontend, backend, and full stack software engineers building web applications.',
+    keyOutcome: 'Engineer and deploy complete, responsive full-stack applications with database integration.',
   },
-  'prog-dotnet': {
+  {
+    id: 'prog-dotnet',
+    number: '04',
+    name: '.NET Development',
+    category: 'Software Engineering',
     logoKey: 'dotnet',
-    trackLabel: 'Enterprise .NET',
-    description:
+    duration: '10–12 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'Intermediate to Pro',
+    summary:
       'Develop enterprise-grade web applications and APIs using the Microsoft .NET ecosystem. Learn C#, ASP.NET Core, MVC architectures, and SQL Server persistence.',
-    tags: ['C#', 'ASP.NET Core', 'MVC Architecture', 'Entity Framework', 'SQL Server', 'Web APIs'],
+    milestones: [
+      { title: 'C# Language & OOP', desc: 'Types, LINQ, delegates, interfaces, memory models, and clean architecture.' },
+      { title: 'ASP.NET Core & MVC', desc: 'Dependency Injection, middleware pipelines, routing, and Razor/MVC.' },
+      { title: 'Entity Framework & SQL', desc: 'Code-first migrations, SQL Server schema design, and query optimization.' },
+      { title: 'Enterprise Web API', desc: 'RESTful API with JWT authentication, logging, and deployment.' },
+    ],
+    techStack: ['C#', 'ASP.NET Core', 'Entity Framework Core', 'SQL Server', 'Web APIs', 'LINQ', 'MVC'],
+    idealFor: 'Software developers targeting corporate enterprise .NET and Microsoft stack roles.',
+    keyOutcome: 'Build and deploy secure, scalable enterprise APIs and MVC business applications.',
   },
-  'prog-analytics': {
+  {
+    id: 'prog-analytics',
+    number: '05',
+    name: 'Data Analytics & BI',
+    category: 'Data & Analytics',
     logoKey: 'analytics',
-    trackLabel: 'BI & Analytics',
-    description:
+    duration: '8–10 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'All Levels',
+    summary:
       'Transform complex business datasets into interactive, executive decision dashboards. Master relational queries, data pipelines, statistical modeling, and visualization.',
-    tags: ['Power BI Desktop', 'SQL Queries', 'Python Analytics', 'Advanced Excel', 'DAX', 'Tableau'],
+    milestones: [
+      { title: 'Excel & Data Hygiene', desc: 'Advanced formulas, PivotTables, Power Query, and cleaning dirty datasets.' },
+      { title: 'SQL Data Querying', desc: 'Complex joins, aggregations, window functions, and database extraction.' },
+      { title: 'Power BI & DAX Modeling', desc: 'Data modeling, star schemas, measures, and executive KPI design.' },
+      { title: 'Python & Business BI', desc: 'Pandas, data analysis, and end-to-end interactive reporting project.' },
+    ],
+    techStack: ['Power BI Desktop', 'SQL Queries', 'Python Analytics', 'Advanced Excel', 'DAX', 'Tableau'],
+    idealFor: 'Aspiring business intelligence analysts, data specialists, and operational managers.',
+    keyOutcome: 'Deliver automated, executive-ready BI dashboards backed by optimized SQL models.',
   },
-  'prog-ai': {
+  {
+    id: 'prog-ai',
+    number: '06',
+    name: 'AI & Emerging Technologies',
+    category: 'AI & Emerging',
     logoKey: 'ai',
-    trackLabel: 'AI & Automation',
-    description:
+    duration: '8–10 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'Intermediate',
+    summary:
       'Build intelligent applications with generative models, retrieval-augmented generation (RAG), and agentic workflows. Automate complex business logic with modern AI orchestrators.',
-    tags: ['Generative AI', 'Agentic RAG', 'Prompt Engineering', 'n8n Automation', 'AI Applications'],
+    milestones: [
+      { title: 'Generative AI & LLMs', desc: 'Foundational transformer concepts, API integration, and system prompting.' },
+      { title: 'Retrieval Augmented Gen', desc: 'Vector embeddings, chunking, semantic retrieval, and document indexing.' },
+      { title: 'Agentic Automation', desc: 'n8n workflow pipelines, tool calling, and multi-step AI task execution.' },
+      { title: 'Applied AI Product', desc: 'Complete RAG-based AI assistant integrated with practical business tools.' },
+    ],
+    techStack: ['Generative AI', 'Agentic RAG', 'Prompt Engineering', 'n8n Automation', 'Vector DB', 'LangChain'],
+    idealFor: 'Engineers, technical founders, and automation developers building with modern AI APIs.',
+    keyOutcome: 'Deploy functional AI agent pipelines and RAG assistants connected to production data.',
   },
-  'prog-backend': {
+  {
+    id: 'prog-backend',
+    number: '07',
+    name: 'Database & Backend Tech',
+    category: 'Backend & Data',
     logoKey: 'database',
-    trackLabel: 'Backend & Data',
-    description:
+    duration: '8–10 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'Beginner to Pro',
+    summary:
       'Design high-performance relational and document database architectures. Master schema normalization, indexing, query optimization, and complex transactional logic.',
-    tags: ['SQL Architecture', 'MongoDB', 'Joins & Subqueries', 'Stored Procedures', 'Indexing'],
+    milestones: [
+      { title: 'Relational Schemas & SQL', desc: 'Normalization, primary/foreign keys, joins, subqueries, and constraints.' },
+      { title: 'Stored Procedures & Logic', desc: 'Triggers, indexes, ACID transactions, and procedural database code.' },
+      { title: 'Document Data & NoSQL', desc: 'MongoDB collections, aggregation pipelines, and document schema design.' },
+      { title: 'Performance Optimization', desc: 'Execution plan analysis, indexing strategies, and connection pooling.' },
+    ],
+    techStack: ['SQL Architecture', 'MongoDB', 'Stored Procedures', 'Indexing', 'Schema Design', 'PostgreSQL'],
+    idealFor: 'Backend developers and database administrators seeking deep database proficiency.',
+    keyOutcome: 'Design normalized, scalable database backends with optimized indexing strategies.',
   },
-  'prog-programming': {
+  {
+    id: 'prog-programming',
+    number: '08',
+    name: 'Programming Fundamentals',
+    category: 'Core Programming',
     logoKey: 'cpp',
-    trackLabel: 'Programming Fundamentals',
-    description:
+    duration: '8–10 Weeks',
+    mode: 'Hands-on Lab & Mentorship',
+    level: 'Beginner',
+    summary:
       'Build an unbreakable foundation in computational logic, memory models, and algorithmic thinking. Master procedural programming, pointers, and object-oriented principles.',
-    tags: ['C Programming', 'C++', 'C#', 'Data Structures', 'Algorithms', 'OOP Concepts'],
+    milestones: [
+      { title: 'Computational Logic & C', desc: 'Variables, memory pointers, control structures, and array manipulations.' },
+      { title: 'Object-Oriented C++', desc: 'Encapsulation, inheritance, polymorphism, templates, and STL usage.' },
+      { title: 'Data Structures & DSA', desc: 'Linked lists, stacks, queues, trees, searching, and sorting algorithms.' },
+      { title: 'Algorithmic Problem Solving', desc: 'Time/space complexity analysis and competitive coding problems.' },
+    ],
+    techStack: ['C Programming', 'C++', 'C#', 'Data Structures', 'Algorithms', 'Memory Pointers', 'OOP'],
+    idealFor: 'First-year engineering students and beginners starting their coding foundation.',
+    keyOutcome: 'Master core algorithmic problem solving, pointer mechanics, and data structures.',
   },
-  'prog-aptitude': {
+  {
+    id: 'prog-aptitude',
+    number: '09',
+    name: 'Aptitude & Placement Training',
+    category: 'Placement & Career',
     logoKey: 'aptitude',
-    trackLabel: 'Career & Placements',
-    description:
+    duration: '6–8 Weeks',
+    mode: 'Instructor-Led Live & Lab',
+    level: 'All Levels',
+    summary:
       'Comprehensive preparation for corporate campus recruitment drives and technical interviews. Master quantitative reasoning, logical deduction, verbal ability, and mock interviews.',
-    tags: ['Quantitative Aptitude', 'Logical Reasoning', 'Verbal Ability', 'Mock Interviews', 'GD Preparation'],
+    milestones: [
+      { title: 'Quantitative Aptitude', desc: 'Percentages, ratios, time & work, permutations, probability, and speed math.' },
+      { title: 'Reasoning & Logic', desc: 'Syllogisms, seating arrangements, coding-decoding, and puzzle analysis.' },
+      { title: 'Verbal & Communication', desc: 'Grammar, reading comprehension, vocabulary, and business communication.' },
+      { title: 'Interview Simulation', desc: 'Company-specific test patterns, group discussions, and 1-on-1 mock interviews.' },
+    ],
+    techStack: ['Quantitative Aptitude', 'Logical Reasoning', 'Verbal Ability', 'Mock Interviews', 'GD Preparation'],
+    idealFor: 'Pre-final and final-year college students preparing for IT and MNC campus placement drives.',
+    keyOutcome: 'Clear corporate aptitude screening tests and deliver confident technical and HR interviews.',
   },
-  'prog-marketing': {
+  {
+    id: 'prog-marketing',
+    number: '10',
+    name: 'Digital Marketing',
+    category: 'Digital & Growth',
     logoKey: 'marketing',
-    trackLabel: 'Growth Marketing',
-    description:
+    duration: '6–8 Weeks',
+    mode: 'Instructor-Led Live & Lab',
+    level: 'Beginner to Intermediate',
+    summary:
       'Execute high-impact organic search optimization, tag management, and conversion analytics. Drive sustainable qualified user acquisition across modern digital channels.',
-    tags: ['Technical SEO', 'Google Tag Manager', 'Search Console', 'Conversion Analytics', 'Organic Growth'],
+    milestones: [
+      { title: 'Technical SEO Audit', desc: 'Site architecture, crawling, indexing, metadata, and Core Web Vitals.' },
+      { title: 'Content & Keyword Strategy', desc: 'Search intent mapping, on-page optimization, and competitive research.' },
+      { title: 'Google Tag Manager', desc: 'Container setup, custom triggers, data layer variables, and event tags.' },
+      { title: 'Analytics & Attribution', desc: 'Conversion goal tracking, audience funnels, and executive reporting.' },
+    ],
+    techStack: ['Technical SEO', 'Google Tag Manager', 'Search Console', 'Conversion Analytics', 'Organic Growth'],
+    idealFor: 'Marketers, business founders, and career switchers entering digital acquisition.',
+    keyOutcome: 'Audit, optimize, and track multi-channel digital campaigns with enterprise precision.',
   },
-};
+];
 
 export default function ProgramsSection() {
   const { openModal } = useAdvisorModal();
-  const [selectedCategory, setSelectedCategory] = useState('All Tracks');
+  const [activeTrackIdx, setActiveTrackIdx] = useState(0);
 
-  const filteredPrograms = selectedCategory === 'All Tracks'
-    ? PROGRAMS_DATA
-    : PROGRAMS_DATA.filter((p) => p.category === selectedCategory);
+  const activeTrack = TRACKS_CATALOG[activeTrackIdx];
 
   return (
     <section id="programs" className="relative py-20 lg:py-28 bg-[#FAFCFF] border-b border-slate-200">
@@ -111,7 +246,7 @@ export default function ProgramsSection() {
       <div className="container-custom">
         
         {/* Section Header: Prestigious Editorial Typography */}
-        <div className="max-w-3xl mb-12 sm:mb-14">
+        <div className="max-w-3xl mb-12 sm:mb-16">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#0A3A7A]" />
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#0A3A7A]">
@@ -128,119 +263,215 @@ export default function ProgramsSection() {
           </p>
         </div>
 
-        {/* Category Navigation Bar (Senior Executive Tabs) */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-12 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-          {CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-[#06284F] text-white shadow-sm'
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
-                }`}
-              >
-                {cat}
-                {cat === 'All Tracks' && (
-                  <span className="ml-2 px-1.5 py-0.5 rounded-full bg-blue-100/80 text-[#0A3A7A] text-[10px] font-mono">
-                    10
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        {/* ── INNOVATIVE MASTER CURRICULUM CONSOLE (NO REPETITIVE BOXES) ── */}
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+            
+            {/* ── LEFT COLUMN: Interactive Track Navigator (5 cols) ── */}
+            <div className="lg:col-span-5 flex flex-col bg-slate-50/50">
+              
+              {/* Directory Strip Header */}
+              <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#06284F]">
+                  All 10 Specialized Disciplines
+                </span>
+                <span className="text-xs font-mono font-semibold text-[#0A3A7A] bg-blue-50 px-2 py-0.5 rounded">
+                  Track {activeTrack.number} / 10
+                </span>
+              </div>
 
-        {/* Executive 2-Column Catalog Grid (Harmonic Typography, Zero Clutter) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {filteredPrograms.map((prog) => {
-            const meta = PROGRAM_METAS[prog.id] || {
-              logoKey: 'fundamentals',
-              trackLabel: prog.category,
-              description: prog.targetOutcome,
-              tags: prog.curriculumHighlights.slice(0, 5),
-            };
+              {/* Scrollable / Clickable Track Items (Zero Boxes, Pure Architectural List) */}
+              <div className="divide-y divide-slate-100 max-h-[640px] overflow-y-auto no-scrollbar">
+                {TRACKS_CATALOG.map((track, idx) => {
+                  const isActive = idx === activeTrackIdx;
 
-            return (
-              <div
-                key={prog.id}
-                className="rounded-2xl bg-white border border-slate-200/90 hover:border-[#0A3A7A]/35 p-7 sm:p-8 hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
-              >
-                <div>
-                  
-                  {/* Top Row: Authentic Brand Icon + Badges */}
-                  <div className="flex items-start justify-between gap-4 mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center p-2 shrink-0 group-hover:scale-105 transition-transform duration-200">
-                      <TechLogo name={meta.logoKey} size={32} />
-                    </div>
-
-                    <div className="flex items-center gap-2 flex-wrap justify-end">
-                      <span className="text-xs font-semibold text-[#0A3A7A] bg-blue-50/80 px-2.5 py-1 rounded-md border border-blue-100/60">
-                        {meta.trackLabel}
-                      </span>
-                      <span className="text-xs font-medium text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/60">
-                        {prog.deliveryMode.includes('Live') ? 'Instructor-Led Live' : 'Lab & Mentorship'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Course Title: Confident, Authoritative Headline */}
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#0A3A7A] transition-colors tracking-tight mb-3">
-                    {prog.name}
-                  </h3>
-
-                  {/* Course Narrative: Clear, High-Legibility Outcome */}
-                  <p className="text-sm text-slate-600 leading-relaxed font-normal mb-6">
-                    {meta.description}
-                  </p>
-
-                  {/* Tech Stack Strip: Clean, Harmonious Badges */}
-                  <div className="pt-4 border-t border-slate-100 mb-6">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">
-                      Technologies &amp; Tools Covered:
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {meta.tags.map((tag) => (
+                  return (
+                    <button
+                      key={track.id}
+                      type="button"
+                      onClick={() => setActiveTrackIdx(idx)}
+                      className={`w-full text-left px-5 py-3.5 flex items-center justify-between transition-all duration-150 cursor-pointer group ${
+                        isActive
+                          ? 'bg-[#06284F] text-white shadow-xs'
+                          : 'hover:bg-slate-100/80 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        {/* Monospace Index Number */}
                         <span
-                          key={tag}
-                          className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-white text-slate-700 text-xs font-medium border border-slate-200/80 transition-colors"
+                          className={`text-xs font-mono font-bold shrink-0 ${
+                            isActive ? 'text-[#FCAF0A]' : 'text-slate-400 group-hover:text-[#0A3A7A]'
+                          }`}
                         >
-                          {tag}
+                          {track.number}
                         </span>
-                      ))}
+
+                        {/* Authentic Brand Logo Image */}
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center p-1 shrink-0 ${
+                            isActive ? 'bg-white/10' : 'bg-white border border-slate-200/80 shadow-2xs'
+                          }`}
+                        >
+                          <TechLogo name={track.logoKey} size={22} />
+                        </div>
+
+                        {/* Title & Category */}
+                        <div className="min-w-0">
+                          <div
+                            className={`text-sm font-bold truncate transition-colors ${
+                              isActive ? 'text-white' : 'text-slate-900 group-hover:text-[#06284F]'
+                            }`}
+                          >
+                            {track.name}
+                          </div>
+                          <div
+                            className={`text-[11px] truncate mt-0.5 ${
+                              isActive ? 'text-slate-300' : 'text-slate-500'
+                            }`}
+                          >
+                            {track.category}
+                          </div>
+                        </div>
+                      </div>
+
+                      <ChevronRight
+                        className={`w-4 h-4 shrink-0 transition-transform ${
+                          isActive
+                            ? 'text-[#FCAF0A] translate-x-1'
+                            : 'text-slate-300 group-hover:text-slate-600'
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+            </div>
+
+            {/* ── RIGHT COLUMN: Active Curriculum Studio View (7 cols) ── */}
+            <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white">
+              
+              <div className="space-y-6">
+                
+                {/* Active Header: High-Res Logo + Track Metadata */}
+                <div className="flex items-start justify-between gap-4 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-center p-2.5 shrink-0 shadow-xs">
+                      <TechLogo name={activeTrack.logoKey} size={36} />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-mono font-bold text-[#FCAF0A] bg-[#06284F] px-2 py-0.5 rounded">
+                          Track {activeTrack.number}
+                        </span>
+                        <span className="text-xs font-semibold text-[#0A3A7A] bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                          {activeTrack.category}
+                        </span>
+                      </div>
+
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight">
+                        {activeTrack.name}
+                      </h3>
                     </div>
                   </div>
 
+                  {/* Mode & Duration Metadata */}
+                  <div className="hidden sm:flex flex-col items-end text-xs text-slate-500 gap-1 shrink-0">
+                    <span className="flex items-center gap-1 font-semibold text-slate-700">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{activeTrack.duration}</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Laptop className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{activeTrack.mode}</span>
+                    </span>
+                  </div>
                 </div>
 
-                {/* Card Action Footer: Clean, Balanced Primary & WhatsApp Links */}
-                <div className="pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
-                  <button
-                    type="button"
-                    onClick={() => openModal(prog.name)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#06284F] hover:bg-[#0A3A7A] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-                  >
-                    <span>Enquire Track</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                {/* Course Narrative Overview */}
+                <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
+                  {activeTrack.summary}
+                </p>
 
-                  <a
-                    href={`https://wa.me/919442605096?text=Hi%2C%20I%20am%20interested%20in%20the%20${encodeURIComponent(prog.name)}%20curriculum%20syllabus.`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
-                  >
-                    <span>WhatsApp Syllabus</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </a>
+                {/* 4-Milestone Academic Progression Roadmap */}
+                <div className="pt-2">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3.5 flex items-center justify-between">
+                    <span>Curriculum Milestones &amp; Progression:</span>
+                    <span className="font-mono text-[11px] text-[#0A3A7A]">4 Structured Phases</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {activeTrack.milestones.map((ms, i) => (
+                      <div
+                        key={i}
+                        className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 hover:border-slate-300 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 text-xs font-extrabold text-[#06284F] mb-1">
+                          <span className="w-4 h-4 rounded-full bg-[#0A3A7A] text-white text-[9px] font-mono flex items-center justify-center shrink-0">
+                            {i + 1}
+                          </span>
+                          <span>{ms.title}</span>
+                        </div>
+                        <p className="text-[11px] sm:text-xs text-slate-600 leading-snug font-normal pl-6">
+                          {ms.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Key Technologies Covered */}
+                <div className="pt-2">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    Technologies &amp; Tools Mastered:
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeTrack.techStack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ideal Candidate Profile */}
+                <div className="p-3.5 rounded-xl bg-blue-50/50 border border-blue-100 text-xs text-slate-700 flex items-start gap-2">
+                  <span className="font-bold text-[#06284F] shrink-0">Target Profile:</span>
+                  <span className="leading-relaxed">{activeTrack.idealFor}</span>
                 </div>
 
               </div>
-            );
-          })}
+
+              {/* Action Terminal */}
+              <div className="pt-6 mt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                <button
+                  type="button"
+                  onClick={() => openModal(activeTrack.name)}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#06284F] hover:bg-[#0A3A7A] text-white text-xs sm:text-sm font-extrabold transition-all shadow-md cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Enquire Track &amp; Schedule Visit</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <a
+                  href={`https://wa.me/919442605096?text=Hi%2C%20I%20am%20interested%20in%20the%20${encodeURIComponent(activeTrack.name)}%20curriculum%20syllabus.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
+                >
+                  <span>Download Syllabus via WhatsApp</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
+            </div>
+
+          </div>
         </div>
 
         {/* Global Admissions Advisor Banner */}
