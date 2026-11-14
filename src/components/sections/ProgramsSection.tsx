@@ -240,7 +240,7 @@ export default function ProgramsSection() {
     <section 
       id="programs" 
       aria-labelledby="academic-curriculum-heading"
-      className="relative py-16 sm:py-20 lg:py-24 bg-[#07182B] text-white border-b border-white/10 overflow-hidden"
+      className="relative py-16 sm:py-20 lg:py-24 bg-[#07182B] text-white border-b border-white/10 overflow-x-clip"
     >
       {/* Anchor for external routing */}
       <div id="courses" className="absolute -top-20 left-0 pointer-events-none" />
@@ -309,7 +309,7 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('left')}
             disabled={!canScrollLeft}
             aria-label="Previous courses"
-            className={`absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-20 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
+            className={`absolute left-0 sm:-left-3 lg:-left-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
               canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
@@ -322,24 +322,24 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('right')}
             disabled={!canScrollRight}
             aria-label="Next courses"
-            className={`absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-20 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
+            className={`absolute right-0 sm:-right-3 lg:-right-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
               canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
             <ChevronRight className="w-5 h-5 text-[#07182B]" />
           </button>
 
-          {/* Carousel Track (Fills 4 cards wide on desktop) */}
+          {/* Carousel Track (Fills 4 cards wide on desktop with generous edge padding so no card is cut off) */}
           <div 
             ref={carouselRef}
-            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-4 pt-1"
+            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar px-2 sm:px-4 lg:px-6 py-4 -mx-2 sm:-mx-4 lg:-mx-6 scroll-px-2 sm:scroll-px-4 lg:scroll-px-6"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {filteredCourses.map((course) => (
               <Link
                 key={course.number}
                 href={`/programs#${course.slug}`}
-                className="group relative flex flex-col justify-between rounded-xl bg-[#0D233B] border border-white/10 hover:border-white/25 hover:bg-[#102A45] transition-all duration-200 overflow-hidden shadow-lg snap-start flex-[0_0_285px] sm:flex-[0_0_305px] lg:flex-[0_0_295px] xl:flex-[0_0_315px] 2xl:flex-[0_0_325px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB000]"
+                className="group relative flex flex-col justify-between rounded-xl bg-[#0D233B] border border-white/10 hover:border-white/30 hover:bg-[#102A45] transition-colors duration-200 overflow-hidden shadow-lg snap-start flex-[0_0_285px] sm:flex-[0_0_305px] lg:flex-[0_0_295px] xl:flex-[0_0_315px] 2xl:flex-[0_0_325px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB000]"
               >
                 <div>
                   {/* Video Thumbnail (Exact 16:9) */}
@@ -349,7 +349,7 @@ export default function ProgramsSection() {
                       alt={`${course.name} thumbnail`}
                       fill
                       sizes="(max-width: 640px) 285px, (max-width: 1024px) 305px, 325px"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover"
                     />
 
                     {/* Number & Track Badge */}
