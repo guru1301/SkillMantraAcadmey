@@ -3,223 +3,282 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ChevronLeft, ChevronRight, Star, HelpCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Star, HelpCircle, CheckCircle2, Check, UserCheck } from 'lucide-react';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 
-export interface UdemyCourse {
+export interface CourseProgram {
   number: string;
   name: string;
-  shortTitle: string;
   category: string;
   tabs: string[];
-  instructor: string;
-  badge: 'Bestseller' | 'Premium' | 'Lab Track';
+  topics: string[];
+  idealFor: string;
+  badge: 'Bestseller' | 'Premium' | 'Foundation' | 'Specialization';
   rating: number;
   ratingCount: string;
-  duration: string;
-  mode: string;
-  tagline: string;
   image: string;
   logo: string;
   slug: string;
+  contactUrl: string;
 }
 
-export const UDEMY_COURSES: UdemyCourse[] = [
+export const PROGRAM_FEATURES = [
+  'Structured, easy-to-understand learning',
+  'Practical, hands-on training',
+  'Projects and assignments',
+  'Expert guidance',
+  'Career-oriented learning',
+  'Certification',
+  'Continuous learner support',
+] as const;
+
+export const COURSES_DATA: CourseProgram[] = [
   {
     number: '01',
     name: 'Java Programming',
-    shortTitle: 'The Complete Java Spring Boot & Microservices Masterclass',
     category: 'Enterprise Engineering',
-    tabs: ['All Programmes', 'Java & Enterprise', 'Database Engineering'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'Java Programming', 'Database & Backend'],
+    topics: [
+      'Java Fundamentals',
+      'Methods & Recursion',
+      'OOP',
+      'Exception Handling',
+      'Collections Framework',
+      'Multithreading & Concurrency',
+      'JDBC & Database Connectivity',
+      'Spring Framework',
+      'Spring Boot',
+      'RESTful Web Services',
+    ],
+    idealFor: 'Backend developers building with Java & Spring',
     badge: 'Bestseller',
-    rating: 4.8,
+    rating: 4.9,
     ratingCount: '2,840 ratings',
-    duration: '8–12 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Enterprise Spring Boot, Microservices, JPA & REST Architecture',
     image: '/images/courses/java.jpg',
     logo: '/images/tech/java.png',
     slug: 'java-programming',
+    contactUrl: '/#contact',
   },
   {
     number: '02',
     name: 'Python Programming',
-    shortTitle: 'Python Engineering 2026: Async IO, FastAPIs & Automation',
     category: 'Core Programming',
-    tabs: ['All Programmes', 'Python Programming', 'Core Programming'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'Python Programming', 'Programming Fundamentals'],
+    topics: [
+      'Python Fundamentals',
+      'Python Data Model & Metaprogramming',
+      'Advanced Control Flow & Memory Management',
+      'Concurrency, Parallelism & Async IO',
+      'Enterprise Design & Ecosystem Tools',
+      'High-Level Framework Domains',
+    ],
+    idealFor: 'Python developers at any level, beginner to advanced',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '3,410 ratings',
-    duration: '8–12 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Advanced Python, OOP, Async IO, Automation & API Engineering',
     image: '/images/courses/python.jpg',
     logo: '/images/tech/python.png',
     slug: 'python-programming',
+    contactUrl: '/#contact',
   },
   {
     number: '03',
     name: 'Web & Full Stack Development',
-    shortTitle: 'Full Stack Web Bootcamp: React 19, Next.js, Node & Tailwind',
     category: 'Software Engineering',
-    tabs: ['All Programmes', 'Web & Full Stack', 'Software Engineering'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'Web & Full Stack'],
+    topics: [
+      'HTML and CSS',
+      'JavaScript',
+      'React.js',
+      'MongoDB',
+      'Full Stack Project Development',
+    ],
+    idealFor: 'Aspiring front-end & full stack developers',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '4,120 ratings',
-    duration: '10–14 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Full-stack development with modern React, Node.js and cloud deploy',
     image: '/images/courses/web.jpg',
     logo: '/images/tech/react.png',
     slug: 'web-full-stack-development',
+    contactUrl: '/#contact',
   },
   {
     number: '04',
     name: '.NET Development',
-    shortTitle: 'C# and .NET Enterprise Architecture: ASP.NET Core & Web APIs',
     category: 'Enterprise Engineering',
-    tabs: ['All Programmes', 'Java & Enterprise', 'Software Engineering'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', '.NET Development'],
+    topics: [
+      'C# Programming',
+      'ASP.NET Core',
+      'MVC Architecture',
+      'Web API Development',
+      'Entity Framework Core',
+      'SQL Server',
+      'Full Stack .NET Projects',
+    ],
+    idealFor: 'Developers targeting enterprise .NET roles',
     badge: 'Premium',
-    rating: 4.7,
+    rating: 4.8,
     ratingCount: '1,290 ratings',
-    duration: '10–12 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'High-throughput enterprise applications on Microsoft .NET stack',
     image: '/images/courses/dotnet.jpg',
     logo: '/images/tech/dotnet.png',
     slug: 'dotnet-development',
+    contactUrl: '/#contact',
   },
   {
     number: '05',
     name: 'Data Analytics & BI',
-    shortTitle: 'Data Analytics & Executive BI: Power BI, Advanced SQL & DAX',
     category: 'Data & Analytics',
-    tabs: ['All Programmes', 'Data Analytics & BI', 'Database Engineering'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'Data Analytics & BI'],
+    topics: [
+      'Advanced Excel',
+      'SQL & Database Concepts',
+      'Power BI Desktop',
+      'Data Modeling',
+      'Dashboard Design',
+      'Business Reporting Projects',
+      'Data Analytics using Python',
+      'Tableau',
+    ],
+    idealFor: 'Analysts & BI aspirants who love working with data',
     badge: 'Bestseller',
     rating: 4.8,
     ratingCount: '2,630 ratings',
-    duration: '8–10 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'ETL data pipelines, statistical modeling and executive BI dashboards',
     image: '/images/courses/analytics.jpg',
     logo: '/images/tech/powerbi.png',
     slug: 'data-analytics-bi',
+    contactUrl: '/#contact',
   },
   {
     number: '06',
     name: 'AI & Emerging Technologies',
-    shortTitle: 'The AI Engineer Track 2026: LLM Apps, Production RAG & Agents',
     category: 'AI & Emerging',
-    tabs: ['All Programmes', 'Artificial Intelligence (AI)', 'Python Programming'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'AI & Emerging', 'Python Programming'],
+    topics: [
+      'Generative AI',
+      'Prompt Engineering',
+      'Agentic AI + RAG',
+      'AI Application Development',
+      'N8N (Nodemation)',
+    ],
+    idealFor: 'Developers exploring applied AI & automation',
     badge: 'Premium',
     rating: 4.9,
     ratingCount: '5,210 ratings',
-    duration: '8–10 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Generative AI engineering, vector databases, LangChain and agentic AI',
     image: '/images/courses/ai.jpg',
     logo: '/images/tech/ai.png',
     slug: 'ai-emerging-technologies',
+    contactUrl: '/#contact',
   },
   {
     number: '07',
     name: 'Database & Backend Technologies',
-    shortTitle: 'Database Architecture Mastery: PostgreSQL, MongoDB & Indexing',
     category: 'Backend & Data',
-    tabs: ['All Programmes', 'Database Engineering', 'Data Analytics & BI'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Lab Track',
+    tabs: ['All Programs', 'Database & Backend', 'Data Analytics & BI'],
+    topics: [
+      'SQL',
+      'MongoDB',
+      'Database Design',
+      'Joins, Subqueries & Stored Procedures',
+    ],
+    idealFor: 'Backend & database-focused learners',
+    badge: 'Specialization',
     rating: 4.7,
     ratingCount: '1,540 ratings',
-    duration: '8–10 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'High-throughput relational schema design, NoSQL storage and sharding',
     image: '/images/courses/database.jpg',
     logo: '/images/tech/database.png',
     slug: 'database-backend-technologies',
+    contactUrl: '/#contact',
   },
   {
     number: '08',
     name: 'Programming Fundamentals',
-    shortTitle: 'Computer Science Fundamentals: C, C++, Data Structures & STL',
     category: 'Core Programming',
-    tabs: ['All Programmes', 'Python Programming', 'Core Programming'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Bestseller',
+    tabs: ['All Programs', 'Programming Fundamentals'],
+    topics: [
+      'C and C++',
+      'C# Programming',
+      'Data Structures & Algorithms',
+      'Object-Oriented Programming',
+      'Problem Solving & Coding Practice',
+    ],
+    idealFor: 'Beginners starting their programming journey',
+    badge: 'Foundation',
     rating: 4.8,
     ratingCount: '3,870 ratings',
-    duration: '8–10 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Algorithmic thinking, pointer memory models and fundamental data structures',
     image: '/images/courses/cpp.jpg',
     logo: '/images/tech/cpp.png',
     slug: 'programming-fundamentals',
+    contactUrl: '/#contact',
   },
   {
     number: '09',
     name: 'Aptitude & Placement Training',
-    shortTitle: 'Campus Placement Bootcamp: Quantitative, Logic & HR Mock',
     category: 'Placement & Career',
-    tabs: ['All Programmes', 'Campus Placement'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
+    tabs: ['All Programs', 'Aptitude & Placement'],
+    topics: [
+      'Quantitative Aptitude',
+      'Verbal Ability & English',
+      'Logical & Non-Verbal Reasoning',
+      'Puzzles & Analytical Thinking',
+      'Tabulation, DI & Charts',
+      'Company-Specific Prep',
+      'GD & Interview Skills',
+    ],
+    idealFor: 'Final-year students & graduates preparing for placements',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '6,450 ratings',
-    duration: '6–8 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Company-specific aptitude patterns, group discussions and interview simulations',
     image: '/images/courses/aptitude.jpg',
     logo: '/images/tech/aptitude.png',
     slug: 'aptitude-placement-training',
+    contactUrl: '/#contact',
   },
   {
     number: '10',
     name: 'Digital Marketing',
-    shortTitle: 'Technical Digital Marketing: SEO, Google Tag Manager & Funnels',
     category: 'Digital & Growth',
-    tabs: ['All Programmes', 'Digital Marketing'],
-    instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Lab Track',
+    tabs: ['All Programs', 'Digital Marketing'],
+    topics: [
+      'SEO (Search Engine Optimization)',
+      'Google Tag Manager (GTM)',
+    ],
+    idealFor: 'Marketers, business owners & career switchers',
+    badge: 'Specialization',
     rating: 4.7,
     ratingCount: '1,180 ratings',
-    duration: '6–8 Weeks',
-    mode: 'Live Lab & Mentor Evaluation',
-    tagline: 'Data-driven performance marketing, conversion tracking and organic SEO',
     image: '/images/courses/marketing.jpg',
     logo: '/images/tech/marketing.png',
     slug: 'digital-marketing',
+    contactUrl: '/#contact',
   },
 ];
 
-export const TOPIC_TABS = [
-  'All Programmes',
-  'Artificial Intelligence (AI)',
+export const PROGRAM_TABS = [
+  'All Programs',
+  'Java Programming',
   'Python Programming',
   'Web & Full Stack',
-  'Java & Enterprise',
+  'AI & Emerging',
   'Data Analytics & BI',
-  'Database Engineering',
-  'Campus Placement',
+  '.NET Development',
+  'Database & Backend',
+  'Programming Fundamentals',
+  'Aptitude & Placement',
   'Digital Marketing',
 ] as const;
 
 export default function ProgramsSection() {
   const { openModal } = useAdvisorModal();
-  const [selectedTab, setSelectedTab] = useState<string>('All Programmes');
+  const [selectedTab, setSelectedTab] = useState<string>('All Programs');
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
   // Filter courses based on active tab
-  const filteredCourses = selectedTab === 'All Programmes'
-    ? UDEMY_COURSES
-    : UDEMY_COURSES.filter((c) => c.tabs.includes(selectedTab));
+  const filteredCourses = selectedTab === 'All Programs'
+    ? COURSES_DATA
+    : COURSES_DATA.filter((c) => c.tabs.includes(selectedTab));
 
   // Update left/right floating arrow bounds
   const updateScrollBounds = useCallback(() => {
@@ -262,7 +321,7 @@ export default function ProgramsSection() {
   return (
     <section 
       id="programs" 
-      aria-labelledby="academic-curriculum-heading"
+      aria-labelledby="courses-programs-heading"
       className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200 overflow-x-clip select-none"
     >
       {/* Anchor for external routing */}
@@ -271,25 +330,38 @@ export default function ProgramsSection() {
       {/* Wide Container to fill screen comfortably */}
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         
-        {/* ── 1. HEADER: CLEAN EDITORIAL ON WHITE (UDEMY REFERENCE) ── */}
+        {/* ── 1. HEADER: EXACT USER CONTENT ON CLEAN WHITE ── */}
         <div className="max-w-4xl mb-7">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#0A3A7A]" />
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#0A3A7A]">
-              ACADEMIC CURRICULUM
+              Courses &amp; Programs
             </span>
           </div>
 
           <h2 
-            id="academic-curriculum-heading"
+            id="courses-programs-heading"
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1c1d1f] tracking-[-0.02em] leading-tight"
           >
-            Skills to transform your <span className="text-[#0A3A7A]">career and life</span>
+            Choose the right <span className="text-[#0A3A7A]">learning path.</span>
           </h2>
 
-          <p className="text-[#6a6f73] text-sm sm:text-base mt-2 font-normal leading-relaxed">
-            From critical programming foundations to production enterprise engineering, Skillthinker supports your professional development with lab projects and mentor evaluations.
+          <p className="text-[#6a6f73] text-sm sm:text-base mt-2.5 font-normal leading-relaxed">
+            Whether you&apos;re starting your career, upgrading your existing skills, or exploring a new professional direction, our programs are designed to provide a structured and engaging learning experience.
           </p>
+
+          {/* Program Value Propositions Strip */}
+          <div className="flex flex-wrap items-center gap-2 pt-4">
+            {PROGRAM_FEATURES.map((feature) => (
+              <span 
+                key={feature} 
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 bg-slate-100/90 border border-slate-200/80 px-2.5 py-1 rounded-full shadow-2xs"
+              >
+                <Check className="w-3 h-3 text-[#0A3A7A] shrink-0" />
+                <span>{feature}</span>
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* ── 2. HORIZONTAL TOPIC TABS (UDEMY EXACT STYLE ON WHITE) ── */}
@@ -299,7 +371,7 @@ export default function ProgramsSection() {
             aria-label="Course Topics"
             className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar -mx-2 px-2"
           >
-            {TOPIC_TABS.map((tab) => {
+            {PROGRAM_TABS.map((tab) => {
               const isActive = selectedTab === tab;
               return (
                 <button
@@ -359,19 +431,18 @@ export default function ProgramsSection() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {filteredCourses.map((course) => (
-              <Link
+              <div
                 key={course.number}
-                href={`/programs#${course.slug}`}
-                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start flex-[0_0_285px] sm:flex-[0_0_305px] lg:flex-[0_0_295px] xl:flex-[0_0_315px] 2xl:flex-[0_0_325px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
+                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start flex-[0_0_290px] sm:flex-[0_0_310px] lg:flex-[0_0_300px] xl:flex-[0_0_320px] 2xl:flex-[0_0_330px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
               >
                 <div>
                   {/* Video Thumbnail (Exact 16:9) */}
                   <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 border-b border-slate-100">
                     <Image
                       src={course.image}
-                      alt={`${course.name} thumbnail`}
+                      alt={`${course.name} preview thumbnail`}
                       fill
-                      sizes="(max-width: 640px) 285px, (max-width: 1024px) 305px, 325px"
+                      sizes="(max-width: 640px) 290px, (max-width: 1024px) 310px, 330px"
                       className="object-cover"
                     />
 
@@ -390,17 +461,22 @@ export default function ProgramsSection() {
                   {/* Course Details (Udemy Typography Rhythm on White) */}
                   <div className="p-4 pb-2">
                     {/* Course Headline Title */}
-                    <h3 className="text-sm sm:text-base font-bold text-[#1c1d1f] group-hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
-                      {course.shortTitle}
-                    </h3>
+                    <Link href={`/programs#${course.slug}`}>
+                      <h3 className="text-base font-bold text-[#1c1d1f] hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-1">
+                        {course.name}
+                      </h3>
+                    </Link>
 
-                    {/* Instructor / Lab Byline */}
-                    <p className="text-[12px] text-[#6a6f73] mt-1 truncate font-normal">
-                      {course.instructor}
-                    </p>
+                    {/* Ideal For Box (Exact User Copy) */}
+                    <div className="mt-2 p-2 rounded-md bg-slate-50 border border-slate-100 flex items-start gap-1.5">
+                      <UserCheck className="w-3.5 h-3.5 text-[#0A3A7A] shrink-0 mt-0.5" />
+                      <p className="text-[11px] text-slate-700 leading-tight">
+                        <strong className="text-slate-900 font-semibold">Ideal for:</strong> {course.idealFor}
+                      </p>
+                    </div>
 
                     {/* Udemy Rating & Badge Row */}
-                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                    <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
                       {course.badge === 'Bestseller' && (
                         <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#d1f2eb] text-[#005646]">
                           Bestseller
@@ -411,9 +487,14 @@ export default function ProgramsSection() {
                           Premium
                         </span>
                       )}
-                      {course.badge === 'Lab Track' && (
-                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#eceb98] text-[#3d3c0a]">
-                          Lab Track
+                      {course.badge === 'Foundation' && (
+                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#fef3c7] text-[#92400e]">
+                          Foundation
+                        </span>
+                      )}
+                      {course.badge === 'Specialization' && (
+                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#e0e7ff] text-[#3730a3]">
+                          Specialization
                         </span>
                       )}
 
@@ -427,32 +508,47 @@ export default function ProgramsSection() {
                       </span>
                     </div>
 
-                    {/* Meaningful One-Line Tagline Description */}
-                    <p className="text-xs text-[#6a6f73] mt-2 line-clamp-2 leading-relaxed font-normal">
-                      {course.tagline}
-                    </p>
+                    {/* Exact Syllabus Modules Preview */}
+                    <div className="mt-3">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Core Syllabus Modules
+                      </div>
+                      <div className="flex flex-wrap gap-1 max-h-[4.2rem] overflow-hidden">
+                        {course.topics.slice(0, 5).map((topic) => (
+                          <span 
+                            key={topic} 
+                            className="text-[10px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded line-clamp-1"
+                          >
+                            {topic}
+                          </span>
+                        ))}
+                        {course.topics.length > 5 && (
+                          <span className="text-[10px] font-semibold text-[#0A3A7A] bg-blue-50 px-1.5 py-0.5 rounded">
+                            +{course.topics.length - 5} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Footer: Metadata on Left, Udemy Outline Button on Right */}
+                {/* Footer: Certification on Left, Exact User CTA on Right */}
                 <div className="p-4 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between gap-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-[#1c1d1f]">
-                      {course.duration}
-                    </span>
-                    <span className="text-[11px] text-[#6a6f73] flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      Lab Certified
-                    </span>
+                  <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Certification</span>
                   </div>
 
-                  {/* Clean Human-Crafted Outline Button (Udemy "Add to cart" style) */}
-                  <div className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] group-hover:bg-[#0A3A7A] group-hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap">
-                    <span>Explore Track</span>
+                  {/* Clean Human-Crafted Outline Button (Exact User CTA: Ask about this course →) */}
+                  <Link
+                    href={course.contactUrl}
+                    className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] hover:bg-[#0A3A7A] hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                  >
+                    <span>Ask about this course</span>
                     <ArrowRight className="w-3 h-3" />
-                  </div>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
@@ -464,7 +560,7 @@ export default function ProgramsSection() {
             href="/programs"
             className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0A3A7A] hover:text-[#06284F] hover:underline transition-colors group"
           >
-            <span>Show all {selectedTab === 'All Programmes' ? 'academic' : selectedTab} courses</span>
+            <span>Show all {selectedTab === 'All Programs' ? 'courses & programs' : selectedTab}</span>
             <ArrowRight className="w-4 h-4 text-[#0A3A7A] transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
