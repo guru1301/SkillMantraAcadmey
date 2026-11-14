@@ -78,28 +78,30 @@ export default function HeroSection() {
           </div>
 
           {/* Directly below Talk to an Advisor: The 3 Metrics */}
-          <div className="pt-8 border-t border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-2xl">
-            <div className="flex items-center gap-3.5">
-              <div className="text-3xl font-black text-[#FCAF0A] font-mono shrink-0">10</div>
-              <div className="text-xs sm:text-sm font-semibold text-white/90 leading-snug">
+          <div className="pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-3xl">
+            <div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#FCAF0A] tracking-tight">
+                10
+              </div>
+              <div className="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium leading-snug">
                 Industry-relevant programs
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="text-2xl font-black text-white font-sans tracking-tight shrink-0 whitespace-nowrap">
+            <div className="border-t sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-8">
+              <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Hands-On
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-white/90 leading-snug">
+              <div className="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium leading-snug">
                 Projects &amp; real-world learning
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="text-2xl font-black text-[#FCAF0A] font-sans tracking-tight shrink-0 whitespace-nowrap">
+            <div className="border-t sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-8">
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#FCAF0A] tracking-tight">
                 Certified
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-white/90 leading-snug">
+              <div className="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium leading-snug">
                 Certification on completion
               </div>
             </div>
