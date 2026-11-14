@@ -63,7 +63,8 @@ export default function ProgramsDiscoverySection() {
           {filteredPrograms.map((program) => (
             <div
               key={program.id}
-              className="academic-card p-6 flex flex-col justify-between bg-white group hover:shadow-md"
+              id={program.slug}
+              className="scroll-mt-24 academic-card p-6 flex flex-col justify-between bg-white group hover:shadow-md"
             >
               <div>
                 {/* Meta Badges */}
