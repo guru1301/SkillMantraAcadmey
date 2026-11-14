@@ -4,7 +4,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight, ChevronDown, MessageCircle, ShieldCheck, LogIn, Sparkles, BookOpen } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  ArrowRight, 
+  ChevronDown, 
+  MessageCircle, 
+  ShieldCheck, 
+  LogIn, 
+  Sparkles, 
+  BookOpen,
+  Home,
+  Info,
+  Award,
+  Phone
+} from 'lucide-react';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 
@@ -50,10 +64,10 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: 'About', href: '/#about' },
-    { label: 'Why Us', href: '/#why-skillthinker' },
-    { label: 'Certifications', href: '/#certifications' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'About', href: '/#about', icon: Info },
+    { label: 'Why Us', href: '/#why-skillthinker', icon: Sparkles },
+    { label: 'Certifications', href: '/#certifications', icon: Award },
+    { label: 'Contact', href: '/#contact', icon: Phone },
   ];
 
   return (
@@ -86,9 +100,10 @@ export default function Header() {
             <nav className="hidden lg:flex items-center gap-1.5">
               <Link
                 href="/"
-                className="px-3.5 py-2 text-sm font-semibold text-white/85 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
               >
-                Home
+                <Home className="w-4 h-4 text-[#FCAF0A]" />
+                <span>Home</span>
               </Link>
 
               {/* Programs Mega-Menu Dropdown */}
@@ -167,15 +182,19 @@ export default function Header() {
                 )}
               </div>
 
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="px-3.5 py-2 text-sm font-semibold text-white/85 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+                  >
+                    <IconComponent className="w-4 h-4 text-[#FCAF0A]" />
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Right Action Terminal */}
@@ -242,27 +261,33 @@ export default function Header() {
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+                className="flex items-center gap-2.5 py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
               >
-                Home
+                <Home className="w-4 h-4 text-[#FCAF0A]" />
+                <span>Home</span>
               </Link>
               <Link
                 href="/#programs"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 px-4 rounded-xl text-sm font-bold text-[#FCAF0A] bg-white/[0.06]"
+                className="flex items-center gap-2.5 py-3 px-4 rounded-xl text-sm font-bold text-[#FCAF0A] bg-white/[0.06]"
               >
-                All 10 Programs
+                <BookOpen className="w-4 h-4 text-[#FCAF0A]" />
+                <span>All 10 Programs</span>
               </Link>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+                  >
+                    <IconComponent className="w-4 h-4 text-[#FCAF0A]" />
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="pt-4 border-t border-white/10 space-y-3">
