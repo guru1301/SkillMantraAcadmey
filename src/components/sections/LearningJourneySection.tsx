@@ -33,7 +33,7 @@ export default function LearningJourneySection() {
             {LEARNING_JOURNEY.map((step, i) => (
               <div
                 key={step.step}
-                className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-blue-300 hover:shadow-md transition-all group hover:-translate-y-1"
+                className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors group"
               >
                 {/* Step badge */}
                 <div className="w-14 h-14 rounded-2xl bg-[#06284F] text-[#FCAF0A] font-mono font-black text-xl flex items-center justify-center mb-5 shadow-xs group-hover:bg-[#0A3A7A] transition-colors">

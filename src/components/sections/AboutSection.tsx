@@ -60,7 +60,7 @@ export default function AboutSection() {
                 alt="Skillthinker technical laboratory, Anna Nagar, Trichy"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none" />

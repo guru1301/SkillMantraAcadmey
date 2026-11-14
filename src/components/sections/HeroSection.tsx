@@ -18,7 +18,7 @@ export default function HeroSection() {
           alt="Skillthinker Solutions live training classroom — Anna Nagar, Trichy"
           fill
           priority
-          className="object-cover object-center brightness-75 scale-105"
+          className="object-cover object-center brightness-75"
           sizes="100vw"
         />
         {/* Cinematic atmospheric overlays */}

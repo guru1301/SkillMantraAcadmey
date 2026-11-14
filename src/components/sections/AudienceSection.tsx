@@ -2,45 +2,29 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, GraduationCap, Briefcase, Rocket, UserCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, GraduationCap, Briefcase, Rocket, UserCheck } from 'lucide-react';
 import { TARGET_AUDIENCES } from '@/data/siteData';
 
 const AUDIENCE_CONFIG = [
   {
     icon: GraduationCap,
     badge: 'College & Degree Students',
-    cardBg: 'bg-amber-50/40 hover:bg-white',
-    accentBorder: 'border-amber-200/80 hover:border-amber-400',
-    iconBg: 'bg-amber-100 text-amber-800',
     highlight: 'Foundation & Hands-On Code',
-    linkText: 'text-amber-800 hover:text-amber-900',
   },
   {
     icon: UserCheck,
     badge: 'Graduates & Job Seekers',
-    cardBg: 'bg-blue-50/40 hover:bg-white',
-    accentBorder: 'border-blue-200/80 hover:border-blue-400',
-    iconBg: 'bg-blue-100 text-[#0A3A7A]',
     highlight: 'Aptitude, GD & Technical Mock Interviews',
-    linkText: 'text-[#0A3A7A] hover:text-[#06284F]',
   },
   {
     icon: Briefcase,
     badge: 'Working Professionals',
-    cardBg: 'bg-emerald-50/40 hover:bg-white',
-    accentBorder: 'border-emerald-200/80 hover:border-emerald-400',
-    iconBg: 'bg-emerald-100 text-emerald-800',
     highlight: 'Weekend Batches & Domain Transitions',
-    linkText: 'text-emerald-800 hover:text-emerald-900',
   },
   {
     icon: Rocket,
     badge: 'Founders & Innovators',
-    cardBg: 'bg-purple-50/40 hover:bg-white',
-    accentBorder: 'border-purple-200/80 hover:border-purple-400',
-    iconBg: 'bg-purple-100 text-purple-800',
     highlight: 'Full-Stack Execution & Digital Growth',
-    linkText: 'text-purple-800 hover:text-purple-900',
   },
 ];
 
@@ -62,7 +46,7 @@ export default function AudienceSection() {
           </p>
         </div>
 
-        {/* 2×2 High-Density Bento Grid */}
+        {/* 2×2 Structured Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {TARGET_AUDIENCES.map((aud, i) => {
             const config = AUDIENCE_CONFIG[i % AUDIENCE_CONFIG.length];
@@ -71,11 +55,11 @@ export default function AudienceSection() {
             return (
               <div
                 key={aud.id}
-                className={`p-7 sm:p-8 rounded-2xl ${config.cardBg} border ${config.accentBorder} transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between group`}
+                className="p-7 sm:p-8 rounded-2xl bg-slate-50/70 hover:bg-white border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 flex flex-col justify-between group shadow-xs"
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white border border-slate-200 shadow-2xs text-slate-700">
+                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md bg-white border border-slate-200 text-slate-700 shadow-2xs">
                       {config.badge}
                     </span>
                     <span className="text-xs font-mono font-bold text-slate-400">
@@ -84,7 +68,7 @@ export default function AudienceSection() {
                   </div>
 
                   <div className="flex items-start gap-4 mb-3">
-                    <div className={`w-12 h-12 rounded-xl ${config.iconBg} flex items-center justify-center shrink-0 shadow-2xs`}>
+                    <div className="w-12 h-12 rounded-xl bg-[#06284F]/5 text-[#06284F] border border-[#06284F]/10 flex items-center justify-center shrink-0">
                       <IconComponent className="w-6 h-6" />
                     </div>
                     <div>
@@ -108,7 +92,7 @@ export default function AudienceSection() {
                   </span>
                   <Link
                     href="/#programs"
-                    className={`inline-flex items-center gap-1.5 text-xs font-bold ${config.linkText} group-hover:translate-x-1 transition-all`}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0A3A7A] hover:text-[#06284F] transition-colors"
                   >
                     <span>View Recommended Tracks</span>
                     <ArrowRight className="w-3.5 h-3.5" />

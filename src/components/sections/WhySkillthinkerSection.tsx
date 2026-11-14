@@ -168,8 +168,8 @@ export default function WhySkillthinkerSection() {
                     aria-selected={isActive}
                     role="tab"
                   >
-                    {/* Clean Outline Icon (No Box/Circle Background) */}
-                    <div className="mb-3 transition-transform duration-200 group-hover:-translate-y-1">
+                    {/* Clean Outline Icon */}
+                    <div className="mb-3">
                       <Icon
                         strokeWidth={1.6}
                         className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors duration-200 ${
@@ -303,7 +303,7 @@ export default function WhySkillthinkerSection() {
                           alt={pillar.headline}
                           fill
                           sizes="(max-width: 1024px) 100vw, 40vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          className="object-cover"
                           priority={idx === 0}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
