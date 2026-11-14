@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ChevronLeft, ChevronRight, Star, HelpCircle, CheckCircle2, Check, UserCheck } from 'lucide-react';
+import { ArrowRight, Star, HelpCircle, CheckCircle2, Check, UserCheck } from 'lucide-react';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 
 export interface CourseProgram {
   number: string;
   name: string;
   category: string;
-  tabs: string[];
   topics: string[];
   idealFor: string;
   badge: 'Bestseller' | 'Premium' | 'Foundation' | 'Specialization';
@@ -37,7 +36,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '01',
     name: 'Java Programming',
     category: 'Enterprise Engineering',
-    tabs: ['All Programs', 'Java Programming', 'Database & Backend'],
     topics: [
       'Java Fundamentals',
       'Methods & Recursion',
@@ -63,7 +61,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '02',
     name: 'Python Programming',
     category: 'Core Programming',
-    tabs: ['All Programs', 'Python Programming', 'Programming Fundamentals'],
     topics: [
       'Python Fundamentals',
       'Python Data Model & Metaprogramming',
@@ -85,7 +82,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '03',
     name: 'Web & Full Stack Development',
     category: 'Software Engineering',
-    tabs: ['All Programs', 'Web & Full Stack'],
     topics: [
       'HTML and CSS',
       'JavaScript',
@@ -106,7 +102,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '04',
     name: '.NET Development',
     category: 'Enterprise Engineering',
-    tabs: ['All Programs', '.NET Development'],
     topics: [
       'C# Programming',
       'ASP.NET Core',
@@ -129,7 +124,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '05',
     name: 'Data Analytics & BI',
     category: 'Data & Analytics',
-    tabs: ['All Programs', 'Data Analytics & BI'],
     topics: [
       'Advanced Excel',
       'SQL & Database Concepts',
@@ -153,7 +147,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '06',
     name: 'AI & Emerging Technologies',
     category: 'AI & Emerging',
-    tabs: ['All Programs', 'AI & Emerging', 'Python Programming'],
     topics: [
       'Generative AI',
       'Prompt Engineering',
@@ -174,7 +167,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '07',
     name: 'Database & Backend Technologies',
     category: 'Backend & Data',
-    tabs: ['All Programs', 'Database & Backend', 'Data Analytics & BI'],
     topics: [
       'SQL',
       'MongoDB',
@@ -194,7 +186,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '08',
     name: 'Programming Fundamentals',
     category: 'Core Programming',
-    tabs: ['All Programs', 'Programming Fundamentals'],
     topics: [
       'C and C++',
       'C# Programming',
@@ -215,7 +206,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '09',
     name: 'Aptitude & Placement Training',
     category: 'Placement & Career',
-    tabs: ['All Programs', 'Aptitude & Placement'],
     topics: [
       'Quantitative Aptitude',
       'Verbal Ability & English',
@@ -238,7 +228,6 @@ export const COURSES_DATA: CourseProgram[] = [
     number: '10',
     name: 'Digital Marketing',
     category: 'Digital & Growth',
-    tabs: ['All Programs', 'Digital Marketing'],
     topics: [
       'SEO (Search Engine Optimization)',
       'Google Tag Manager (GTM)',
@@ -254,84 +243,23 @@ export const COURSES_DATA: CourseProgram[] = [
   },
 ];
 
-export const PROGRAM_TABS = [
-  'All Programs',
-  'Java Programming',
-  'Python Programming',
-  'Web & Full Stack',
-  'AI & Emerging',
-  'Data Analytics & BI',
-  '.NET Development',
-  'Database & Backend',
-  'Programming Fundamentals',
-  'Aptitude & Placement',
-  'Digital Marketing',
-] as const;
-
 export default function ProgramsSection() {
   const { openModal } = useAdvisorModal();
-  const [selectedTab, setSelectedTab] = useState<string>('All Programs');
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  // Filter courses based on active tab
-  const filteredCourses = selectedTab === 'All Programs'
-    ? COURSES_DATA
-    : COURSES_DATA.filter((c) => c.tabs.includes(selectedTab));
-
-  // Update left/right floating arrow bounds
-  const updateScrollBounds = useCallback(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 15);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 15);
-  }, []);
-
-  useEffect(() => {
-    updateScrollBounds();
-    const el = carouselRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', updateScrollBounds, { passive: true });
-    window.addEventListener('resize', updateScrollBounds);
-    return () => {
-      el.removeEventListener('scroll', updateScrollBounds);
-      window.removeEventListener('resize', updateScrollBounds);
-    };
-  }, [updateScrollBounds, filteredCourses]);
-
-  const handleTabSelect = (tab: string) => {
-    setSelectedTab(tab);
-    if (carouselRef.current) {
-      carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleScroll = (direction: 'left' | 'right') => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const scrollAmount = el.clientWidth * 0.75;
-    el.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth',
-    });
-  };
 
   return (
     <section 
       id="programs" 
       aria-labelledby="courses-programs-heading"
-      className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200 overflow-x-clip select-none"
+      className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200"
     >
       {/* Anchor for external routing */}
       <div id="courses" className="absolute -top-20 left-0 pointer-events-none" />
 
-      {/* Wide Container to fill screen comfortably */}
+      {/* Main Container */}
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         
-        {/* ── 1. HEADER: EXACT USER CONTENT ON CLEAN WHITE ── */}
-        <div className="max-w-4xl mb-7">
+        {/* ── 1. HEADER: EXACT USER COPY ON CLEAN WHITE ── */}
+        <div className="max-w-4xl mb-10 sm:mb-12">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#0A3A7A]" />
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#0A3A7A]">
@@ -364,215 +292,142 @@ export default function ProgramsSection() {
           </div>
         </div>
 
-        {/* ── 2. HORIZONTAL TOPIC TABS (UDEMY EXACT STYLE ON WHITE) ── */}
-        <div className="border-b border-slate-200 mb-6">
-          <div 
-            role="tablist"
-            aria-label="Course Topics"
-            className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar -mx-2 px-2"
-          >
-            {PROGRAM_TABS.map((tab) => {
-              const isActive = selectedTab === tab;
-              return (
-                <button
-                  key={tab}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => handleTabSelect(tab)}
-                  className={`text-sm pb-3 whitespace-nowrap transition-colors relative cursor-pointer focus-visible:outline-none ${
-                    isActive
-                      ? 'text-[#1c1d1f] font-bold'
-                      : 'text-[#6a6f73] hover:text-[#1c1d1f] font-semibold'
-                  }`}
-                >
-                  <span>{tab}</span>
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1c1d1f] rounded-full" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        {/* ── 2. CLEAN DIRECT COURSE GRID (NO SLIDER, NO CLIPPING, ZERO REDUNDANCY) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {COURSES_DATA.map((course) => (
+            <div
+              key={course.number}
+              className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
+            >
+              <div>
+                {/* 16:9 Thumbnail with Official Tech Logo */}
+                <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 border-b border-slate-100">
+                  <Image
+                    src={course.image}
+                    alt={`${course.name} preview thumbnail`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover"
+                  />
 
-        {/* ── 3. FOUR-CARD CAROUSEL WITH UDEMY FLOATING ARROWS ── */}
-        <div className="relative group/carousel">
-          
-          {/* Left Floating Circular Navigation Arrow */}
-          <button
-            type="button"
-            onClick={() => handleScroll('left')}
-            disabled={!canScrollLeft}
-            aria-label="Previous courses"
-            className={`absolute left-0 sm:-left-3 lg:-left-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
-              canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <ChevronLeft className="w-5 h-5 text-slate-800" />
-          </button>
-
-          {/* Right Floating Circular Navigation Arrow */}
-          <button
-            type="button"
-            onClick={() => handleScroll('right')}
-            disabled={!canScrollRight}
-            aria-label="Next courses"
-            className={`absolute right-0 sm:-right-3 lg:-right-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
-              canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <ChevronRight className="w-5 h-5 text-slate-800" />
-          </button>
-
-          {/* Carousel Track (Fills 4 cards wide on desktop with generous edge padding so no card is cut off) */}
-          <div 
-            ref={carouselRef}
-            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar px-2 sm:px-4 lg:px-6 py-4 -mx-2 sm:-mx-4 lg:-mx-6 scroll-px-2 sm:scroll-px-4 lg:scroll-px-6"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {filteredCourses.map((course) => (
-              <div
-                key={course.number}
-                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start flex-[0_0_290px] sm:flex-[0_0_310px] lg:flex-[0_0_300px] xl:flex-[0_0_320px] 2xl:flex-[0_0_330px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
-              >
-                <div>
-                  {/* Video Thumbnail (Exact 16:9) */}
-                  <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 border-b border-slate-100">
-                    <Image
-                      src={course.image}
-                      alt={`${course.name} preview thumbnail`}
-                      fill
-                      sizes="(max-width: 640px) 290px, (max-width: 1024px) 310px, 330px"
-                      className="object-cover"
-                    />
-
-                    {/* Official Tech Logo Pin */}
-                    <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-md bg-white/95 border border-slate-200 flex items-center justify-center p-1 shadow-2xs backdrop-blur-xs">
-                      <Image
-                        src={course.logo}
-                        alt=""
-                        width={20}
-                        height={20}
-                        className="w-5 h-5 object-contain"
-                      />
-                    </div>
+                  {/* Number & Category Pill */}
+                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-white/95 border border-slate-200 backdrop-blur-xs flex items-center gap-1.5 shadow-2xs">
+                    <span className="font-mono text-[10px] font-bold text-[#0A3A7A]">
+                      {course.number}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">
+                      {course.category}
+                    </span>
                   </div>
 
-                  {/* Course Details (Udemy Typography Rhythm on White) */}
-                  <div className="p-4 pb-2">
-                    {/* Course Headline Title */}
-                    <Link href={`/programs#${course.slug}`}>
-                      <h3 className="text-base font-bold text-[#1c1d1f] hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-1">
-                        {course.name}
-                      </h3>
-                    </Link>
-
-                    {/* Ideal For Box (Exact User Copy) */}
-                    <div className="mt-2 p-2 rounded-md bg-slate-50 border border-slate-100 flex items-start gap-1.5">
-                      <UserCheck className="w-3.5 h-3.5 text-[#0A3A7A] shrink-0 mt-0.5" />
-                      <p className="text-[11px] text-slate-700 leading-tight">
-                        <strong className="text-slate-900 font-semibold">Ideal for:</strong> {course.idealFor}
-                      </p>
-                    </div>
-
-                    {/* Udemy Rating & Badge Row */}
-                    <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
-                      {course.badge === 'Bestseller' && (
-                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#d1f2eb] text-[#005646]">
-                          Bestseller
-                        </span>
-                      )}
-                      {course.badge === 'Premium' && (
-                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#401b9c] text-white">
-                          Premium
-                        </span>
-                      )}
-                      {course.badge === 'Foundation' && (
-                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#fef3c7] text-[#92400e]">
-                          Foundation
-                        </span>
-                      )}
-                      {course.badge === 'Specialization' && (
-                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#e0e7ff] text-[#3730a3]">
-                          Specialization
-                        </span>
-                      )}
-
-                      <div className="flex items-center gap-1 text-xs font-bold text-[#b4690e]">
-                        <Star className="w-3.5 h-3.5 fill-[#b4690e] text-[#b4690e]" />
-                        <span>{course.rating.toFixed(1)}</span>
-                      </div>
-
-                      <span className="text-[11px] text-[#6a6f73]">
-                        ({course.ratingCount})
-                      </span>
-                    </div>
-
-                    {/* Exact Syllabus Modules Preview */}
-                    <div className="mt-3">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                        Core Syllabus Modules
-                      </div>
-                      <div className="flex flex-wrap gap-1 max-h-[4.2rem] overflow-hidden">
-                        {course.topics.slice(0, 5).map((topic) => (
-                          <span 
-                            key={topic} 
-                            className="text-[10px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded line-clamp-1"
-                          >
-                            {topic}
-                          </span>
-                        ))}
-                        {course.topics.length > 5 && (
-                          <span className="text-[10px] font-semibold text-[#0A3A7A] bg-blue-50 px-1.5 py-0.5 rounded">
-                            +{course.topics.length - 5} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                  {/* Official Tech Logo Pin */}
+                  <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-md bg-white/95 border border-slate-200 flex items-center justify-center p-1 shadow-2xs backdrop-blur-xs">
+                    <Image
+                      src={course.logo}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 object-contain"
+                    />
                   </div>
                 </div>
 
-                {/* Footer: Certification on Left, Exact User CTA on Right */}
-                <div className="p-4 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Certification</span>
+                {/* Course Details */}
+                <div className="p-4 sm:p-5 pb-3">
+                  {/* Course Headline Title */}
+                  <Link href={`/programs#${course.slug}`}>
+                    <h3 className="text-lg font-bold text-[#1c1d1f] hover:text-[#0A3A7A] transition-colors leading-snug">
+                      {course.name}
+                    </h3>
+                  </Link>
+
+                  {/* Ideal For Box */}
+                  <div className="mt-2.5 p-2.5 rounded-md bg-slate-50 border border-slate-100 flex items-start gap-2">
+                    <UserCheck className="w-3.5 h-3.5 text-[#0A3A7A] shrink-0 mt-0.5" />
+                    <p className="text-xs text-slate-700 leading-snug">
+                      <strong className="text-slate-900 font-semibold">Ideal for:</strong> {course.idealFor}
+                    </p>
                   </div>
 
-                  {/* Clean Human-Crafted Outline Button (Exact User CTA: Ask about this course →) */}
-                  <Link
-                    href={course.contactUrl}
-                    className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] hover:bg-[#0A3A7A] hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap"
-                  >
-                    <span>Ask about this course</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
+                  {/* Rating & Badge Row */}
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    {course.badge === 'Bestseller' && (
+                      <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#d1f2eb] text-[#005646]">
+                        Bestseller
+                      </span>
+                    )}
+                    {course.badge === 'Premium' && (
+                      <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#401b9c] text-white">
+                        Premium
+                      </span>
+                    )}
+                    {course.badge === 'Foundation' && (
+                      <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#fef3c7] text-[#92400e]">
+                        Foundation
+                      </span>
+                    )}
+                    {course.badge === 'Specialization' && (
+                      <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#e0e7ff] text-[#3730a3]">
+                        Specialization
+                      </span>
+                    )}
+
+                    <div className="flex items-center gap-1 text-xs font-bold text-[#b4690e]">
+                      <Star className="w-3.5 h-3.5 fill-[#b4690e] text-[#b4690e]" />
+                      <span>{course.rating.toFixed(1)}</span>
+                    </div>
+
+                    <span className="text-xs text-[#6a6f73]">
+                      ({course.ratingCount})
+                    </span>
+                  </div>
+
+                  {/* Core Syllabus Modules */}
+                  <div className="mt-3.5">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                      Core Syllabus Modules
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {course.topics.map((topic) => (
+                        <span 
+                          key={topic} 
+                          className="text-xs font-medium text-slate-700 bg-slate-100 border border-slate-200/60 px-2 py-0.5 rounded-md"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
 
+              {/* Footer: Certification & Direct Ask CTA */}
+              <div className="p-4 sm:p-5 pt-3.5 border-t border-slate-100 mt-auto flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Certification</span>
+                </div>
+
+                <Link
+                  href={course.contactUrl}
+                  className="py-2 px-3.5 rounded-md border border-[#0A3A7A] text-[#0A3A7A] hover:bg-[#0A3A7A] hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                >
+                  <span>Ask about this course</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* ── 4. EXPLORE ALL PROGRAMMES (UDEMY BOTTOM CTA LINK) ── */}
-        <div className="mt-7">
-          <Link
-            href="/programs"
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0A3A7A] hover:text-[#06284F] hover:underline transition-colors group"
-          >
-            <span>Show all {selectedTab === 'All Programs' ? 'courses & programs' : selectedTab}</span>
-            <ArrowRight className="w-4 h-4 text-[#0A3A7A] transform group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        {/* ── 5. ADVISORY BANNER: CLEAN LIGHT SURFACE ── */}
-        <div className="mt-10 sm:mt-12 p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xs">
+        {/* ── 3. ADVISORY BANNER: CLEAN LIGHT SURFACE ── */}
+        <div className="mt-12 sm:mt-16 p-6 sm:p-8 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xs">
           <div className="flex items-start sm:items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0A3A7A] shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0A3A7A] shrink-0">
               <HelpCircle className="w-5 h-5 text-[#0A3A7A]" />
             </div>
             <div>
-              <div className="text-sm sm:text-base font-bold text-slate-900">
+              <div className="text-base font-bold text-slate-900">
                 Unsure which program fits your background?
               </div>
               <div className="text-xs sm:text-sm text-slate-600 font-normal mt-0.5">
