@@ -50,16 +50,14 @@ export default function AudienceSection() {
       <div className="container-custom">
         
         {/* Header */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#FCAF0A]" />
-            <span>Target Profiles</span>
+        <div className="max-w-3xl mb-12">
+          <div className="text-xs font-bold tracking-[0.18em] uppercase text-[#0A3A7A] mb-3">
+            Target Profiles
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-[1.12]">
             Training built around <span className="text-[#0A3A7A]">where you&apos;re starting from.</span>
           </h2>
-          <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
-          <p className="text-slate-600 text-base mt-4 max-w-2xl font-normal leading-relaxed">
+          <p className="text-slate-600 text-base mt-3 max-w-2xl font-normal leading-relaxed">
             Whether preparing for your first campus placement or switching tech stacks after five years in industry, our modular learning pathways adapt to your level.
           </p>
         </div>

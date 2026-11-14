@@ -41,16 +41,14 @@ export default function ProgramsSection() {
       <div className="container-custom">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#0A3A7A] text-xs font-semibold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#FCAF0A]" />
-            <span>Academic Curriculum</span>
+        <div className="max-w-3xl mb-10">
+          <div className="text-xs font-bold tracking-[0.18em] uppercase text-[#0A3A7A] mb-3">
+            Academic Curriculum
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-[1.12]">
             Choose the right <span className="text-[#0A3A7A]">learning path.</span>
           </h2>
-          <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
-          <p className="text-slate-600 text-base mt-4 max-w-2xl font-normal leading-relaxed">
+          <p className="text-slate-600 text-base mt-3 max-w-2xl font-normal leading-relaxed">
             10 specialized technical curricula structured from absolute fundamentals to production execution. Every track includes real lab projects, mentor evaluations, and a verifiable digital credential.
           </p>
         </div>

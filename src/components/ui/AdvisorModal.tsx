@@ -165,9 +165,8 @@ function AdvisorModalDialog() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#FCAF0A]/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[#FCAF0A] text-xs font-bold uppercase tracking-widest mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Skillthinker Admissions Desk</span>
+            <div className="text-xs font-bold uppercase tracking-widest text-[#FCAF0A] mb-2">
+              Skillthinker Admissions Desk
             </div>
             <h3 id="advisor-modal-title" className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
               Talk to an Academic Advisor

@@ -93,14 +93,12 @@ function ContactFormContent() {
           {/* Left Column: Direct Contacts & Campus Information (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#0A3A7A] text-xs font-semibold uppercase tracking-wider mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-[#FCAF0A]" />
-                <span>Admissions Desk</span>
+              <div className="text-xs font-bold uppercase tracking-widest text-[#0A3A7A] mb-3">
+                Admissions &amp; Campus Desk
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
                 Ready to start your <span className="text-[#0A3A7A]">learning journey?</span>
               </h2>
-              <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
             </div>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">

@@ -46,14 +46,12 @@ export default function MentorshipSection() {
           {/* Right: Narrative & Trainer Standards (7 cols) */}
           <div className="lg:col-span-7 space-y-6 order-1 lg:order-2">
             <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#0A3A7A] text-xs font-semibold uppercase tracking-wider mb-4">
-                <Sparkles className="w-3.5 h-3.5 text-[#FCAF0A]" />
-                <span>Mentorship Ethos</span>
+              <div className="text-xs font-bold uppercase tracking-widest text-[#0A3A7A] mb-3">
+                Mentorship Ethos
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
                 Learn from people who <span className="text-[#0A3A7A]">guide your growth.</span>
               </h2>
-              <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
             </div>
 
             <p className="text-base text-slate-600 leading-relaxed font-normal">
