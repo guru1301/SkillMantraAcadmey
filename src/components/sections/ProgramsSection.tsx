@@ -254,8 +254,8 @@ export default function ProgramsSection() {
     const el = carouselRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 15);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 15);
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
   }, []);
 
   useEffect(() => {
@@ -273,7 +273,7 @@ export default function ProgramsSection() {
   const handleScroll = (direction: 'left' | 'right') => {
     const el = carouselRef.current;
     if (!el) return;
-    const scrollAmount = el.clientWidth * 0.75;
+    const scrollAmount = el.clientWidth * 0.8;
     el.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
@@ -284,7 +284,7 @@ export default function ProgramsSection() {
     <section 
       id="programs" 
       aria-labelledby="courses-programs-heading"
-      className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200 overflow-x-clip select-none"
+      className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200 select-none"
     >
       {/* Anchor for external routing */}
       <div id="courses" className="absolute -top-20 left-0 pointer-events-none" />
@@ -326,8 +326,8 @@ export default function ProgramsSection() {
           </div>
         </div>
 
-        {/* ── 2. FOUR-CARD CAROUSEL SCROLLER WITH FLOATING ARROWS (NO TOP CATEGORY TABS) ── */}
-        <div className="relative group/carousel">
+        {/* ── 2. CAROUSEL SCROLLER WITH PERFECT EDGE PADDING & NO CLIPPING ── */}
+        <div className="relative">
           
           {/* Left Floating Circular Navigation Arrow */}
           <button
@@ -335,7 +335,7 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('left')}
             disabled={!canScrollLeft}
             aria-label="Previous courses"
-            className={`absolute left-0 sm:-left-3 lg:-left-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
+            className={`absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-300 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 hover:scale-105 active:scale-95 ${
               canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
@@ -348,7 +348,7 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('right')}
             disabled={!canScrollRight}
             aria-label="Next courses"
-            className={`absolute right-0 sm:-right-3 lg:-right-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
+            className={`absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-300 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 hover:scale-105 active:scale-95 ${
               canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
@@ -358,13 +358,13 @@ export default function ProgramsSection() {
           {/* Smooth Horizontal Carousel Track with Full Edge Padding */}
           <div 
             ref={carouselRef}
-            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar px-2 sm:px-4 lg:px-6 py-4 -mx-2 sm:-mx-4 lg:-mx-6 scroll-px-2 sm:scroll-px-4 lg:scroll-px-6"
+            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar px-3 sm:px-4 lg:px-5 py-4 scroll-px-3 sm:scroll-px-4 lg:scroll-px-5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {COURSES_DATA.map((course) => (
               <div
                 key={course.number}
-                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start flex-[0_0_290px] sm:flex-[0_0_310px] lg:flex-[0_0_300px] xl:flex-[0_0_320px] 2xl:flex-[0_0_330px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
+                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start w-[285px] sm:w-[305px] lg:w-[calc((100%-3*1.5rem)/4)] min-w-[285px] shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
               >
                 <div>
                   {/* 16:9 Thumbnail with Official Tech Logo */}
@@ -373,7 +373,7 @@ export default function ProgramsSection() {
                       src={course.image}
                       alt={`${course.name} preview thumbnail`}
                       fill
-                      sizes="(max-width: 640px) 290px, (max-width: 1024px) 310px, 330px"
+                      sizes="(max-width: 640px) 285px, (max-width: 1024px) 305px, 320px"
                       className="object-cover"
                     />
 
@@ -399,11 +399,11 @@ export default function ProgramsSection() {
                     </div>
                   </div>
 
-                  {/* Course Details */}
-                  <div className="p-4 pb-2">
-                    {/* Course Headline Title */}
+                  {/* Course Details (No Title Clipping, No Module Slicing) */}
+                  <div className="p-4 sm:p-4.5 pb-2">
+                    {/* Course Headline Title (2 Lines, Never Truncated to 1 Line) */}
                     <Link href={`/programs#${course.slug}`}>
-                      <h3 className="text-base font-bold text-[#1c1d1f] hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-1">
+                      <h3 className="text-base font-bold text-[#1c1d1f] hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-2 min-h-[2.75rem]">
                         {course.name}
                       </h3>
                     </Link>
@@ -411,7 +411,7 @@ export default function ProgramsSection() {
                     {/* Ideal For Box */}
                     <div className="mt-2 p-2 rounded-md bg-slate-50 border border-slate-100 flex items-start gap-1.5">
                       <UserCheck className="w-3.5 h-3.5 text-[#0A3A7A] shrink-0 mt-0.5" />
-                      <p className="text-[11px] text-slate-700 leading-tight">
+                      <p className="text-[11px] text-slate-700 leading-snug">
                         <strong className="text-slate-900 font-semibold">Ideal for:</strong> {course.idealFor}
                       </p>
                     </div>
@@ -449,23 +449,23 @@ export default function ProgramsSection() {
                       </span>
                     </div>
 
-                    {/* Core Syllabus Modules */}
+                    {/* Core Syllabus Modules Preview (Clean, Non-clipped) */}
                     <div className="mt-3">
                       <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                         Core Syllabus Modules
                       </div>
-                      <div className="flex flex-wrap gap-1 max-h-[4.2rem] overflow-hidden">
-                        {course.topics.slice(0, 5).map((topic) => (
+                      <div className="flex flex-wrap gap-1">
+                        {course.topics.slice(0, 4).map((topic) => (
                           <span 
                             key={topic} 
-                            className="text-[10px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded line-clamp-1"
+                            className="text-[10px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded"
                           >
                             {topic}
                           </span>
                         ))}
-                        {course.topics.length > 5 && (
+                        {course.topics.length > 4 && (
                           <span className="text-[10px] font-semibold text-[#0A3A7A] bg-blue-50 px-1.5 py-0.5 rounded">
-                            +{course.topics.length - 5} more
+                            +{course.topics.length - 4} more
                           </span>
                         )}
                       </div>
@@ -474,12 +474,13 @@ export default function ProgramsSection() {
                 </div>
 
                 {/* Footer: Certification on Left, Exact User CTA on Right */}
-                <div className="p-4 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between gap-2">
+                <div className="p-4 sm:p-4.5 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span>Certification</span>
                   </div>
 
+                  {/* Clean Human-Crafted Outline Button (Exact User CTA: Ask about this course →) */}
                   <Link
                     href={course.contactUrl}
                     className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] hover:bg-[#0A3A7A] hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap"
@@ -490,6 +491,9 @@ export default function ProgramsSection() {
                 </div>
               </div>
             ))}
+
+            {/* End-of-track Spacer so the 10th card right edge and shadow are never cut off */}
+            <div className="w-4 shrink-0" aria-hidden="true" />
           </div>
 
         </div>
