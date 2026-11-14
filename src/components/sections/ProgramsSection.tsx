@@ -1,11 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowRight, Laptop, Clock, CheckCircle2, Award, MessageCircle, Sparkles, Terminal, ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
+import Link from 'next/link';
+import { 
+  ArrowRight, 
+  Laptop, 
+  Clock, 
+  CheckCircle2, 
+  ChevronLeft, 
+  ChevronRight, 
+  HelpCircle,
+  Sparkles,
+  ExternalLink
+} from 'lucide-react';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 import TechLogo from '@/components/ui/TechLogos';
+import CurriculumPreview from '@/components/sections/CurriculumPreviews';
 
-interface MasterTrack {
+export interface CurriculumTrack {
   id: string;
   number: string;
   name: string;
@@ -15,15 +27,13 @@ interface MasterTrack {
   duration: string;
   mode: string;
   tagline: string;
-  description: string;
-  codeFilename: string;
-  codeSnippet: string;
+  overview: string;
   deliverables: string[];
   techStack: string[];
   idealFor: string;
 }
 
-const MASTER_TRACKS: MasterTrack[] = [
+export const CURRICULUM_TRACKS: CurriculumTrack[] = [
   {
     id: 'prog-java',
     number: '01',
@@ -34,30 +44,14 @@ const MASTER_TRACKS: MasterTrack[] = [
     duration: '8–12 Weeks',
     mode: 'Instructor-Led Live & Lab',
     tagline: 'Enterprise Backend & Microservices Architecture',
-    description:
+    overview:
       'Engineer robust, scalable backends using modern Java and Spring Boot. Learn multi-threading, concurrency, Spring Data JPA, Hibernate, and containerized microservice architectures built for enterprise production.',
-    codeFilename: 'OrderServiceController.java',
-    codeSnippet: `@RestController
-@RequestMapping("/api/v1/orders")
-public class OrderServiceController {
-
-  @Autowired
-  private OrderService orderService;
-
-  @PostMapping("/checkout")
-  @ResponseStatus(HttpStatus.CREATED)
-  public CompletableFuture<OrderReceipt> processOrder(
-      @Valid @RequestBody CheckoutPayload payload) {
-    return orderService.executeTransactionalOrder(payload)
-      .thenApply(OrderReceipt::fromEntity);
-  }
-}`,
     deliverables: [
-      'Spring Boot RESTful microservices with JWT auth',
-      'Hibernate ORM & relational SQL persistence',
-      'Multi-threaded concurrent task executors',
+      'Spring Boot RESTful microservices with JWT authentication',
+      'Hibernate ORM & relational SQL persistence layer',
+      'Multi-threaded concurrent task executors & containerized deploys',
     ],
-    techStack: ['Java 21', 'Spring Boot', 'Hibernate', 'REST APIs', 'JDBC', 'Maven', 'Docker'],
+    techStack: ['Java 21', 'Spring Boot', 'Hibernate', 'REST APIs', 'JDBC', 'Docker'],
     idealFor: 'Developers aiming for senior enterprise Java backend roles.',
   },
   {
@@ -70,34 +64,15 @@ public class OrderServiceController {
     duration: '8–12 Weeks',
     mode: 'Instructor-Led Live & Lab',
     tagline: 'Advanced Python, Async IO & Software Engineering',
-    description:
+    overview:
       'From foundational scripting to advanced asynchronous frameworks, OOP metaprogramming, and automated workflows. Write idiomatic, production-grade Python that powers modern backends and data pipelines.',
-    codeFilename: 'async_worker.py',
-    codeSnippet: `import asyncio
-from fastapi import FastAPI, BackgroundTasks
-from pydantic import BaseModel
-
-app = FastAPI(title="Skillthinker Pipeline")
-
-class TaskPayload(BaseModel):
-    task_id: str
-    priority: int = 1
-
-@app.post("/tasks/execute")
-async def run_pipeline(payload: TaskPayload):
-    # Asynchronous non-blocking worker queue
-    result = await asyncio.gather(
-        fetch_remote_data(payload.task_id),
-        execute_data_transform(payload.priority)
-    )
-    return {"status": "success", "metrics": result}`,
     deliverables: [
-      'Asynchronous web backends with FastAPI & AsyncIO',
-      'Advanced OOP, dunder protocols & decorators',
-      'Automated data ingestion and API pipelines',
+      'Asynchronous web backends with FastAPI & AsyncIO event loop',
+      'Advanced OOP protocols, dunder methods & custom decorators',
+      'Automated data ingestion and API pipelines with Pydantic validation',
     ],
     techStack: ['Python 3', 'Async IO', 'FastAPI', 'OOP Models', 'Decorators', 'Pydantic'],
-    idealFor: 'Students & engineers seeking deep Python fluency.',
+    idealFor: 'Students & engineers seeking deep Python fluency for production.',
   },
   {
     id: 'prog-web',
@@ -109,34 +84,15 @@ async def run_pipeline(payload: TaskPayload):
     duration: '10–14 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'Modern Reactive UIs & Cloud-Native Backends',
-    description:
+    overview:
       'Master the entire modern web development lifecycle. Build high-performance frontend interfaces in React.js and connect them to scalable Node.js backends and MongoDB databases with clean REST architecture.',
-    codeFilename: 'DashboardView.tsx',
-    codeSnippet: `'use client';
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-
-export default function AnalyticsDashboard() {
-  const { data, isLoading } = useQuery({
-    queryKey: ['campus-metrics'],
-    queryFn: () => fetch('/api/metrics').then(r => r.json())
-  });
-
-  return (
-    <div className="grid grid-cols-3 gap-6 p-8">
-      {data?.map(metric => (
-        <MetricCard key={metric.id} {...metric} />
-      ))}
-    </div>
-  );
-}`,
     deliverables: [
-      'Component-driven UIs with React and Tailwind',
-      'Node.js RESTful API architectures & middleware',
-      'End-to-end full stack deployment on cloud platforms',
+      'Component-driven UIs with React, Tailwind CSS, and TanStack Query',
+      'Node.js RESTful API architectures, middleware & authentication',
+      'End-to-end full stack deployment on cloud platforms with Git CI/CD',
     ],
     techStack: ['React.js', 'JavaScript (ES6+)', 'Node.js', 'MongoDB', 'REST APIs', 'Git'],
-    idealFor: 'Aspiring full stack web engineers building modern products.',
+    idealFor: 'Aspiring full stack web engineers building modern SaaS products.',
   },
   {
     id: 'prog-dotnet',
@@ -148,32 +104,15 @@ export default function AnalyticsDashboard() {
     duration: '10–12 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'Microsoft Enterprise Architecture & Cloud Services',
-    description:
+    overview:
       'Build enterprise software and mission-critical cloud APIs with C#, ASP.NET Core, and Entity Framework Core. Learn enterprise architectural patterns, MVC, dependency injection, and SQL Server optimization.',
-    codeFilename: 'OrderController.cs',
-    codeSnippet: `[ApiController]
-[Route("api/[controller]")]
-public class EnrollmentController : ControllerBase
-{
-    private readonly IStudentRepository _repo;
-
-    public EnrollmentController(IStudentRepository repo) {
-        _repo = repo;
-    }
-
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] StudentDto dto) {
-        var student = await _repo.CreateStudentProfileAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = student.Id }, student);
-    }
-}`,
     deliverables: [
-      'Enterprise ASP.NET Core APIs with JWT security',
-      'Entity Framework Core code-first database migrations',
-      'Clean architecture & dependency injection design',
+      'Enterprise ASP.NET Core Web APIs with JWT security & authorization',
+      'Entity Framework Core code-first database migrations & LINQ queries',
+      'Clean architecture, dependency injection, and repository patterns',
     ],
     techStack: ['C#', 'ASP.NET Core', 'EF Core', 'SQL Server', 'Web API', 'LINQ'],
-    idealFor: 'Developers preparing for Microsoft .NET engineering positions.',
+    idealFor: 'Developers preparing for Microsoft .NET enterprise engineering positions.',
   },
   {
     id: 'prog-analytics',
@@ -185,25 +124,12 @@ public class EnrollmentController : ControllerBase
     duration: '8–10 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'Relational Intelligence & Executive Decision Dashboards',
-    description:
+    overview:
       'Transform unstructured raw enterprise data into automated executive dashboards. Master complex SQL queries, star schemas, Power BI DAX formulas, Python analytics, and business intelligence reporting.',
-    codeFilename: 'revenue_intelligence.sql',
-    codeSnippet: `WITH MonthlyAggregates AS (
-  SELECT 
-    DATE_TRUNC('month', order_date) AS reporting_month,
-    program_track,
-    COUNT(student_id) AS total_enrolled,
-    SUM(course_fee) AS gross_revenue,
-    RANK() OVER (PARTITION BY DATE_TRUNC('month', order_date) 
-                 ORDER BY SUM(course_fee) DESC) as track_rank
-  FROM institutional_enrollments
-  GROUP BY 1, 2
-)
-SELECT * FROM MonthlyAggregates WHERE track_rank <= 3;`,
     deliverables: [
-      'Interactive executive dashboards in Power BI Desktop',
-      'Advanced SQL joins, CTEs, and window functions',
-      'Python data manipulation with Pandas & visualization',
+      'Interactive executive dashboards in Power BI Desktop with drilldowns',
+      'Advanced SQL joins, CTEs, and analytic window functions',
+      'Python data manipulation with Pandas, NumPy, and Seaborn visualization',
     ],
     techStack: ['Power BI Desktop', 'SQL Queries', 'Python Analytics', 'Advanced Excel', 'DAX'],
     idealFor: 'Data analysts, BI specialists, and quantitative decision makers.',
@@ -218,27 +144,15 @@ SELECT * FROM MonthlyAggregates WHERE track_rank <= 3;`,
     duration: '8–10 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'Generative AI, Agentic Workflows & Production RAG',
-    description:
+    overview:
       'Build applied AI applications using foundational models, vector embeddings, semantic retrieval, and agentic tool workflows. Learn to automate complex business workflows with n8n and modern AI frameworks.',
-    codeFilename: 'agentic_rag.py',
-    codeSnippet: `from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain_community.vectorstores import Chroma
-
-# Vector Search Retrieval Augmented Generation
-retriever = Chroma(embedding_function=OpenAIEmbeddings()).as_retriever()
-tools = [create_retriever_tool(retriever, "campus_kb", "Search Skillthinker")]
-
-agent = create_tool_calling_agent(llm, tools, prompt_template)
-executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-response = executor.invoke({"input": "Summarize Java certification eligibility"})`,
     deliverables: [
-      'Document RAG pipelines with vector databases',
-      'Autonomous multi-step AI agents using n8n and APIs',
-      'Prompt engineering standards and model evaluation',
+      'Document RAG pipelines with vector databases and semantic search',
+      'Autonomous multi-step AI agents using n8n workflows and API tooling',
+      'Prompt engineering standards, evaluation frameworks, and guardrails',
     ],
     techStack: ['Generative AI', 'Agentic RAG', 'Prompt Engineering', 'n8n Automation', 'Vector DB'],
-    idealFor: 'Engineers and founders building applied generative AI software.',
+    idealFor: 'Engineers and technical leaders building applied generative AI software.',
   },
   {
     id: 'prog-backend',
@@ -250,23 +164,12 @@ response = executor.invoke({"input": "Summarize Java certification eligibility"}
     duration: '8–10 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'High-Throughput Relational & NoSQL Architecture',
-    description:
+    overview:
       'Master schema normalization, B-Tree indexing, subqueries, ACID transactions, and document data models in MongoDB. Design robust databases capable of handling heavy concurrent write and read operations.',
-    codeFilename: 'schema_optimization.sql',
-    codeSnippet: `CREATE TABLE institutional_records (
-  record_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id UUID NOT NULL REFERENCES student_profiles(id),
-  batch_id UUID NOT NULL REFERENCES batch_schedules(id),
-  merit_tier VARCHAR(16) CHECK (merit_tier IN ('Gold', 'Silver', 'Bronze')),
-  issued_at TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT unique_student_batch UNIQUE (student_id, batch_id)
-);
--- Optimized B-Tree index for instant verification lookups
-CREATE INDEX idx_records_lookup ON institutional_records (batch_id, merit_tier);`,
     deliverables: [
-      'Relational schema design with foreign key constraints',
-      'Complex query optimization, indexing, and EXPLAIN plans',
-      'MongoDB aggregation pipelines and document architecture',
+      'Relational schema design with integrity constraints & foreign keys',
+      'Complex query optimization, indexing strategies, and EXPLAIN plans',
+      'MongoDB aggregation pipelines and document-oriented storage models',
     ],
     techStack: ['SQL Architecture', 'MongoDB', 'PostgreSQL', 'Indexing', 'Stored Procedures'],
     idealFor: 'Backend developers and database engineers optimizing storage layers.',
@@ -281,35 +184,12 @@ CREATE INDEX idx_records_lookup ON institutional_records (batch_id, merit_tier);
     duration: '8–10 Weeks',
     mode: 'Hands-on Lab & Mentorship',
     tagline: 'Algorithmic Thinking, Pointers & Memory Models',
-    description:
+    overview:
       'Build an ironclad foundation in computational logic and memory models. Master procedural programming, pointers, memory allocation, and object-oriented principles in C, C++, and modern data structures.',
-    codeFilename: 'linked_list_dsa.cpp',
-    codeSnippet: `#include <iostream>
-#include <memory>
-
-template <typename T>
-class Node {
-public:
-    T data;
-    std::shared_ptr<Node<T>> next;
-    Node(T val) : data(val), next(nullptr) {}
-};
-
-template <typename T>
-void reverseList(std::shared_ptr<Node<T>>& head) {
-    std::shared_ptr<Node<T>> prev = nullptr, curr = head, next = nullptr;
-    while (curr != nullptr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }
-    head = prev;
-}`,
     deliverables: [
-      'Pointers, memory addresses, and dynamic memory allocation',
-      'Classic data structures: Stacks, Queues, Trees, and Graphs',
-      'Object-oriented principles: Polymorphism, Inheritance, STL',
+      'Pointers, memory addressing, and dynamic heap/stack allocation',
+      'Classic data structures: Linked Lists, Stacks, Queues, Trees, and Graphs',
+      'Object-oriented principles: Polymorphism, Inheritance, Encapsulation, STL',
     ],
     techStack: ['C Programming', 'C++', 'C#', 'Data Structures', 'Algorithms', 'Memory Models'],
     idealFor: 'Beginners and computer science students building core coding ability.',
@@ -324,25 +204,15 @@ void reverseList(std::shared_ptr<Node<T>>& head) {
     duration: '6–8 Weeks',
     mode: 'Instructor-Led Live & Lab',
     tagline: 'Quantitative Reasoning, Logic & Technical Mock Interviews',
-    description:
+    overview:
       'Comprehensive placement readiness for IT services and product company campus drives. Master speed math, quantitative aptitude, syllogisms, reading comprehension, and simulate 1-on-1 technical and HR interviews.',
-    codeFilename: 'PlacementMatrix.ts',
-    codeSnippet: `// Skillthinker Campus Recruitment Evaluation Matrix
-interface PlacementMetrics {
-  quantitativeAptitude: "Percentages | Speed Math | Permutations";
-  logicalReasoning: "Syllogisms | Coding-Decoding | Puzzles";
-  verbalAbility: "Grammar | Reading Comprehension | Vocabulary";
-  technicalRounds: "Data Structures | OOP Logic | Problem Solving";
-  hrEvaluation: "Behavioral Questions | Communication | GD";
-}
-// Goal: 100% Student Screening Clearance Rate`,
     deliverables: [
-      'Speed math techniques & shortcut formulas',
-      'Logical puzzle solving & analytical deduction',
-      'Realistic 1-on-1 mock interviews and constructive feedback',
+      'Speed math techniques, shortcut formulas & quantitative deduction',
+      'Logical puzzle solving, syllogisms, and data interpretation',
+      'Realistic 1-on-1 mock technical interviews and constructive evaluation',
     ],
     techStack: ['Quantitative Aptitude', 'Logical Reasoning', 'Verbal Ability', 'Mock Interviews', 'GD'],
-    idealFor: 'Final-year college students preparing for campus hiring drives.',
+    idealFor: 'Final-year college students preparing for campus recruitment drives.',
   },
   {
     id: 'prog-marketing',
@@ -354,23 +224,12 @@ interface PlacementMetrics {
     duration: '6–8 Weeks',
     mode: 'Instructor-Led Live & Lab',
     tagline: 'Technical SEO, Tag Management & User Acquisition',
-    description:
+    overview:
       'Execute high-impact organic search optimization, tag management, and conversion analytics. Learn technical site audits, Google Tag Manager event tracking, Search Console analysis, and growth analytics.',
-    codeFilename: 'gtm_datalayer.js',
-    codeSnippet: `// Skillthinker Conversion Event Tracking
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({
-  event: 'course_syllabus_inquiry',
-  program_name: 'Java Programming',
-  lead_source: 'organic_search',
-  campus_location: 'Trichy_Anna_Nagar',
-  timestamp: new Date().toISOString()
-});
-console.log('Conversion telemetry dispatched.');`,
     deliverables: [
       'Technical SEO audits, Core Web Vitals, and crawl optimization',
-      'Google Tag Manager custom triggers and conversion events',
-      'Audience conversion funnels and executive analytics reporting',
+      'Google Tag Manager custom triggers, dataLayer events, and conversion tags',
+      'Audience acquisition funnels and executive analytics reporting',
     ],
     techStack: ['Technical SEO', 'Google Tag Manager', 'Search Console', 'Analytics', 'Conversion Funnels'],
     idealFor: 'Marketing professionals, entrepreneurs, and career switchers.',
@@ -381,78 +240,75 @@ export default function ProgramsSection() {
   const { openModal } = useAdvisorModal();
   const [activeIdx, setActiveIdx] = useState(0);
 
-  const active = MASTER_TRACKS[activeIdx];
+  const active = CURRICULUM_TRACKS[activeIdx];
 
   const handlePrev = () => {
-    setActiveIdx((prev) => (prev === 0 ? MASTER_TRACKS.length - 1 : prev - 1));
+    setActiveIdx((prev) => (prev === 0 ? CURRICULUM_TRACKS.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setActiveIdx((prev) => (prev === MASTER_TRACKS.length - 1 ? 0 : prev + 1));
+    setActiveIdx((prev) => (prev === CURRICULUM_TRACKS.length - 1 ? 0 : prev + 1));
   };
 
   return (
-    <section id="programs" className="relative py-20 lg:py-28 bg-[#041427] text-white overflow-hidden select-none">
-      <div id="courses" className="absolute -top-24 left-0 pointer-events-none" />
-      
-      {/* Subtle Background Ambience */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#0A3A7A]/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#FCAF0A]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 bg-tech-grid opacity-15 pointer-events-none" />
+    <section 
+      id="programs" 
+      aria-labelledby="curriculum-index-heading"
+      className="relative py-20 lg:py-28 bg-[#07182B] text-white border-b border-white/10"
+    >
+      {/* Anchor for external links */}
+      <div id="courses" className="absolute -top-20 left-0 pointer-events-none" />
+
+      {/* Subtle Background Structural Accent */}
+      <div className="absolute top-0 right-1/3 w-96 h-96 bg-[#1769D2]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-96 h-96 bg-[#FFB000]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container-custom relative z-10">
         
-        {/* Section Header: Luxurious Editorial Presentation */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
+        {/* ── SECTION INTRODUCTION: COMPACT, EDITORIAL, PRECISE ── */}
+        <div className="max-w-3xl mb-12 lg:mb-16">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FCAF0A]" />
-            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#FCAF0A]">
-              Academic Curriculum
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FFB000]" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFB000]">
+              ACADEMIC CURRICULUM
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-[-0.03em] leading-[1.12]">
-            Choose the right <span className="text-[#FCAF0A]">learning path.</span>
+          <h2 
+            id="curriculum-index-heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-[-0.03em] leading-[1.15]"
+          >
+            Choose the right <span className="text-[#FFB000]">learning path.</span>
           </h2>
 
-          <p className="text-slate-300 text-sm sm:text-base mt-3 max-w-2xl font-normal leading-relaxed">
+          <p className="text-[#B8C6D8] text-sm sm:text-base mt-3 max-w-2xl font-normal leading-relaxed">
             10 specialized technical curricula structured from absolute fundamentals to production execution. Every track includes real lab projects, mentor evaluations, and a verifiable digital credential.
           </p>
         </div>
 
-        {/* ── LUXURY FLOATING TECH DOCK (HORIZONTAL 10-TRACK CAROUSEL SELECTOR) ── */}
-        <div className="mb-8">
-          <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex items-center gap-2.5 min-w-max pb-2">
-              {MASTER_TRACKS.map((track, idx) => {
+        {/* ── MOBILE TRACK SELECTOR (HORIZONTAL PILL BAR) ── */}
+        <div className="lg:hidden mb-6">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#B8C6D8] mb-2 flex items-center justify-between">
+            <span>Select Discipline ({activeIdx + 1} of 10)</span>
+            <span className="text-[#FFB000]">{active.shortName}</span>
+          </div>
+          <div className="overflow-x-auto no-scrollbar -mx-4 px-4 pb-2">
+            <div className="flex items-center gap-2 min-w-max">
+              {CURRICULUM_TRACKS.map((track, idx) => {
                 const isActive = idx === activeIdx;
-
                 return (
                   <button
                     key={track.id}
                     type="button"
                     onClick={() => setActiveIdx(idx)}
-                    className={`group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer border ${
+                    className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer border ${
                       isActive
-                        ? 'bg-white text-[#041427] border-white shadow-lg scale-105'
-                        : 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 hover:text-white border-white/10'
+                        ? 'bg-[#102A45] text-white border-[#FFB000] shadow-sm'
+                        : 'bg-[#0D233B]/80 text-[#B8C6D8] border-white/10 hover:text-white'
                     }`}
                   >
-                    <div className="w-6 h-6 shrink-0 flex items-center justify-center">
-                      <TechLogo name={track.logoKey} size={22} />
-                    </div>
-
-                    <span className="text-xs font-bold tracking-tight whitespace-nowrap">
-                      {track.shortName}
-                    </span>
-
-                    <span
-                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${
-                        isActive ? 'bg-[#041427] text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
-                      }`}
-                    >
-                      {track.number}
-                    </span>
+                    <span className="font-mono text-[11px] text-[#FFB000]">{track.number}</span>
+                    <span className="whitespace-nowrap">{track.shortName}</span>
                   </button>
                 );
               })}
@@ -460,69 +316,167 @@ export default function ProgramsSection() {
           </div>
         </div>
 
-        {/* ── MASTER CURRICULUM STUDIO (SINGLE HIGH-IMPACT COMMAND STAGE) ── */}
-        <div className="relative rounded-3xl bg-gradient-to-br from-[#06203D] via-[#051C38] to-[#041427] border border-white/15 shadow-2xl p-6 sm:p-8 lg:p-12 overflow-hidden">
+        {/* ── MAIN EXPERIENCE: TWO-PART INTERACTIVE CURRICULUM INDEX ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          {/* ════ LEFT COLUMN: CURRICULUM NAVIGATION (10 COURSES) ════ */}
+          <div className="hidden lg:block lg:col-span-4 bg-[#0D233B] border border-white/10 rounded-2xl overflow-hidden shadow-lg sticky top-24">
             
-            {/* Left Column: Master Course Details & Actions (6 cols) */}
-            <div className="lg:col-span-6 space-y-6">
+            {/* Navigation Header */}
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-[#07182B]/60">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#B8C6D8]">
+                Discipline Index
+              </span>
+              <span className="text-[11px] font-mono text-[#FFB000] bg-[#FFB000]/10 px-2 py-0.5 rounded border border-[#FFB000]/20 font-semibold">
+                10 Tracks
+              </span>
+            </div>
+
+            {/* Vertical List of Courses */}
+            <div className="divide-y divide-white/5 max-h-[660px] overflow-y-auto no-scrollbar">
+              {CURRICULUM_TRACKS.map((track, idx) => {
+                const isActive = idx === activeIdx;
+
+                return (
+                  <button
+                    key={track.id}
+                    type="button"
+                    onClick={() => setActiveIdx(idx)}
+                    className={`w-full text-left px-5 py-3.5 transition-colors flex items-center justify-between gap-3 cursor-pointer group border-l-2 ${
+                      isActive
+                        ? 'bg-[#102A45] border-[#FFB000] text-white'
+                        : 'border-transparent text-[#B8C6D8] hover:bg-[#07182B]/40 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      {/* Sequence Number */}
+                      <span
+                        className={`text-xs font-mono font-bold shrink-0 ${
+                          isActive ? 'text-[#FFB000]' : 'text-slate-400 group-hover:text-slate-300'
+                        }`}
+                      >
+                        {track.number}
+                      </span>
+
+                      {/* Brand Logo */}
+                      <div className="w-5 h-5 shrink-0 flex items-center justify-center">
+                        <TechLogo name={track.logoKey} size={18} />
+                      </div>
+
+                      {/* Course Title and Category */}
+                      <div className="min-w-0">
+                        <div className={`text-sm font-bold truncate leading-snug ${isActive ? 'text-white' : 'text-[#B8C6D8] group-hover:text-white'}`}>
+                          {track.name}
+                        </div>
+                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                          {track.category}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Active Indicator Chevron / Dot */}
+                    <div className="shrink-0">
+                      {isActive ? (
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#FFB000]" />
+                      ) : (
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Navigation Footer Hint */}
+            <div className="px-5 py-3 border-t border-white/10 bg-[#07182B]/60 text-[11px] text-slate-400 flex items-center justify-between">
+              <span>Verified Syllabus</span>
+              <span className="font-mono text-[#FFB000]">Trichy Campus Hub</span>
+            </div>
+          </div>
+
+          {/* ════ RIGHT COLUMN: SELECTED COURSE PRESENTATION ════ */}
+          <div className="lg:col-span-8 space-y-6">
+            
+            <div className="bg-[#0D233B] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl">
               
-              {/* Badge Strip */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#FCAF0A]/15 border border-[#FCAF0A]/30 text-[#FCAF0A] text-xs font-bold uppercase tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FCAF0A]" />
-                  <span>Track {active.number} • {active.category}</span>
+              {/* 1. Header: Course number & Category + Metadata */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <span className="px-2.5 py-1 rounded-md bg-[#FFB000]/15 border border-[#FFB000]/30 text-[#FFB000] text-xs font-mono font-bold">
+                    TRACK {active.number}
+                  </span>
+                  <span className="text-xs font-semibold text-[#B8C6D8] uppercase tracking-wider">
+                    {active.category}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-300 font-medium">
-                  <span className="flex items-center gap-1">
+                <div className="flex items-center gap-3 text-xs text-[#B8C6D8] font-medium">
+                  <span className="flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
                     <span>{active.duration}</span>
                   </span>
                   <span>•</span>
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1.5">
                     <Laptop className="w-3.5 h-3.5 text-slate-400" />
                     <span>{active.mode}</span>
                   </span>
                 </div>
               </div>
 
-              {/* Master Headline */}
-              <div>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                  {active.name}
-                </h3>
-                <div className="text-sm font-semibold text-[#FCAF0A] mt-1.5">
-                  {active.tagline}
+              {/* 2 & 3. Title & Tagline */}
+              <div className="pt-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#102A45] border border-white/10 flex items-center justify-center shrink-0">
+                    <TechLogo name={active.logoKey} size={22} />
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    {active.name}
+                  </h3>
                 </div>
+                <p className="text-sm sm:text-base font-semibold text-[#FFB000] mt-2">
+                  {active.tagline}
+                </p>
               </div>
 
-              {/* Narrative Description */}
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
-                {active.description}
+              {/* 5. Concise Overview */}
+              <p className="text-[#B8C6D8] text-sm sm:text-base leading-relaxed mt-4 font-normal">
+                {active.overview}
               </p>
 
-              {/* Core Deliverables Checklist */}
-              <div className="space-y-2.5 pt-2">
-                {active.deliverables.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                    <CheckCircle2 className="w-4 h-4 text-[#FCAF0A] shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+              {/* 8. Dedicated Discipline-Specific Visual Preview */}
+              <div className="mt-6 pt-2">
+                <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
+                  <span>Technical Lab Architecture &amp; Execution Preview</span>
+                  <span className="text-[#FFB000]">Live Lab Artifact</span>
+                </div>
+                <CurriculumPreview trackId={active.id} />
               </div>
 
-              {/* Tech Stack Badges */}
-              <div className="pt-2">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+              {/* 6. Three Core Deliverables */}
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">
+                  Key Production Deliverables:
+                </div>
+                <div className="space-y-2.5">
+                  {active.deliverables.map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#B8C6D8]">
+                      <CheckCircle2 className="w-4 h-4 text-[#FFB000] shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 7. Tooling & Frameworks Compact Inline Labels */}
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
                   Tooling &amp; Frameworks Covered:
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {active.techStack.map((tech) => (
                     <span
                       key={tech}
-                      className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs font-medium transition-colors"
+                      className="px-2.5 py-1 rounded bg-[#102A45] border border-white/10 text-white text-xs font-medium"
                     >
                       {tech}
                     </span>
@@ -530,47 +484,55 @@ export default function ProgramsSection() {
                 </div>
               </div>
 
-              {/* Action Buttons & Steppers */}
-              <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
+              {/* 9. Action Buttons & Track Stepper */}
+              <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
                     onClick={() => openModal(active.name)}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm transition-all shadow-md cursor-pointer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFB000] hover:bg-[#E59E00] text-[#07182B] font-extrabold text-xs sm:text-sm transition-all shadow-md cursor-pointer"
                   >
                     <span>Enquire for this Track</span>
-                    <ArrowRight className="w-4 h-4 text-[#041427]" />
+                    <ArrowRight className="w-4 h-4 text-[#07182B]" />
                   </button>
+
+                  <Link
+                    href={`/programs#${active.id}`}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#102A45] hover:bg-[#102A45]/80 border border-white/10 text-white text-xs sm:text-sm font-semibold transition-colors"
+                  >
+                    <span>Explore Full Catalog</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-300" />
+                  </Link>
 
                   <a
                     href={`https://wa.me/919442605096?text=Hi%2C%20I%20am%20interested%20in%20the%20${encodeURIComponent(active.name)}%20curriculum%20syllabus.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-400 hover:text-emerald-300 transition-colors py-2 px-2"
                   >
                     <span>WhatsApp Syllabus</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
 
-                {/* Track Steppers */}
-                <div className="flex items-center gap-2">
+                {/* Track Steppers (Prev / Next) */}
+                <div className="flex items-center gap-2 ml-auto">
                   <button
                     type="button"
                     onClick={handlePrev}
                     aria-label="Previous track"
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-2 rounded-lg bg-[#102A45] hover:bg-[#102A45]/80 border border-white/10 text-white transition-colors cursor-pointer"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-xs font-mono text-slate-300 px-1">
-                    {activeIdx + 1} / {MASTER_TRACKS.length}
+                  <span className="text-xs font-mono text-[#B8C6D8] px-2 font-medium">
+                    {active.number} / 10
                   </span>
                   <button
                     type="button"
                     onClick={handleNext}
                     aria-label="Next track"
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-2 rounded-lg bg-[#102A45] hover:bg-[#102A45]/80 border border-white/10 text-white transition-colors cursor-pointer"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -579,63 +541,21 @@ export default function ProgramsSection() {
 
             </div>
 
-            {/* Right Column: Authentic Live Code & Architecture Terminal (6 cols) */}
-            <div className="lg:col-span-6 relative">
-              <div className="rounded-2xl bg-[#031122]/95 border border-white/20 shadow-2xl overflow-hidden backdrop-blur-xl">
-                
-                {/* Terminal Header */}
-                <div className="px-4 py-3 bg-white/5 border-b border-white/10 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
-                    <span className="text-xs font-mono text-slate-300 ml-2 font-medium">
-                      {active.codeFilename}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-                    <Terminal className="w-3 h-3 text-[#FCAF0A]" />
-                    <span>Trichy Live Lab</span>
-                  </div>
-                </div>
-
-                {/* Real Syntax Code Body */}
-                <div className="p-5 font-mono text-xs sm:text-sm text-slate-200 leading-relaxed overflow-x-auto no-scrollbar">
-                  <pre className="text-emerald-300/90 font-mono">
-                    <code>{active.codeSnippet}</code>
-                  </pre>
-                </div>
-
-                {/* Terminal Footer Strip */}
-                <div className="px-5 py-3 bg-white/[0.03] border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-[#FCAF0A]" />
-                    <span>Project Evaluated &amp; Merit Certified</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-[#FCAF0A] uppercase tracking-wider">
-                    Hands-On Lab
-                  </span>
-                </div>
-
-              </div>
-            </div>
-
           </div>
 
         </div>
 
-        {/* Global Admissions Advisor Banner */}
-        <div className="mt-12 p-6 sm:p-7 rounded-2xl bg-white/[0.04] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 backdrop-blur-md">
+        {/* ── BOTTOM ADVISORY STRIP ── */}
+        <div className="mt-12 p-6 rounded-2xl bg-[#0D233B] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-lg">
           <div className="flex items-start sm:items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-[#FCAF0A]/10 border border-[#FCAF0A]/20 flex items-center justify-center text-[#FCAF0A] shrink-0">
-              <HelpCircle className="w-5 h-5 text-[#FCAF0A]" />
+            <div className="w-10 h-10 rounded-xl bg-[#FFB000]/10 border border-[#FFB000]/20 flex items-center justify-center text-[#FFB000] shrink-0">
+              <HelpCircle className="w-5 h-5 text-[#FFB000]" />
             </div>
             <div>
               <div className="text-sm sm:text-base font-bold text-white">
                 Unsure which program fits your background?
               </div>
-              <div className="text-xs sm:text-sm text-slate-300 font-normal mt-0.5">
+              <div className="text-xs sm:text-sm text-[#B8C6D8] font-normal mt-0.5">
                 Our admissions advisors in Trichy can evaluate your academic background and recommend the ideal track.
               </div>
             </div>
@@ -644,7 +564,7 @@ export default function ProgramsSection() {
           <button
             type="button"
             onClick={() => openModal()}
-            className="px-6 py-3 rounded-xl bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm shrink-0 transition-colors cursor-pointer shadow-md"
+            className="px-6 py-3 rounded-xl bg-[#FFB000] hover:bg-[#E59E00] text-[#07182B] font-extrabold text-xs sm:text-sm shrink-0 transition-colors cursor-pointer shadow-md"
           >
             Get Free Career Assessment
           </button>
