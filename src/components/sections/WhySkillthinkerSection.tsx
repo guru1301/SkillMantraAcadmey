@@ -129,8 +129,6 @@ export default function WhySkillthinkerSection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const { openModal } = useAdvisorModal();
 
-  const active = PILLARS[activeIdx];
-
   const handlePrev = () => {
     setActiveIdx((prev) => (prev === 0 ? PILLARS.length - 1 : prev - 1));
   };
@@ -204,111 +202,129 @@ export default function WhySkillthinkerSection() {
       {/* ── BOTTOM SECTION: Full-Width Executive Dark Showcase Band ── */}
       <div className="relative w-full bg-[#182332] text-white py-12 sm:py-16 lg:py-20 shadow-2xl">
         
-        {/* Dynamic Connected Triangle Notch - Points Up Directly Under Active Tab */}
-        <div className="container-custom relative">
-          <div className="hidden lg:block absolute -top-[12px] left-0 right-0 pointer-events-none z-10">
-            <div className="grid grid-cols-7">
-              {PILLARS.map((_, idx) => (
-                <div key={idx} className="flex justify-center">
-                  {idx === activeIdx && (
-                    <div
-                      className="w-0 h-0 border-x-[12px] border-x-transparent border-b-[12px] border-b-[#182332]"
-                      aria-hidden="true"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+        {/* Silky-Smooth Gliding Triangle Notch - Transitions Across in 300ms */}
+        <div className="absolute -top-[12px] left-0 right-0 pointer-events-none z-20">
+          <div className="container-custom relative">
+            <div
+              className="hidden lg:block absolute top-0 w-0 h-0 border-x-[12px] border-x-transparent border-b-[12px] border-b-[#182332] transition-all duration-300 ease-out"
+              style={{
+                left: `calc(${activeIdx * (100 / 7)}% + ${(100 / 7) / 2}% - 12px)`,
+              }}
+              aria-hidden="true"
+            />
           </div>
         </div>
 
-        {/* Showcase Content Container (50/50 Split: Narrative & Photo) */}
+        {/* Locked Spatial Container: Absolute Layering Guarantees ZERO Height Jump / Layout Shift */}
         <div className="container-custom">
-          <div
-            key={active.id}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center animate-in fade-in duration-300"
-          >
-            
-            {/* Left Column: Headline, Narrative & Orange Button (7 cols) */}
-            <div className="lg:col-span-7 space-y-5">
-              <h3 className="text-xl sm:text-2xl lg:text-[28px] font-extrabold text-white tracking-tight leading-snug uppercase">
-                {active.headline}
-              </h3>
+          <div className="relative min-h-[420px] sm:min-h-[360px] lg:min-h-[340px] w-full">
+            {PILLARS.map((pillar, idx) => {
+              const isActive = idx === activeIdx;
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal max-w-2xl">
-                {active.description}
-              </p>
+              return (
+                <div
+                  key={pillar.id}
+                  className={`w-full transition-opacity duration-300 ease-in-out ${
+                    isActive
+                      ? 'opacity-100 z-10 relative pointer-events-auto'
+                      : 'opacity-0 z-0 absolute inset-0 pointer-events-none'
+                  }`}
+                  aria-hidden={!isActive}
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+                    
+                    {/* Left Column: Fixed-Height Typography Stacks (7 cols) */}
+                    <div className="lg:col-span-7 flex flex-col justify-between h-full space-y-4 sm:space-y-5">
+                      
+                      {/* Fixed-Height Headline Box: Eliminates Any Vertical Size Jumps */}
+                      <div className="min-h-[3.25rem] sm:min-h-[3.75rem] flex items-center">
+                        <h3 className="text-xl sm:text-2xl lg:text-[27px] font-extrabold text-white tracking-tight leading-snug uppercase">
+                          {pillar.headline}
+                        </h3>
+                      </div>
 
-              {/* Action Button & Steppers */}
-              <div className="pt-2 flex items-center justify-between flex-wrap gap-4">
-                {active.isAdvisorAction ? (
-                  <button
-                    type="button"
-                    onClick={() => openModal()}
-                    className="px-7 py-3 bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-colors shadow-md cursor-pointer rounded-sm"
-                  >
-                    {active.ctaText}
-                  </button>
-                ) : (
-                  <Link
-                    href={active.ctaHref || '/#programs'}
-                    className="inline-block px-7 py-3 bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-colors shadow-md cursor-pointer rounded-sm"
-                  >
-                    {active.ctaText}
-                  </Link>
-                )}
+                      {/* Fixed-Height Narrative Box */}
+                      <div className="min-h-[4.75rem] sm:min-h-[5.25rem] flex items-start">
+                        <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal max-w-2xl">
+                          {pillar.description}
+                        </p>
+                      </div>
 
-                {/* Steppers */}
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    aria-label="Previous capability"
-                    className="p-2 bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer rounded-sm"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-xs font-mono text-slate-400 px-1">
-                    {activeIdx + 1} / {PILLARS.length}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    aria-label="Next capability"
-                    className="p-2 bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer rounded-sm"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+                      {/* Action Button & Steppers */}
+                      <div className="pt-2 flex items-center justify-between flex-wrap gap-4">
+                        {pillar.isAdvisorAction ? (
+                          <button
+                            type="button"
+                            onClick={() => openModal()}
+                            className="px-7 py-3 bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-colors shadow-md cursor-pointer rounded-sm"
+                          >
+                            {pillar.ctaText}
+                          </button>
+                        ) : (
+                          <Link
+                            href={pillar.ctaHref || '/#programs'}
+                            className="inline-block px-7 py-3 bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-colors shadow-md cursor-pointer rounded-sm"
+                          >
+                            {pillar.ctaText}
+                          </Link>
+                        )}
+
+                        {/* Steppers */}
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={handlePrev}
+                            aria-label="Previous capability"
+                            className="p-2 bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer rounded-sm"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <span className="text-xs font-mono text-slate-400 px-1">
+                            {idx + 1} / {PILLARS.length}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleNext}
+                            aria-label="Next capability"
+                            className="p-2 bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer rounded-sm"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    {/* Right Column: Framed Photograph (5 cols) */}
+                    <div className="lg:col-span-5">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 shadow-2xl group">
+                        <Image
+                          src={pillar.image}
+                          alt={pillar.headline}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          priority={idx === 0}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                        {/* Campus Facility Anchor Badge */}
+                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white bg-black/60 backdrop-blur-md px-3.5 py-2 rounded border border-white/10">
+                          <span className="font-semibold flex items-center gap-1.5">
+                            <MapPin className="w-3.5 h-3.5 text-[#FCAF0A]" />
+                            <span>{pillar.badge}</span>
+                          </span>
+                          <span className="text-[10px] text-slate-300 font-mono">
+                            Anna Nagar, Trichy
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Right Column: Framed Photograph (5 cols) */}
-            <div className="lg:col-span-5">
-              <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 shadow-2xl group">
-                <Image
-                  src={active.image}
-                  alt={active.headline}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-
-                {/* Campus Facility Anchor Badge */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white bg-black/60 backdrop-blur-md px-3.5 py-2 rounded border border-white/10">
-                  <span className="font-semibold flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#FCAF0A]" />
-                    <span>{active.badge}</span>
-                  </span>
-                  <span className="text-[10px] text-slate-300 font-mono">
-                    Anna Nagar, Trichy
-                  </span>
-                </div>
-              </div>
-            </div>
-
+              );
+            })}
           </div>
         </div>
 
