@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ChevronLeft, ChevronRight, Clock, Laptop, HelpCircle, Award } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Star, HelpCircle, CheckCircle2 } from 'lucide-react';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
 
 export interface UdemyCourse {
@@ -13,10 +13,12 @@ export interface UdemyCourse {
   category: string;
   tabs: string[];
   instructor: string;
-  badge: 'Bestseller' | 'Lab Track' | 'Enterprise' | 'Foundation' | 'Specialization';
-  tagline: string;
+  badge: 'Bestseller' | 'Premium' | 'Lab Track';
+  rating: number;
+  ratingCount: string;
   duration: string;
   mode: string;
+  tagline: string;
   image: string;
   logo: string;
   slug: string;
@@ -26,14 +28,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '01',
     name: 'Java Programming',
-    shortTitle: 'Java Enterprise: Complete Spring Boot & Microservices Lab',
+    shortTitle: 'The Complete Java Spring Boot & Microservices Masterclass',
     category: 'Enterprise Engineering',
-    tabs: ['All Programmes', 'Java & Enterprise', 'Backend & Data'],
+    tabs: ['All Programmes', 'Java & Enterprise', 'Database Engineering'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Enterprise',
-    tagline: 'Enterprise Backend & Microservices Architecture',
+    badge: 'Bestseller',
+    rating: 4.8,
+    ratingCount: '2,840 ratings',
     duration: '8–12 Weeks',
-    mode: 'Instructor-Led Live & Lab',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Enterprise Spring Boot, Microservices, JPA & REST Architecture',
     image: '/images/courses/java.jpg',
     logo: '/images/tech/java.png',
     slug: 'java-programming',
@@ -41,14 +45,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '02',
     name: 'Python Programming',
-    shortTitle: 'Python Engineering: Async IO, FastAPIs & Systems Automation',
+    shortTitle: 'Python Engineering 2026: Async IO, FastAPIs & Automation',
     category: 'Core Programming',
     tabs: ['All Programmes', 'Python Programming', 'Core Programming'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
     badge: 'Bestseller',
-    tagline: 'Advanced Python, Async IO & Software Engineering',
+    rating: 4.9,
+    ratingCount: '3,410 ratings',
     duration: '8–12 Weeks',
-    mode: 'Instructor-Led Live & Lab',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Advanced Python, OOP, Async IO, Automation & API Engineering',
     image: '/images/courses/python.jpg',
     logo: '/images/tech/python.png',
     slug: 'python-programming',
@@ -56,14 +62,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '03',
     name: 'Web & Full Stack Development',
-    shortTitle: 'Modern Web & Full Stack: React.js, Node.js & Cloud Deploy',
+    shortTitle: 'Full Stack Web Bootcamp: React 19, Next.js, Node & Tailwind',
     category: 'Software Engineering',
     tabs: ['All Programmes', 'Web & Full Stack', 'Software Engineering'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
     badge: 'Bestseller',
-    tagline: 'Modern Reactive UIs & Cloud-Native Backends',
+    rating: 4.9,
+    ratingCount: '4,120 ratings',
     duration: '10–14 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Full-stack development with modern React, Node.js and cloud deploy',
     image: '/images/courses/web.jpg',
     logo: '/images/tech/react.png',
     slug: 'web-full-stack-development',
@@ -71,14 +79,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '04',
     name: '.NET Development',
-    shortTitle: '.NET Enterprise Architecture: C#, ASP.NET Core & EF Core',
+    shortTitle: 'C# and .NET Enterprise Architecture: ASP.NET Core & Web APIs',
     category: 'Enterprise Engineering',
     tabs: ['All Programmes', 'Java & Enterprise', 'Software Engineering'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Enterprise',
-    tagline: 'Microsoft Enterprise Architecture & Cloud Services',
+    badge: 'Premium',
+    rating: 4.7,
+    ratingCount: '1,290 ratings',
     duration: '10–12 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'High-throughput enterprise applications on Microsoft .NET stack',
     image: '/images/courses/dotnet.jpg',
     logo: '/images/tech/dotnet.png',
     slug: 'dotnet-development',
@@ -86,14 +96,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '05',
     name: 'Data Analytics & BI',
-    shortTitle: 'Data Analytics & BI: Power BI, Advanced SQL & Dashboards',
+    shortTitle: 'Data Analytics & Executive BI: Power BI, Advanced SQL & DAX',
     category: 'Data & Analytics',
-    tabs: ['All Programmes', 'Data Analytics & BI', 'Data & Analytics'],
+    tabs: ['All Programmes', 'Data Analytics & BI', 'Database Engineering'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
     badge: 'Bestseller',
-    tagline: 'Relational Intelligence & Executive Decision Dashboards',
+    rating: 4.8,
+    ratingCount: '2,630 ratings',
     duration: '8–10 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'ETL data pipelines, statistical modeling and executive BI dashboards',
     image: '/images/courses/analytics.jpg',
     logo: '/images/tech/powerbi.png',
     slug: 'data-analytics-bi',
@@ -101,14 +113,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '06',
     name: 'AI & Emerging Technologies',
-    shortTitle: 'Artificial Intelligence (AI): LLM Apps, RAG & Agentic Workflows',
+    shortTitle: 'The AI Engineer Track 2026: LLM Apps, Production RAG & Agents',
     category: 'AI & Emerging',
-    tabs: ['All Programmes', 'Artificial Intelligence (AI)', 'AI & Emerging'],
+    tabs: ['All Programmes', 'Artificial Intelligence (AI)', 'Python Programming'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Specialization',
-    tagline: 'Generative AI, Agentic Workflows & Production RAG',
+    badge: 'Premium',
+    rating: 4.9,
+    ratingCount: '5,210 ratings',
     duration: '8–10 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Generative AI engineering, vector databases, LangChain and agentic AI',
     image: '/images/courses/ai.jpg',
     logo: '/images/tech/ai.png',
     slug: 'ai-emerging-technologies',
@@ -116,14 +130,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '07',
     name: 'Database & Backend Technologies',
-    shortTitle: 'Database Architecture: PostgreSQL, MongoDB & High-Load DDL',
+    shortTitle: 'Database Architecture Mastery: PostgreSQL, MongoDB & Indexing',
     category: 'Backend & Data',
-    tabs: ['All Programmes', 'Backend & Data', 'Data Analytics & BI'],
+    tabs: ['All Programmes', 'Database Engineering', 'Data Analytics & BI'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
     badge: 'Lab Track',
-    tagline: 'High-Throughput Relational & NoSQL Architecture',
+    rating: 4.7,
+    ratingCount: '1,540 ratings',
     duration: '8–10 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'High-throughput relational schema design, NoSQL storage and sharding',
     image: '/images/courses/database.jpg',
     logo: '/images/tech/database.png',
     slug: 'database-backend-technologies',
@@ -131,14 +147,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '08',
     name: 'Programming Fundamentals',
-    shortTitle: 'Computer Science Fundamentals: C, C++, Pointers & STL',
+    shortTitle: 'Computer Science Fundamentals: C, C++, Data Structures & STL',
     category: 'Core Programming',
     tabs: ['All Programmes', 'Python Programming', 'Core Programming'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Foundation',
-    tagline: 'Algorithmic Thinking, Pointers & Memory Models',
+    badge: 'Bestseller',
+    rating: 4.8,
+    ratingCount: '3,870 ratings',
     duration: '8–10 Weeks',
-    mode: 'Hands-on Lab & Mentorship',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Algorithmic thinking, pointer memory models and fundamental data structures',
     image: '/images/courses/cpp.jpg',
     logo: '/images/tech/cpp.png',
     slug: 'programming-fundamentals',
@@ -148,12 +166,14 @@ export const UDEMY_COURSES: UdemyCourse[] = [
     name: 'Aptitude & Placement Training',
     shortTitle: 'Campus Placement Bootcamp: Quantitative, Logic & HR Mock',
     category: 'Placement & Career',
-    tabs: ['All Programmes', 'Campus Placement', 'Placement & Career'],
+    tabs: ['All Programmes', 'Campus Placement'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
     badge: 'Bestseller',
-    tagline: 'Quantitative Reasoning, Logic & Technical Mock Interviews',
+    rating: 4.9,
+    ratingCount: '6,450 ratings',
     duration: '6–8 Weeks',
-    mode: 'Instructor-Led Live & Lab',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Company-specific aptitude patterns, group discussions and interview simulations',
     image: '/images/courses/aptitude.jpg',
     logo: '/images/tech/aptitude.png',
     slug: 'aptitude-placement-training',
@@ -161,14 +181,16 @@ export const UDEMY_COURSES: UdemyCourse[] = [
   {
     number: '10',
     name: 'Digital Marketing',
-    shortTitle: 'Digital Marketing Mastery: Technical SEO & GTM Tracking Funnels',
+    shortTitle: 'Technical Digital Marketing: SEO, Google Tag Manager & Funnels',
     category: 'Digital & Growth',
-    tabs: ['All Programmes', 'Digital Marketing', 'Digital & Growth'],
+    tabs: ['All Programmes', 'Digital Marketing'],
     instructor: 'Skillthinker Institutional Lab • Trichy',
-    badge: 'Specialization',
-    tagline: 'Technical SEO, Tag Management & User Acquisition',
+    badge: 'Lab Track',
+    rating: 4.7,
+    ratingCount: '1,180 ratings',
     duration: '6–8 Weeks',
-    mode: 'Instructor-Led Live & Lab',
+    mode: 'Live Lab & Mentor Evaluation',
+    tagline: 'Data-driven performance marketing, conversion tracking and organic SEO',
     image: '/images/courses/marketing.jpg',
     logo: '/images/tech/marketing.png',
     slug: 'digital-marketing',
@@ -182,6 +204,7 @@ export const TOPIC_TABS = [
   'Web & Full Stack',
   'Java & Enterprise',
   'Data Analytics & BI',
+  'Database Engineering',
   'Campus Placement',
   'Digital Marketing',
 ] as const;
@@ -203,8 +226,8 @@ export default function ProgramsSection() {
     const el = carouselRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    setCanScrollLeft(scrollLeft > 15);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 15);
   }, []);
 
   useEffect(() => {
@@ -240,7 +263,7 @@ export default function ProgramsSection() {
     <section 
       id="programs" 
       aria-labelledby="academic-curriculum-heading"
-      className="relative py-16 sm:py-20 lg:py-24 bg-[#07182B] text-white border-b border-white/10 overflow-x-clip"
+      className="relative py-16 sm:py-20 lg:py-24 bg-white text-slate-900 border-b border-slate-200 overflow-x-clip select-none"
     >
       {/* Anchor for external routing */}
       <div id="courses" className="absolute -top-20 left-0 pointer-events-none" />
@@ -248,29 +271,29 @@ export default function ProgramsSection() {
       {/* Wide Container to fill screen comfortably */}
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         
-        {/* ── 1. HEADER: UDEMY STYLE INSPIRATION ── */}
-        <div className="max-w-4xl mb-8">
+        {/* ── 1. HEADER: CLEAN EDITORIAL ON WHITE (UDEMY REFERENCE) ── */}
+        <div className="max-w-4xl mb-7">
           <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FFB000]" />
-            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFB000]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0A3A7A]" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#0A3A7A]">
               ACADEMIC CURRICULUM
             </span>
           </div>
 
           <h2 
             id="academic-curriculum-heading"
-            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-[-0.02em] leading-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1c1d1f] tracking-[-0.02em] leading-tight"
           >
-            Choose the right <span className="text-[#FFB000]">learning path.</span>
+            Skills to transform your <span className="text-[#0A3A7A]">career and life</span>
           </h2>
 
-          <p className="text-[#B8C6D8] text-sm sm:text-base mt-2 font-normal leading-relaxed">
-            10 specialized technical curricula structured from absolute fundamentals to production execution. Every track includes real lab projects, mentor evaluations, and a verifiable digital credential.
+          <p className="text-[#6a6f73] text-sm sm:text-base mt-2 font-normal leading-relaxed">
+            From critical programming foundations to production enterprise engineering, Skillthinker supports your professional development with lab projects and mentor evaluations.
           </p>
         </div>
 
-        {/* ── 2. HORIZONTAL TOPIC TABS (UDEMY UNDERLINED STYLE) ── */}
-        <div className="border-b border-white/15 mb-7">
+        {/* ── 2. HORIZONTAL TOPIC TABS (UDEMY EXACT STYLE ON WHITE) ── */}
+        <div className="border-b border-slate-200 mb-6">
           <div 
             role="tablist"
             aria-label="Course Topics"
@@ -284,15 +307,15 @@ export default function ProgramsSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleTabSelect(tab)}
-                  className={`text-sm font-semibold pb-3 whitespace-nowrap transition-colors relative cursor-pointer focus-visible:outline-none ${
+                  className={`text-sm pb-3 whitespace-nowrap transition-colors relative cursor-pointer focus-visible:outline-none ${
                     isActive
-                      ? 'text-white font-bold'
-                      : 'text-[#8FA5C2] hover:text-white'
+                      ? 'text-[#1c1d1f] font-bold'
+                      : 'text-[#6a6f73] hover:text-[#1c1d1f] font-semibold'
                   }`}
                 >
                   <span>{tab}</span>
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#FFB000] rounded-full" />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1c1d1f] rounded-full" />
                   )}
                 </button>
               );
@@ -309,11 +332,11 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('left')}
             disabled={!canScrollLeft}
             aria-label="Previous courses"
-            className={`absolute left-0 sm:-left-3 lg:-left-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
+            className={`absolute left-0 sm:-left-3 lg:-left-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
               canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
-            <ChevronLeft className="w-5 h-5 text-[#07182B]" />
+            <ChevronLeft className="w-5 h-5 text-slate-800" />
           </button>
 
           {/* Right Floating Circular Navigation Arrow */}
@@ -322,11 +345,11 @@ export default function ProgramsSection() {
             onClick={() => handleScroll('right')}
             disabled={!canScrollRight}
             aria-label="Next courses"
-            className={`absolute right-0 sm:-right-3 lg:-right-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#07182B] shadow-2xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:scale-105 active:scale-95 ${
+            className={`absolute right-0 sm:-right-3 lg:-right-5 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 flex items-center justify-center z-30 cursor-pointer transition-all hover:bg-slate-50 active:scale-95 ${
               canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
-            <ChevronRight className="w-5 h-5 text-[#07182B]" />
+            <ChevronRight className="w-5 h-5 text-slate-800" />
           </button>
 
           {/* Carousel Track (Fills 4 cards wide on desktop with generous edge padding so no card is cut off) */}
@@ -339,11 +362,11 @@ export default function ProgramsSection() {
               <Link
                 key={course.number}
                 href={`/programs#${course.slug}`}
-                className="group relative flex flex-col justify-between rounded-xl bg-[#0D233B] border border-white/10 hover:border-white/30 hover:bg-[#102A45] transition-colors duration-200 overflow-hidden shadow-lg snap-start flex-[0_0_285px] sm:flex-[0_0_305px] lg:flex-[0_0_295px] xl:flex-[0_0_315px] 2xl:flex-[0_0_325px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB000]"
+                className="group relative flex flex-col justify-between rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden shadow-xs snap-start flex-[0_0_285px] sm:flex-[0_0_305px] lg:flex-[0_0_295px] xl:flex-[0_0_315px] 2xl:flex-[0_0_325px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A3A7A]"
               >
                 <div>
                   {/* Video Thumbnail (Exact 16:9) */}
-                  <div className="relative w-full aspect-[16/9] overflow-hidden bg-[#07182B]">
+                  <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 border-b border-slate-100">
                     <Image
                       src={course.image}
                       alt={`${course.name} thumbnail`}
@@ -352,18 +375,8 @@ export default function ProgramsSection() {
                       className="object-cover"
                     />
 
-                    {/* Number & Track Badge */}
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-[#07182B]/90 border border-white/15 backdrop-blur-xs flex items-center gap-1.5 shadow-sm">
-                      <span className="font-mono text-[10px] font-bold text-[#FFB000]">
-                        {course.number}
-                      </span>
-                      <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-wider">
-                        {course.category}
-                      </span>
-                    </div>
-
                     {/* Official Tech Logo Pin */}
-                    <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-md bg-[#07182B]/90 border border-white/15 flex items-center justify-center p-1 shadow-sm backdrop-blur-xs">
+                    <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-md bg-white/95 border border-slate-200 flex items-center justify-center p-1 shadow-2xs backdrop-blur-xs">
                       <Image
                         src={course.logo}
                         alt=""
@@ -374,48 +387,69 @@ export default function ProgramsSection() {
                     </div>
                   </div>
 
-                  {/* Course Details (Udemy Typography Rhythm) */}
-                  <div className="p-4 sm:p-4.5 pb-2">
+                  {/* Course Details (Udemy Typography Rhythm on White) */}
+                  <div className="p-4 pb-2">
                     {/* Course Headline Title */}
-                    <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#FFB000] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
+                    <h3 className="text-sm sm:text-base font-bold text-[#1c1d1f] group-hover:text-[#0A3A7A] transition-colors leading-snug line-clamp-2 min-h-[2.5rem]">
                       {course.shortTitle}
                     </h3>
 
-                    {/* Institutional Instructor Byline */}
-                    <p className="text-[11px] text-[#8FA5C2] mt-1 truncate font-normal">
+                    {/* Instructor / Lab Byline */}
+                    <p className="text-[12px] text-[#6a6f73] mt-1 truncate font-normal">
                       {course.instructor}
                     </p>
 
-                    {/* Metadata & Bestseller Badge */}
-                    <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#FFB000]/15 text-[#FFB000] border border-[#FFB000]/30">
-                        {course.badge}
-                      </span>
+                    {/* Udemy Rating & Badge Row */}
+                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                      {course.badge === 'Bestseller' && (
+                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#d1f2eb] text-[#005646]">
+                          Bestseller
+                        </span>
+                      )}
+                      {course.badge === 'Premium' && (
+                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#401b9c] text-white">
+                          Premium
+                        </span>
+                      )}
+                      {course.badge === 'Lab Track' && (
+                        <span className="px-2 py-0.5 rounded-xs text-[11px] font-bold bg-[#eceb98] text-[#3d3c0a]">
+                          Lab Track
+                        </span>
+                      )}
 
-                      <div className="flex items-center gap-1.5 text-xs text-slate-300 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-[#FFB000] shrink-0" />
-                        <span>{course.duration}</span>
+                      <div className="flex items-center gap-1 text-xs font-bold text-[#b4690e]">
+                        <Star className="w-3.5 h-3.5 fill-[#b4690e] text-[#b4690e]" />
+                        <span>{course.rating.toFixed(1)}</span>
                       </div>
+
+                      <span className="text-[11px] text-[#6a6f73]">
+                        ({course.ratingCount})
+                      </span>
                     </div>
 
                     {/* Meaningful One-Line Tagline Description */}
-                    <p className="text-xs text-[#B8C6D8] mt-2 line-clamp-2 leading-relaxed font-normal">
+                    <p className="text-xs text-[#6a6f73] mt-2 line-clamp-2 leading-relaxed font-normal">
                       {course.tagline}
                     </p>
                   </div>
                 </div>
 
-                {/* Footer: Mode & Premium Explore Button */}
-                <div className="p-4 sm:p-4.5 pt-3 border-t border-white/10 mt-auto space-y-2.5">
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                    <Laptop className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="truncate">{course.mode}</span>
+                {/* Footer: Metadata on Left, Udemy Outline Button on Right */}
+                <div className="p-4 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between gap-2">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-[#1c1d1f]">
+                      {course.duration}
+                    </span>
+                    <span className="text-[11px] text-[#6a6f73] flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      Lab Certified
+                    </span>
                   </div>
 
-                  {/* Premium Action Button */}
-                  <div className="w-full py-2 px-3 rounded-lg bg-[#FFB000] group-hover:bg-[#E59E00] text-[#07182B] text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5">
+                  {/* Clean Human-Crafted Outline Button (Udemy "Add to cart" style) */}
+                  <div className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] group-hover:bg-[#0A3A7A] group-hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap">
                     <span>Explore Track</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#07182B] transform group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3 h-3" />
                   </div>
                 </div>
               </Link>
@@ -425,27 +459,27 @@ export default function ProgramsSection() {
         </div>
 
         {/* ── 4. EXPLORE ALL PROGRAMMES (UDEMY BOTTOM CTA LINK) ── */}
-        <div className="mt-8">
+        <div className="mt-7">
           <Link
             href="/programs"
-            className="inline-flex items-center gap-2 text-sm font-bold text-white hover:text-[#FFB000] transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0A3A7A] hover:text-[#06284F] hover:underline transition-colors group"
           >
             <span>Show all {selectedTab === 'All Programmes' ? 'academic' : selectedTab} courses</span>
-            <ArrowRight className="w-4 h-4 text-[#FFB000] transform group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 text-[#0A3A7A] transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        {/* ── 5. ADVISORY BANNER: COMPACT & ELEGANT ── */}
-        <div className="mt-10 sm:mt-12 p-6 rounded-2xl bg-[#0D233B] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-lg">
+        {/* ── 5. ADVISORY BANNER: CLEAN LIGHT SURFACE ── */}
+        <div className="mt-10 sm:mt-12 p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xs">
           <div className="flex items-start sm:items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#FFB000]/10 border border-[#FFB000]/20 flex items-center justify-center text-[#FFB000] shrink-0">
-              <HelpCircle className="w-5 h-5 text-[#FFB000]" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0A3A7A] shrink-0">
+              <HelpCircle className="w-5 h-5 text-[#0A3A7A]" />
             </div>
             <div>
-              <div className="text-sm sm:text-base font-bold text-white">
+              <div className="text-sm sm:text-base font-bold text-slate-900">
                 Unsure which program fits your background?
               </div>
-              <div className="text-xs sm:text-sm text-[#B8C6D8] font-normal mt-0.5">
+              <div className="text-xs sm:text-sm text-slate-600 font-normal mt-0.5">
                 Our admissions advisors in Trichy can evaluate your academic background and recommend the ideal track.
               </div>
             </div>
@@ -454,7 +488,7 @@ export default function ProgramsSection() {
           <button
             type="button"
             onClick={() => openModal()}
-            className="px-6 py-3 rounded-xl bg-[#FFB000] hover:bg-[#E59E00] text-[#07182B] font-extrabold text-xs sm:text-sm shrink-0 transition-colors cursor-pointer shadow-md"
+            className="px-6 py-3 rounded-xl bg-[#0A3A7A] hover:bg-[#06284F] text-white font-extrabold text-xs sm:text-sm shrink-0 transition-colors cursor-pointer shadow-xs"
           >
             Get Free Career Assessment
           </button>
