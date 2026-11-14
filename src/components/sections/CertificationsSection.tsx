@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Award, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { CERTIFICATE_TIERS } from '@/data/siteData';
+import BrandLogo from '@/components/ui/BrandLogo';
 
 export default function CertificationsSection() {
   return (
@@ -11,16 +12,14 @@ export default function CertificationsSection() {
       <div className="container-custom">
         
         {/* Header */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold uppercase tracking-wider mb-4">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Digital Credential Authority</span>
+        <div className="max-w-3xl mb-12">
+          <div className="text-xs font-bold tracking-[0.18em] uppercase text-[#0A3A7A] mb-3">
+            Digital Credential Authority
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-[1.12]">
             100% Digitally Verifiable Credentials with <span className="text-[#0A3A7A]">3 Merit Tiers.</span>
           </h2>
-          <div className="w-12 h-1 bg-[#FCAF0A] mt-4 rounded-full" />
-          <p className="text-slate-600 text-base mt-4 max-w-2xl font-normal leading-relaxed">
+          <p className="text-slate-600 text-base mt-3 max-w-2xl font-normal leading-relaxed">
             Every credential issued by Skillthinker Solutions is backed by rigorous practical evaluations, lab assignments, and project defense. Recruiters, HR teams, and academic institutions can verify certificate authenticity instantly online.
           </p>
         </div>
@@ -36,13 +35,7 @@ export default function CertificationsSection() {
               <div className="border border-slate-300 rounded-xl p-5 sm:p-6 text-center space-y-4 bg-white/95">
                 {/* Logo & Header */}
                 <div className="flex justify-center">
-                  <Image
-                    src="/images/brand/logo-brand.png"
-                    alt="Skillthinker Solutions"
-                    width={130}
-                    height={32}
-                    className="h-8 w-auto object-contain"
-                  />
+                  <BrandLogo variant="light" size="sm" showTagline={true} />
                 </div>
 
                 <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#0A3A7A] font-bold">

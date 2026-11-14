@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
 import { useAdvisorModal } from '@/components/ui/AdvisorModal';
+import BrandLogo from '@/components/ui/BrandLogo';
 
 export default function Header() {
   const pathname = usePathname();
@@ -68,18 +69,9 @@ export default function Header() {
         <div className="container-custom">
           <div className="flex items-center justify-between h-14">
 
-            {/* Brand Logo in Frosted Pill */}
-            <Link href="/" className="flex items-center gap-3 shrink-0">
-              <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm">
-                <Image
-                  src="/images/brand/logo-brand.png"
-                  alt="Skillthinker Solutions"
-                  width={130}
-                  height={32}
-                  className="h-7 w-auto object-contain"
-                  priority
-                />
-              </div>
+            {/* Official Brand Logo Lockup */}
+            <Link href="/" className="group flex items-center shrink-0">
+              <BrandLogo variant="dark" size="sm" showTagline={true} />
             </Link>
 
             {/* Desktop Navigation - Pure Human-Crafted Typography (No Icon Clutter) */}
@@ -212,15 +204,9 @@ export default function Header() {
           />
           <div className="absolute top-0 right-0 h-full w-80 max-w-full bg-[#041427] border-l border-white/10 shadow-2xl flex flex-col p-6 z-10">
             <div className="flex items-center justify-between pb-5 border-b border-white/10">
-              <div className="bg-white px-2.5 py-1.5 rounded-lg">
-                <Image
-                  src="/images/brand/logo-brand.png"
-                  alt="Skillthinker"
-                  width={120}
-                  height={30}
-                  className="h-7 w-auto object-contain"
-                />
-              </div>
+              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                <BrandLogo variant="dark" size="sm" showTagline={true} />
+              </Link>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}

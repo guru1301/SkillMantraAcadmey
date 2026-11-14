@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Mail, Phone, MapPin, MessageCircle, ShieldCheck } from 'lucide-react';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
+import BrandLogo from '@/components/ui/BrandLogo';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -31,15 +32,9 @@ export default function Footer() {
 
           {/* Col 1: Brand identity + contacts (4 cols) */}
           <div className="lg:col-span-4 space-y-5">
-            <div className="bg-white px-3 py-2 rounded inline-block shadow-xs">
-              <Image
-                src="/images/brand/logo-brand.png"
-                alt="Skillthinker Solutions"
-                width={148}
-                height={38}
-                className="object-contain max-h-9 w-auto"
-              />
-            </div>
+            <Link href="/" className="inline-block group">
+              <BrandLogo variant="dark" size="md" showTagline={true} />
+            </Link>
 
             <p className="text-sm text-slate-400 leading-[1.75] max-w-xs">
               <strong className="text-white font-semibold">Learn Today • Build Tomorrow</strong> — practical, industry-relevant training for students, graduates, and working professionals.
