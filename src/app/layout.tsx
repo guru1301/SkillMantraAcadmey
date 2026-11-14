@@ -1,15 +1,23 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import InstitutionalChatWidget from '@/components/ui/InstitutionalChatWidget';
+import { AdvisorModalProvider } from '@/components/ui/AdvisorModal';
 import { BRAND_INFO } from '@/data/siteData';
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 export const viewport: Viewport = {
@@ -20,13 +28,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Skill Mantra Academy | Learn Today • Build Tomorrow | Institutional Education & Skill Development',
-    template: '%s | Skill Mantra Academy',
+    default: 'SkillThinker | Learn Today • Build Tomorrow | Institutional Education & Skill Development',
+    template: '%s | SkillThinker',
   },
   description:
-    'Skill Mantra Academy connects higher-education institutions, educators, students, and corporate organizations through industry-relevant technical training, Faculty Development Programs (FDP), and hands-on bootcamps.',
+    'SkillThinker connects higher-education institutions, educators, students, and corporate organizations through industry-relevant technical training, Faculty Development Programs (FDP), and hands-on bootcamps.',
   keywords: [
-    'Skill Mantra Academy',
+    'SkillThinker',
     'Faculty Development Program',
     'FDP Engineering Colleges',
     'Institutional Technical Training',
@@ -37,30 +45,30 @@ export const metadata: Metadata = {
     'Full Stack Web Development',
     'Cloud Computing Workshops',
   ],
-  authors: [{ name: 'Skill Mantra Academy' }],
-  creator: 'Skill Mantra Academy',
-  publisher: 'Skill Mantra Academy',
-  metadataBase: new URL('https://skillmantraacademy.com'),
+  authors: [{ name: 'SkillThinker' }],
+  creator: 'SkillThinker',
+  publisher: 'SkillThinker',
+  metadataBase: new URL('https://skillthinker.com'),
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://skillmantraacademy.com',
-    title: 'Skill Mantra Academy — Institutional Education & Professional Skill Development',
+    url: 'https://skillthinker.com',
+    title: 'SkillThinker — Institutional Education & Professional Skill Development',
     description:
       'Connecting learners, institutions, and industry through practical, industry-relevant technical and professional skill training.',
-    siteName: 'Skill Mantra Academy',
+    siteName: 'SkillThinker',
     images: [
       {
         url: '/images/hero-training.jpg',
         width: 1200,
         height: 630,
-        alt: 'Skill Mantra Academy Institutional Training',
+        alt: 'SkillThinker Institutional Training',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Skill Mantra Academy | Learn Today • Build Tomorrow',
+    title: 'SkillThinker | Learn Today • Build Tomorrow',
     description: 'Bridging higher education with practical industry skills through institutional training and faculty programs.',
     images: ['/images/hero-training.jpg'],
   },
@@ -81,8 +89,8 @@ export default function RootLayout({
     name: BRAND_INFO.name,
     slogan: BRAND_INFO.tagline,
     description: BRAND_INFO.positioning,
-    url: 'https://skillmantraacademy.com',
-    logo: 'https://skillmantraacademy.com/images/brand/logo-brand.png',
+    url: 'https://skillthinker.com',
+    logo: 'https://skillthinker.com/images/brand/logo-brand.png',
     email: BRAND_INFO.contactEmail,
     telephone: BRAND_INFO.contactPhone,
     address: {
@@ -100,7 +108,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${jakarta.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -108,10 +116,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-white text-[#162033] antialiased selection:bg-[#FCAF0A]/30 selection:text-[#062F68]">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <InstitutionalChatWidget />
+        <AdvisorModalProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <InstitutionalChatWidget />
+        </AdvisorModalProvider>
       </body>
     </html>
   );
