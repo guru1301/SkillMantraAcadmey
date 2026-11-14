@@ -146,10 +146,13 @@ export default function WhySkillthinkerSection() {
           
           {/* Section Heading - Exact Corporate Aesthetic from Reference */}
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#06284F] tracking-tight uppercase">
-              WHAT WE DO
+            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#06284F] tracking-tight">
+              Why Choose Skillthinker Solutions
             </h2>
-            <div className="w-12 h-1 bg-[#FCAF0A] mx-auto mt-2.5 rounded-full" />
+            <p className="text-base sm:text-lg text-slate-600 font-medium mt-2 max-w-2xl mx-auto">
+              The right skills can create real opportunities.
+            </p>
+            <div className="w-12 h-1 bg-[#FCAF0A] mx-auto mt-3 rounded-full" />
           </div>
 
           {/* Horizontal Icon Tabs (7 Columns) */}
