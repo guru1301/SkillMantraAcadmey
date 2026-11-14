@@ -2,8 +2,27 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Target, Compass, Sparkles, MapPin, CheckCircle2, Award } from 'lucide-react';
+import { 
+  Target, 
+  Compass, 
+  Sparkles, 
+  MapPin, 
+  CheckCircle2, 
+  ShieldCheck, 
+  Code2, 
+  TrendingUp, 
+  HeartHandshake, 
+  Award 
+} from 'lucide-react';
 import { BRAND_INFO, CORE_VALUES } from '@/data/siteData';
+
+const PRINCIPLE_META = [
+  { icon: ShieldCheck,    color: 'text-[#0A3A7A]',   bg: 'bg-blue-50 border-blue-200' },
+  { icon: Code2,          color: 'text-violet-700',  bg: 'bg-violet-50 border-violet-200' },
+  { icon: TrendingUp,     color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
+  { icon: HeartHandshake, color: 'text-sky-700',     bg: 'bg-sky-50 border-sky-200' },
+  { icon: Award,          color: 'text-amber-700',   bg: 'bg-amber-50 border-amber-200' },
+];
 
 export default function AboutSection() {
   return (
@@ -122,7 +141,7 @@ export default function AboutSection() {
 
         </div>
 
-        {/* Block 3: Our 5 Foundational Principles (5-Column Balanced Grid, Zero Holes) */}
+        {/* Block 3: Our 5 Foundational Principles (With Custom Icons, Balanced 5-Col Grid) */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-2">
             <div className="flex items-center gap-2">
@@ -137,27 +156,36 @@ export default function AboutSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {CORE_VALUES.map((val, i) => (
-              <div
-                key={val.title}
-                className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-[#0A3A7A]/30 hover:shadow-md transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-black font-mono px-2 py-0.5 rounded bg-slate-100 text-[#0A3A7A] border border-slate-200">
-                      0{i + 1}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-[#FCAF0A]" />
+            {CORE_VALUES.map((val, i) => {
+              const meta = PRINCIPLE_META[i % PRINCIPLE_META.length];
+              const IconComp = meta.icon;
+              return (
+                <div
+                  key={val.title}
+                  className="group p-5 rounded-2xl bg-white border border-slate-200 hover:border-[#0A3A7A]/30 hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Top Icon & Number Badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-10 h-10 rounded-xl ${meta.bg} border flex items-center justify-center ${meta.color} shadow-2xs group-hover:scale-105 transition-transform`}>
+                        <IconComp className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-mono font-black px-2 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">
+                        0{i + 1}
+                      </span>
+                    </div>
+
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#0A3A7A] transition-colors mb-2 leading-snug">
+                      {val.title}
+                    </h4>
+
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                      {val.description}
+                    </p>
                   </div>
-                  <h4 className="text-base font-extrabold text-slate-900 mb-2 leading-snug">
-                    {val.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {val.description}
-                  </p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

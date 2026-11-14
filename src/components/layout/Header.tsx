@@ -84,6 +84,13 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1.5">
+              <Link
+                href="/"
+                className="px-3.5 py-2 text-sm font-semibold text-white/85 hover:text-white rounded-xl hover:bg-white/10 transition-colors"
+              >
+                Home
+              </Link>
+
               {/* Programs Mega-Menu Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -232,6 +239,13 @@ export default function Header() {
             </div>
 
             <nav className="flex-1 overflow-y-auto py-6 space-y-2">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 px-4 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                Home
+              </Link>
               <Link
                 href="/#programs"
                 onClick={() => setMobileMenuOpen(false)}
