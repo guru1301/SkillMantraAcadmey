@@ -39,7 +39,7 @@ export default function ForCorporatesPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-2xl sm:text-3xl font-bold text-[#162033]">
-              Why Corporate L&D Teams Choose Skill Mantra Academy
+              Why Corporate L&D Teams Choose SkillThinker
             </h2>
             <div className="gold-accent-line mx-auto my-3" />
           </div>

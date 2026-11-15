@@ -1,5 +1,10 @@
-import { query } from '@/lib/db';
+/**
+ * Programs Data Access Layer — Fully migrated to FastAPI Backend.
+ */
+import { apiGet, apiPost, apiDelete } from '@/lib/api/client';
 import { ProgramInput } from '@/lib/validations/program';
+import { assertUuid } from '@/lib/validations/ids';
+import { ApiError } from '@/lib/api/errors';
 
 export interface ProgramRecord {
   id: string;
@@ -12,95 +17,75 @@ export interface ProgramRecord {
   batches_count?: number;
 }
 
+/**
+ * Retrieves programs from FastAPI.
+ */
 export async function getPrograms(filters?: { status?: string }): Promise<ProgramRecord[]> {
-  const whereClauses: string[] = [];
-  const params: any[] = [];
-
-  if (filters?.status && filters.status !== 'all') {
-    params.push(filters.status);
-    whereClauses.push(`p.status = $${params.length}`);
+  try {
+    const params: Record<string, string> = {};
+    if (filters?.status && filters.status !== 'all') params.status = filters.status;
+    const programs = await apiGet<ProgramRecord[]>('/programs', params);
+    return programs || [];
+  } catch (err) {
+    console.error('[getPrograms error]:', err);
+    return [];
   }
-
-  const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-  const sqlQuery = `
-    SELECT 
-      p.id, 
-      p.name, 
-      p.description, 
-      p.duration_days, 
-      p.status, 
-      p.created_at, 
-      p.updated_at,
-      COUNT(b.id)::int as batches_count
-    FROM programs p
-    LEFT JOIN batches b ON b.program_id = p.id
-    ${whereSql}
-    GROUP BY p.id
-    ORDER BY p.name ASC
-  `;
-
-  return query<ProgramRecord>(sqlQuery, params);
 }
 
+/**
+ * Retrieves a single program by ID with batch counts from FastAPI.
+ */
 export async function getProgramById(id: string): Promise<ProgramRecord | null> {
-  const rows = await query<ProgramRecord>(
-    `
-    SELECT 
-      p.id, 
-      p.name, 
-      p.description, 
-      p.duration_days, 
-      p.status, 
-      p.created_at, 
-      p.updated_at,
-      COUNT(b.id)::int as batches_count
-    FROM programs p
-    LEFT JOIN batches b ON b.program_id = p.id
-    WHERE p.id = $1
-    GROUP BY p.id
-    LIMIT 1
-    `,
-    [id]
-  );
-  return rows[0] || null;
+  const safeProgramId = assertUuid(id, 'programId');
+  try {
+    return await apiGet<ProgramRecord>(`/programs/${safeProgramId}`);
+  } catch (err) {
+    console.error('[getProgramById error]:', err);
+    return null;
+  }
 }
 
+/**
+ * Retrieves programs associated with a college from FastAPI.
+ */
 export async function getProgramsByCollegeId(collegeId: string): Promise<ProgramRecord[]> {
-  return query<ProgramRecord>(
-    `
-    SELECT DISTINCT
-      p.id, 
-      p.name, 
-      p.description, 
-      p.duration_days, 
-      p.status, 
-      p.created_at, 
-      p.updated_at,
-      COUNT(b.id)::int as batches_count
-    FROM programs p
-    JOIN batches b ON b.program_id = p.id
-    WHERE b.college_id = $1
-    GROUP BY p.id
-    ORDER BY p.name ASC
-    `,
-    [collegeId]
-  );
+  const safeCollegeId = assertUuid(collegeId, 'collegeId');
+  try {
+    const programs = await apiGet<ProgramRecord[]>('/programs', { college_id: safeCollegeId });
+    return programs || [];
+  } catch (err) {
+    console.error('[getProgramsByCollegeId error]:', err);
+    return [];
+  }
 }
 
+/**
+ * Creates a new program curriculum via FastAPI.
+ */
 export async function createProgram(data: ProgramInput): Promise<{ id: string }> {
-  const rows = await query<{ id: string }>(
-    `
-    INSERT INTO programs (name, description, duration_days, status)
-    VALUES ($1, $2, $3, $4)
-    RETURNING id
-    `,
-    [
-      data.name.trim(),
-      data.description?.trim() || null,
-      data.durationDays || 30,
-      data.status || 'active',
-    ]
-  );
-  return rows[0];
+  const payload = {
+    name: data.name.trim(),
+    description: data.description?.trim() || null,
+    duration_days: data.durationDays || 30,
+    status: data.status || 'active',
+  };
+
+  const res = await apiPost<{ id: string }>('/programs', payload);
+  return { id: String(res.id) };
+}
+
+/**
+ * Deletes a program curriculum via FastAPI.
+ */
+export async function deleteProgram(id: string): Promise<{ success: boolean; error?: string }> {
+  const safeProgramId = assertUuid(id, 'programId');
+  try {
+    await apiDelete(`/programs/${safeProgramId}`);
+    return { success: true };
+  } catch (err: any) {
+    if (err instanceof ApiError) {
+      return { success: false, error: err.message };
+    }
+    return { success: false, error: 'Failed to delete program.' };
+  }
 }

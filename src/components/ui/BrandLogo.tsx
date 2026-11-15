@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 interface BrandLogoProps {
   /**
-   * 'dark' = for dark backgrounds (white text, gold accent, slate tagline)
+   * 'dark' = for dark backgrounds (white text, gold accent, bright slate tagline)
    * 'light' = for light backgrounds (navy text, amber accent, blue tagline)
    */
   variant?: 'dark' | 'light';
@@ -18,45 +18,69 @@ export default function BrandLogo({
   variant = 'dark',
   showTagline = true,
   className = '',
-  size = 'md',
+  size = 'sm',
 }: BrandLogoProps) {
   const isDark = variant === 'dark';
 
-  // Dimension scaling
   const dimensions = {
-    sm: { icon: 34, iconClass: 'h-8 w-8', title: 'text-sm sm:text-base', subtitle: 'text-[9px] tracking-[0.16em]' },
-    md: { icon: 42, iconClass: 'h-10 w-10 sm:h-11 sm:w-11', title: 'text-base sm:text-lg', subtitle: 'text-[10px] sm:text-[10.5px] tracking-[0.18em]' },
-    lg: { icon: 52, iconClass: 'h-12 w-12 sm:h-14 sm:w-14', title: 'text-lg sm:text-xl', subtitle: 'text-[11px] sm:text-[12px] tracking-[0.2em]' },
+    sm: {
+      emblem: 36,
+      emblemClass: 'w-8 h-8 sm:w-9 sm:h-9',
+      dividerClass: 'h-6',
+      title: 'text-[15px] sm:text-[16px]',
+      subtitle: 'text-[8.5px] sm:text-[9.5px] tracking-[0.2em]',
+    },
+    md: {
+      emblem: 42,
+      emblemClass: 'w-9 h-9 sm:w-10 sm:h-10',
+      dividerClass: 'h-7',
+      title: 'text-[17px] sm:text-[18px]',
+      subtitle: 'text-[9.5px] sm:text-[10.5px] tracking-[0.22em]',
+    },
+    lg: {
+      emblem: 52,
+      emblemClass: 'w-11 h-11 sm:w-12 sm:h-12',
+      dividerClass: 'h-8',
+      title: 'text-[19px] sm:text-[21px]',
+      subtitle: 'text-[11px] sm:text-[12px] tracking-[0.24em]',
+    },
   }[size];
 
   return (
     <div className={`flex items-center gap-2.5 sm:gap-3 select-none ${className}`}>
       {/* Official Transparent Emblem Icon */}
-      <div className={`relative shrink-0 ${dimensions.iconClass} transition-transform duration-200 group-hover:scale-105`}>
+      <div className={`relative shrink-0 ${dimensions.emblemClass} transition-transform duration-200 group-hover:scale-105`}>
         <Image
           src="/images/brand/logo-emblem.png"
           alt="Skillthinker Solutions Official Emblem"
-          width={dimensions.icon * 2}
-          height={dimensions.icon * 2}
+          width={dimensions.emblem * 2}
+          height={dimensions.emblem * 2}
           className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]"
           priority
         />
       </div>
 
-      {/* Senior Typographic Wordmark & Registered Tagline */}
+      {/* Hairline Divider */}
+      <div
+        className={`w-px ${dimensions.dividerClass} shrink-0 ${
+          isDark ? 'bg-white/25' : 'bg-[#0A3A7A]/25'
+        }`}
+        aria-hidden="true"
+      />
+
+      {/* Senior Typographic Wordmark & Tagline */}
       <div className="flex flex-col justify-center leading-none">
         <div className="flex items-baseline gap-1.5 flex-nowrap">
           <span
-            className={`font-extrabold uppercase ${dimensions.title} tracking-[-0.03em] ${
+            className={`font-black uppercase ${dimensions.title} tracking-tight ${
               isDark ? 'text-white' : 'text-[#06284F]'
             }`}
           >
             SKILLTHINKER
           </span>
           <span
-            className={`font-black uppercase ${dimensions.title} tracking-wider ${
-              isDark ? 'text-[#FCAF0A]' : 'text-[#D97706]'
-            }`}
+            className="font-black uppercase tracking-tight text-[#FCAF0A]"
+            style={{ fontSize: 'inherit' }}
           >
             SOLUTIONS
           </span>
@@ -65,10 +89,12 @@ export default function BrandLogo({
         {showTagline && (
           <span
             className={`font-bold uppercase ${dimensions.subtitle} mt-1 ${
-              isDark ? 'text-slate-300/90' : 'text-[#0A3A7A]'
-            }`}
+              isDark ? 'text-slate-200' : 'text-[#0A3A7A]'
+            } flex items-center gap-1.5`}
           >
-            Learn Today • Build Tomorrow
+            <span>LEARN TODAY</span>
+            <span className="w-1 h-1 rounded-full bg-[#FCAF0A] inline-block shrink-0" />
+            <span>BUILD TOMORROW</span>
           </span>
         )}
       </div>

@@ -1,5 +1,9 @@
-import { query } from '@/lib/db';
+/**
+ * Batches Data Access Layer — Fully migrated to FastAPI Backend.
+ */
+import { apiGet, apiPost, apiPatch } from '@/lib/api/client';
 import { BatchInput } from '@/lib/validations/batch';
+import { assertUuid } from '@/lib/validations/ids';
 
 export interface BatchWithDetails {
   id: string;
@@ -13,6 +17,8 @@ export interface BatchWithDetails {
   end_date: string;
   target_strength: number;
   actual_students_count: number;
+  trainers_count: number;
+  assigned_trainers: string | null;
   sessions_count: number;
   status: 'planned' | 'active' | 'completed' | 'cancelled';
   created_at: string;
@@ -28,154 +34,118 @@ export interface BatchStats {
   assessmentsCount: number;
 }
 
+/**
+ * Retrieves batches matching optional filters from FastAPI.
+ */
 export async function getBatches(filters?: {
   collegeId?: string;
   programId?: string;
   status?: string;
   search?: string;
 }): Promise<BatchWithDetails[]> {
-  const whereClauses: string[] = [];
-  const params: any[] = [];
+  const safeCollegeId =
+    filters?.collegeId && filters.collegeId !== 'all'
+      ? assertUuid(filters.collegeId, 'collegeId')
+      : undefined;
+  const safeProgramId =
+    filters?.programId && filters.programId !== 'all'
+      ? assertUuid(filters.programId, 'programId')
+      : undefined;
 
-  if (filters?.collegeId) {
-    params.push(filters.collegeId);
-    whereClauses.push(`b.college_id = $${params.length}`);
+  try {
+    const params: Record<string, string> = {};
+    if (safeCollegeId) params.college_id = safeCollegeId;
+    if (safeProgramId) params.program_id = safeProgramId;
+    if (filters?.status && filters.status !== 'all') params.status = filters.status;
+    if (filters?.search?.trim()) params.search = filters.search.trim();
+
+    const batches = await apiGet<BatchWithDetails[]>('/batches', params);
+    return batches || [];
+  } catch (err) {
+    console.error('[getBatches error]:', err);
+    return [];
   }
-
-  if (filters?.programId) {
-    params.push(filters.programId);
-    whereClauses.push(`b.program_id = $${params.length}`);
-  }
-
-  if (filters?.status && filters.status !== 'all') {
-    params.push(filters.status);
-    whereClauses.push(`b.status = $${params.length}`);
-  }
-
-  if (filters?.search?.trim()) {
-    params.push(`%${filters.search.trim().toLowerCase()}%`);
-    whereClauses.push(
-      `(LOWER(b.code) LIKE $${params.length} OR LOWER(c.name) LIKE $${params.length} OR LOWER(p.name) LIKE $${params.length})`
-    );
-  }
-
-  const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-  const sqlQuery = `
-    SELECT 
-      b.id,
-      b.code,
-      b.college_id,
-      c.name as college_name,
-      c.city as college_city,
-      b.program_id,
-      p.name as program_name,
-      b.start_date::text as start_date,
-      b.end_date::text as end_date,
-      b.target_strength,
-      COUNT(DISTINCT bs.id)::int as actual_students_count,
-      COUNT(DISTINCT ts.id)::int as sessions_count,
-      b.status,
-      b.created_at,
-      b.updated_at
-    FROM batches b
-    JOIN colleges c ON c.id = b.college_id
-    JOIN programs p ON p.id = b.program_id
-    LEFT JOIN batch_students bs ON bs.batch_id = b.id
-    LEFT JOIN training_sessions ts ON ts.batch_id = b.id
-    ${whereSql}
-    GROUP BY b.id, c.name, c.city, p.name
-    ORDER BY b.start_date DESC, b.created_at DESC
-  `;
-
-  return query<BatchWithDetails>(sqlQuery, params);
 }
 
+/**
+ * Retrieves a single batch by ID from FastAPI.
+ */
 export async function getBatchById(id: string): Promise<BatchWithDetails | null> {
-  const rows = await query<BatchWithDetails>(
-    `
-    SELECT 
-      b.id,
-      b.code,
-      b.college_id,
-      c.name as college_name,
-      c.city as college_city,
-      b.program_id,
-      p.name as program_name,
-      b.start_date::text as start_date,
-      b.end_date::text as end_date,
-      b.target_strength,
-      COUNT(DISTINCT bs.id)::int as actual_students_count,
-      COUNT(DISTINCT ts.id)::int as sessions_count,
-      b.status,
-      b.created_at,
-      b.updated_at
-    FROM batches b
-    JOIN colleges c ON c.id = b.college_id
-    JOIN programs p ON p.id = b.program_id
-    LEFT JOIN batch_students bs ON bs.batch_id = b.id
-    LEFT JOIN training_sessions ts ON ts.batch_id = b.id
-    WHERE b.id = $1
-    GROUP BY b.id, c.name, c.city, p.name
-    LIMIT 1
-    `,
-    [id]
-  );
-  return rows[0] || null;
+  const safeBatchId = assertUuid(id, 'batchId');
+  try {
+    return await apiGet<BatchWithDetails>(`/batches/${safeBatchId}`);
+  } catch (err) {
+    console.error('[getBatchById error]:', err);
+    return null;
+  }
 }
 
+/**
+ * Retrieves operational metrics for a batch from FastAPI.
+ */
 export async function getBatchStats(batchId: string): Promise<BatchStats> {
-  const rows = await query<{
-    target_strength: number;
-    actual_students: number;
-    assigned_trainers: number;
-    total_sessions: number;
-  }>(
-    `
-    SELECT 
-      b.target_strength,
-      (SELECT COUNT(*)::int FROM batch_students WHERE batch_id = b.id) as actual_students,
-      (SELECT COUNT(*)::int FROM batch_trainers WHERE batch_id = b.id) as assigned_trainers,
-      (SELECT COUNT(*)::int FROM training_sessions WHERE batch_id = b.id) as total_sessions
-    FROM batches b
-    WHERE b.id = $1
-    `,
-    [batchId]
-  );
-
-  const r = rows[0];
-  return {
-    targetStrength: Number(r?.target_strength ?? 0),
-    actualStudents: Number(r?.actual_students ?? 0),
-    assignedTrainers: Number(r?.assigned_trainers ?? 0),
-    totalSessions: Number(r?.total_sessions ?? 0),
-    attendancePercentage: 0,
-    assessmentsCount: 0,
-  };
+  const safeBatchId = assertUuid(batchId, 'batchId');
+  try {
+    const stats = await apiGet<any>(`/batches/${safeBatchId}/stats`);
+    if (!stats) {
+      return {
+        targetStrength: 0,
+        actualStudents: 0,
+        assignedTrainers: 0,
+        totalSessions: 0,
+        attendancePercentage: 0,
+        assessmentsCount: 0,
+      };
+    }
+    return {
+      targetStrength: Number(stats.targetStrength || stats.target_strength || 0),
+      actualStudents: Number(stats.actualStudents || stats.actual_students || stats.enrolledStudents || 0),
+      assignedTrainers: Number(stats.assignedTrainers || stats.assigned_trainers || 0),
+      totalSessions: Number(stats.totalSessions || stats.total_sessions || 0),
+      attendancePercentage: Number(stats.attendancePercentage || stats.attendance_rate || 0),
+      assessmentsCount: Number(stats.assessmentsCount || 0),
+    };
+  } catch (err) {
+    console.error('[getBatchStats error]:', err);
+    return {
+      targetStrength: 0,
+      actualStudents: 0,
+      assignedTrainers: 0,
+      totalSessions: 0,
+      attendancePercentage: 0,
+      assessmentsCount: 0,
+    };
+  }
 }
 
-export async function createBatch(
-  data: BatchInput,
-  adminId?: string
-): Promise<{ id: string }> {
-  const rows = await query<{ id: string }>(
-    `
-    INSERT INTO batches (
-      code, college_id, program_id, start_date, end_date, target_strength, status, created_by
-    )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING id
-    `,
-    [
-      data.code.trim().toUpperCase(),
-      data.collegeId,
-      data.programId,
-      data.startDate,
-      data.endDate,
-      data.targetStrength || 0,
-      data.status || 'planned',
-      adminId || null,
-    ]
-  );
-  return rows[0];
+/**
+ * Provisions a new cohort batch via FastAPI.
+ */
+export async function createBatch(data: BatchInput, _adminId?: string): Promise<{ id: string }> {
+  const safeCollegeId = assertUuid(data.collegeId, 'collegeId');
+  const safeProgramId = assertUuid(data.programId, 'programId');
+  const payload = {
+    code: data.code.trim().toUpperCase(),
+    college_id: safeCollegeId,
+    program_id: safeProgramId,
+    start_date: data.startDate,
+    end_date: data.endDate,
+    target_strength: data.targetStrength || 0,
+    status: data.status || 'planned',
+  };
+
+  const res = await apiPost<{ id: string }>('/batches', payload);
+  return { id: String(res.id) };
+}
+
+/**
+ * Updates batch progression status via FastAPI.
+ */
+export async function updateBatchStatus(
+  batchId: string,
+  status: 'planned' | 'active' | 'completed' | 'cancelled'
+): Promise<boolean> {
+  const safeBatchId = assertUuid(batchId, 'batchId');
+  await apiPatch(`/batches/${safeBatchId}/status`, { status });
+  return true;
 }

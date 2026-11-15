@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://skillmantraacademy.com';
+  const baseUrl = 'https://skillthinker.com';
 
   const routes = [
     '',

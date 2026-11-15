@@ -96,8 +96,9 @@ export default function SecureDeleteModal({
           {/* Warning Impact Box */}
           {impactDetails.length > 0 && (
             <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3.5 text-xs text-amber-900">
-              <span className="font-semibold block mb-1.5 text-amber-950">
-                ⚠️ Consequences of this action:
+              <span className="font-semibold mb-1.5 text-amber-950 flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>Consequences of this action:</span>
               </span>
               <ul className="list-disc list-inside space-y-1 text-amber-800">
                 {impactDetails.map((detail, idx) => (

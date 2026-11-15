@@ -5,7 +5,7 @@ import CollegeForm from '@/components/admin/CollegeForm';
 
 export default function NewCollegePage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-4 max-w-6xl mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin/dashboard' },
@@ -16,7 +16,7 @@ export default function NewCollegePage() {
 
       <PageHeader
         title="Add Partner College"
-        description="Register a new academic partner institution or enterprise campus in Skill Matra"
+        description="Register a new academic partner institution or enterprise campus in SkillThinker"
       />
 
       <CollegeForm />

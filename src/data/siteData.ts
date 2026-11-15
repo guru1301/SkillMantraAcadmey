@@ -208,7 +208,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'GD & Interview Skills',
     ],
     targetOutcome: 'Master campus recruitment tests, technical interviews, and group discussions.',
-    idealFor: 'Final-year students & graduates preparing for placements',
+    idealFor: 'Ideal for: Final-year students & graduates preparing for placements',
   },
   {
     id: 'prog-programming',
@@ -227,7 +227,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Problem Solving & Coding Practice',
     ],
     targetOutcome: 'Build strong algorithmic thinking and coding fundamentals.',
-    idealFor: 'Beginners starting their programming journey',
+    idealFor: 'Ideal for: Beginners starting their programming journey',
   },
   {
     id: 'prog-web',
@@ -246,7 +246,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Full Stack Project Development',
     ],
     targetOutcome: 'Develop responsive frontend interfaces and complete full stack web applications.',
-    idealFor: 'Aspiring front-end & full stack developers',
+    idealFor: 'Ideal for: Aspiring front-end & full stack developers',
   },
   {
     id: 'prog-dotnet',
@@ -267,7 +267,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Full Stack .NET Projects',
     ],
     targetOutcome: 'Build enterprise-grade web applications and APIs using the Microsoft .NET ecosystem.',
-    idealFor: 'Developers targeting enterprise .NET roles',
+    idealFor: 'Ideal for: Developers targeting enterprise .NET roles',
   },
   {
     id: 'prog-data',
@@ -289,7 +289,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Tableau',
     ],
     targetOutcome: 'Transform raw data into insightful, executive dashboards and business reports.',
-    idealFor: 'Analysts & BI aspirants who love working with data',
+    idealFor: 'Ideal for: Analysts & BI aspirants who love working with data',
   },
   {
     id: 'prog-ai',
@@ -308,7 +308,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'N8N (Nodemation)',
     ],
     targetOutcome: 'Create intelligent AI applications using modern prompt engineering, RAG, and automation.',
-    idealFor: 'Developers exploring applied AI & automation',
+    idealFor: 'Ideal for: Developers exploring applied AI & automation',
   },
   {
     id: 'prog-database',
@@ -326,7 +326,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Joins, Subqueries & Stored Procedures',
     ],
     targetOutcome: 'Design performant relational and document schemas for production applications.',
-    idealFor: 'Backend & database-focused learners',
+    idealFor: 'Ideal for: Backend & database-focused learners',
   },
   {
     id: 'prog-digital-marketing',
@@ -342,7 +342,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'Google Tag Manager (GTM)',
     ],
     targetOutcome: 'Implement high-impact organic search and analytics tag tracking strategies.',
-    idealFor: 'Marketers, business owners & career switchers',
+    idealFor: 'Ideal for: Marketers, business owners & career switchers',
   },
   {
     id: 'prog-java',
@@ -366,7 +366,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'RESTful Web Services',
     ],
     targetOutcome: 'Build robust, scalable enterprise backends using Java and Spring Boot.',
-    idealFor: 'Backend developers building with Java & Spring',
+    idealFor: 'Ideal for: Backend developers building with Java & Spring',
   },
   {
     id: 'prog-python',
@@ -386,7 +386,7 @@ const RAW_PROGRAMS_DATA: Program[] = [
       'High-Level Framework Domains',
     ],
     targetOutcome: 'Write clean, modular Python software from foundational scripts to async frameworks.',
-    idealFor: 'Python developers at any level, beginner to advanced',
+    idealFor: 'Ideal for: Python developers at any level, beginner to advanced',
   },
 ];
 
@@ -441,47 +441,43 @@ export const FAQS_DATA: FaqItem[] = [
     id: 'faq-1',
     question: 'Who can join these programs?',
     answer:
-      'Our programs are open to students, fresh graduates, working professionals, and anyone looking to build practical, job-ready skills — regardless of your current background.',
+      'Our programs are open to students, fresh graduates, working professionals, and anyone who wants to build practical, career-relevant skills. There are no strict prerequisites for most foundational programs.',
   },
   {
     id: 'faq-2',
-    question: 'Do I need prior experience to start?',
+    question: 'Do you offer placement support?',
     answer:
-      'Not for most programs. We structure our courses to build from fundamentals, so beginners are welcome. For more advanced or specialized tracks, our team can help you pick the right starting point.',
+      'Yes. We provide career guidance, resume-building assistance, interview preparation, and placement support to help learners connect with relevant opportunities.',
   },
   {
     id: 'faq-3',
-    question: 'Will I receive a certificate after the course?',
+    question: 'Are the sessions practical and hands-on?',
     answer:
-      'Yes. After completing a course, you take an online assessment through your access code and receive a Bronze, Silver, or Gold Skillthinker Solutions certificate based on your score — each with its own verifiable certificate ID.',
+      'Yes. Every program includes hands-on exercises, assignments, and real-world projects to ensure you can apply what you learn with confidence.',
   },
   {
     id: 'faq-4',
-    question: 'How can someone verify my certificate is genuine?',
+    question: 'Will I receive a certificate after completing the program?',
     answer:
-      'Every certificate includes a unique ID and a link to our certificate verification page (/verify), where anyone can confirm it\'s authentic.',
-    linkText: 'certificate verification page',
-    linkHref: '/verify',
+      'Yes. Every learner who successfully completes their program and assessment receives a verifiable Skillthinker Solutions certificate with a unique certificate ID that can be verified online.',
   },
   {
     id: 'faq-5',
-    question: 'How do I get an access code for the assessment?',
+    question: 'How do I enroll in a course?',
     answer:
-      'Access codes are issued to learners after training, specific to your batch and course. If you haven\'t received yours, reach out to our team using the contact details below.',
+      'You can get in touch with our team through the contact form, by phone, or via email. We will guide you through the available courses, schedules, and enrollment process.',
   },
   {
     id: 'faq-6',
-    question: 'What if I don\'t score well on the assessment?',
+    question: 'Can working professionals attend these programs?',
     answer:
-      'Every completed assessment earns at least a Bronze certificate — there\'s no fail threshold. If you\'d like another attempt to aim for a higher tier, just reach out to your trainer about retaking it.',
+      'Yes. We offer flexible scheduling options, including weekend and evening batches, designed specifically to accommodate the schedules of working professionals.',
   },
   {
     id: 'faq-7',
-    question: 'How do I know which course is right for me?',
+    question: 'What is the duration of the courses?',
     answer:
-      'Have a look at the Courses section above, or send us an enquiry with your goals — our team will help you pick the right fit.',
-    linkText: 'Courses section',
-    linkHref: '#courses',
+      'Course durations vary depending on the program — ranging from short, intensive bootcamps to comprehensive multi-week programs. Contact our team for specific batch schedules.',
   },
 ];
 

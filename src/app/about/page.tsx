@@ -9,7 +9,7 @@ import { BRAND_INFO } from '@/data/siteData';
 export const metadata: Metadata = {
   title: 'About Us | Institutional Vision & Leadership',
   description:
-    'Learn about Skill Mantra Academy, our institutional mission, educational philosophy, and commitment to bridging the gap between college curricula and industry competencies.',
+    'Learn about SkillThinker, our institutional mission, educational philosophy, and commitment to bridging the gap between college curricula and industry competencies.',
 };
 
 export default function AboutPage() {
@@ -45,7 +45,7 @@ export default function AboutPage() {
               Connecting Academic Potential With Industry Capability
             </h1>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-              Skill Mantra Academy was founded to deliver structured, high-impact technical training and faculty development programs that empower higher-education institutions and modern learners.
+              SkillThinker was founded to deliver structured, high-impact technical training and faculty development programs that empower higher-education institutions and modern learners.
             </p>
           </div>
         </div>
@@ -60,14 +60,14 @@ export default function AboutPage() {
                 Our Institutional Purpose
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#162033] tracking-tight">
-                Why Skill Mantra Academy Exists
+                Why SkillThinker Exists
               </h2>
               <div className="gold-accent-line" />
               <p className="text-sm sm:text-base text-[#667085] leading-relaxed">
                 Across India&apos;s higher-education landscape, colleges and universities produce millions of eager graduates every year. However, corporate recruiters consistently identify a widening gap: students master theory for semester examinations but often lack practical confidence in writing clean code, architecting databases, and deploying software.
               </p>
               <p className="text-sm sm:text-base text-[#667085] leading-relaxed">
-                Skill Mantra Academy addresses this structural challenge at its roots. By collaborating directly with college principals, deans, heads of department, and faculty members, we deliver immersive, project-based technical workshops and FDPs that seamlessly integrate into the academic lifecycle.
+                SkillThinker addresses this structural challenge at its roots. By collaborating directly with college principals, deans, heads of department, and faculty members, we deliver immersive, project-based technical workshops and FDPs that seamlessly integrate into the academic lifecycle.
               </p>
 
               <div className="pt-2 border-t border-[#E4E8EF]">
@@ -82,7 +82,7 @@ export default function AboutPage() {
               <div className="relative rounded-2xl overflow-hidden border border-[#E4E8EF] shadow-lg aspect-[4/3] bg-slate-900">
                 <Image
                   src="/images/hero-training.jpg"
-                  alt="Skill Mantra Academy higher-education seminar and practical lab session"
+                  alt="SkillThinker higher-education seminar and practical lab session"
                   fill
                   className="object-cover"
                 />
@@ -139,7 +139,7 @@ export default function AboutPage() {
       <section className="py-16 bg-[#062F68] text-white text-center">
         <div className="container-custom max-w-2xl">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-            Partner With Skill Mantra Academy
+            Partner With SkillThinker
           </h2>
           <p className="text-sm text-slate-300 leading-relaxed mb-6">
             Let&apos;s collaborate to design a structured skill development initiative or faculty empowerment program for your campus.

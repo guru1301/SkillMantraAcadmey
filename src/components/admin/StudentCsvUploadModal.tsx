@@ -11,6 +11,7 @@ import {
   Loader2,
   Table,
 } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import { uploadStudentsBulkAction } from '@/app/actions/students';
 import { StudentRowInput } from '@/lib/validations/student';
 
@@ -40,7 +41,7 @@ export default function StudentCsvUploadModal({
 
   if (!isOpen) return null;
 
-  // 1. Generate & download sample CSV template
+  // 1. Download sample CSV template
   const handleDownloadSample = () => {
     const csvContent =
       'roll_number,full_name,email,phone,department,year_or_semester\n' +
@@ -59,26 +60,21 @@ export default function StudentCsvUploadModal({
     document.body.removeChild(link);
   };
 
-  // 2. Parse CSV text with header normalization
-  const parseCsvText = (text: string) => {
+  // 2. Parse 2D raw rows from Excel or CSV
+  const processMatrixRows = (matrix: any[][]) => {
     setParseError(null);
     setUploadSuccess(null);
 
-    const lines = text
-      .split(/\r\n|\n/)
-      .map((l) => l.trim())
-      .filter((l) => l.length > 0);
-
-    if (lines.length < 2) {
-      setParseError('The CSV file appears to be empty or missing data rows.');
+    if (!matrix || matrix.length < 2) {
+      setParseError('The uploaded file appears to be empty or has no data rows.');
       setParsedRows([]);
       return;
     }
 
-    // Split first row for headers
-    const rawHeaders = lines[0]
-      .split(',')
-      .map((h) => h.replace(/^["']|["']$/g, '').trim().toLowerCase());
+    // Normalize header strings
+    const rawHeaders = matrix[0].map((h) =>
+      String(h || '').replace(/^["']|["']$/g, '').trim().toLowerCase()
+    );
 
     const findIndex = (keys: string[]) =>
       rawHeaders.findIndex((h) => keys.includes(h));
@@ -92,6 +88,8 @@ export default function StudentCsvUploadModal({
       'register_number',
       'registration_number',
       'roll',
+      'student_id',
+      'id',
     ]);
     const nameIdx = findIndex([
       'full_name',
@@ -114,7 +112,7 @@ export default function StudentCsvUploadModal({
 
     if (rollIdx === -1 || nameIdx === -1) {
       setParseError(
-        'Could not find required columns in CSV header. Please ensure headers contain "roll_number" and "full_name" (or download the sample template).'
+        'Could not find required columns in header. Please ensure headers contain "roll_number" and "full_name" (or download the sample template).'
       );
       setParsedRows([]);
       return;
@@ -122,40 +120,33 @@ export default function StudentCsvUploadModal({
 
     const rows: StudentRowInput[] = [];
 
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i];
-      // Regex CSV splitter handling commas inside quotes
-      const values = line
-        .match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
+    for (let i = 1; i < matrix.length; i++) {
+      const row = matrix[i];
+      if (!row || row.length === 0) continue;
 
-      const cleanVals = values.map((v) =>
-        v.replace(/^["']|["']$/g, '').trim()
-      );
-
-      const rollNumber = cleanVals[rollIdx] || '';
-      const fullName = cleanVals[nameIdx] || '';
+      const rollNumber = String(row[rollIdx] || '').trim();
+      const fullName = String(row[nameIdx] || '').trim();
 
       if (!rollNumber && !fullName) {
-        continue; // skip empty trailing rows
+        continue;
       }
 
       rows.push({
         rollNumber,
         fullName,
-        email: emailIdx !== -1 ? cleanVals[emailIdx] || null : null,
-        phone: phoneIdx !== -1 ? cleanVals[phoneIdx] || null : null,
-        department: deptIdx !== -1 ? cleanVals[deptIdx] || null : null,
-        yearOrSemester: yearIdx !== -1 ? cleanVals[yearIdx] || null : null,
+        email: emailIdx !== -1 && row[emailIdx] ? String(row[emailIdx]).trim() : null,
+        phone: phoneIdx !== -1 && row[phoneIdx] ? String(row[phoneIdx]).trim() : null,
+        department: deptIdx !== -1 && row[deptIdx] ? String(row[deptIdx]).trim() : null,
+        yearOrSemester: yearIdx !== -1 && row[yearIdx] ? String(row[yearIdx]).trim() : null,
       });
     }
 
     if (rows.length === 0) {
-      setParseError('No valid student rows could be parsed from the file.');
+      setParseError('No valid student rows found in the uploaded file.');
       setParsedRows([]);
       return;
     }
 
-    // Check for required values
     const invalidRows = rows.filter((r) => !r.rollNumber || !r.fullName);
     if (invalidRows.length > 0) {
       setParseError(
@@ -166,45 +157,75 @@ export default function StudentCsvUploadModal({
     setParsedRows(rows);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0];
-    if (!selected) return;
+  // 3. Process File (Excel .xlsx / .xls or CSV .csv)
+  const processUploadedFile = (selected: File) => {
+    const isExcel =
+      selected.name.endsWith('.xlsx') ||
+      selected.name.endsWith('.xls') ||
+      selected.type.includes('spreadsheet') ||
+      selected.type.includes('excel');
 
-    if (!selected.name.endsWith('.csv')) {
-      setParseError('Please upload a valid .csv spreadsheet file.');
+    const isCsv = selected.name.endsWith('.csv') || selected.type.includes('csv');
+
+    if (!isExcel && !isCsv) {
+      setParseError('Please upload an Excel spreadsheet (.xlsx, .xls) or a CSV (.csv) file.');
       return;
     }
 
     setFile(selected);
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target?.result as string;
-      parseCsvText(text);
-    };
-    reader.readAsText(selected);
+
+    if (isExcel) {
+      reader.onload = (e) => {
+        try {
+          const buffer = e.target?.result as ArrayBuffer;
+          const workbook = XLSX.read(buffer, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const data = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
+          processMatrixRows(data);
+        } catch (err: any) {
+          setParseError('Failed to parse Excel file. Please ensure it is a valid .xlsx or .xls document.');
+        }
+      };
+      reader.readAsArrayBuffer(selected);
+    } else {
+      // CSV
+      reader.onload = (e) => {
+        try {
+          const text = e.target?.result as string;
+          const workbook = XLSX.read(text, { type: 'string' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const data = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
+          processMatrixRows(data);
+        } catch (err: any) {
+          setParseError('Failed to parse CSV file. Please ensure it is properly formatted.');
+        }
+      };
+      reader.readAsText(selected);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (selected) {
+      processUploadedFile(selected);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const dropped = e.dataTransfer.files?.[0];
-    if (dropped && dropped.name.endsWith('.csv')) {
-      setFile(dropped);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const text = event.target?.result as string;
-        parseCsvText(text);
-      };
-      reader.readAsText(dropped);
-    } else {
-      setParseError('Please drop a valid .csv file.');
+    if (dropped) {
+      processUploadedFile(dropped);
     }
   };
 
   const handleUploadSubmit = async () => {
     if (parsedRows.length === 0) return;
 
-    // Filter out rows missing required identifiers
     const validRows = parsedRows.filter((r) => r.rollNumber && r.fullName);
     if (validRows.length === 0) {
       setParseError('All parsed rows are missing required roll number or name.');
@@ -236,12 +257,12 @@ export default function StudentCsvUploadModal({
         {/* Header */}
         <div className="px-6 py-4.5 bg-gradient-to-r from-[#062F68] to-[#0A3A7A] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-[#FCAF0A]">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-[#FCAF0A]">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-bold text-base text-white">
-                Upload Student Roster CSV
+                Upload Student Roster (Excel / CSV)
               </h3>
               <p className="text-xs text-blue-200">
                 Enroll cohort students for batch{' '}
@@ -253,7 +274,7 @@ export default function StudentCsvUploadModal({
           </div>
           <button
             onClick={onClose}
-            className="text-blue-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition"
+            className="text-blue-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -264,7 +285,7 @@ export default function StudentCsvUploadModal({
           {/* Template Download Strip */}
           <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
             <div className="text-xs text-blue-900">
-              <span className="font-bold block">Need the standard CSV format?</span>
+              <span className="font-bold block">Accepted Formats: Excel (.xlsx, .xls) and CSV (.csv)</span>
               <span className="text-blue-700/80">
                 Columns: roll_number, full_name, email, phone, department, year_or_semester
               </span>
@@ -272,10 +293,10 @@ export default function StudentCsvUploadModal({
             <button
               onClick={handleDownloadSample}
               type="button"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-blue-300 text-blue-800 text-xs font-bold hover:bg-blue-100/50 shadow-2xs shrink-0 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-blue-300 text-blue-800 text-xs font-bold hover:bg-blue-100/50 shadow-2xs shrink-0 transition cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-[#0A3A7A]" />
-              <span>Sample CSV</span>
+              <span>Sample Template</span>
             </button>
           </div>
 
@@ -289,7 +310,7 @@ export default function StudentCsvUploadModal({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv"
+              accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -297,10 +318,10 @@ export default function StudentCsvUploadModal({
               <Upload className="w-6 h-6 text-[#0A3A7A]" />
             </div>
             <p className="text-sm font-bold text-slate-800">
-              {file ? file.name : 'Click to upload or drag & drop CSV file'}
+              {file ? file.name : 'Click to select or drag & drop Excel / CSV file'}
             </p>
             <p className="text-xs text-slate-400 mt-1">
-              Supports CSV rosters exported from College ERP or Excel (up to 500 students per batch)
+              Supports .xlsx, .xls, and .csv files exported from College ERP or Excel (up to 500 students)
             </p>
           </div>
 
@@ -331,7 +352,7 @@ export default function StudentCsvUploadModal({
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-500">
-                  Showing first {Math.min(parsedRows.length, 5)} rows
+                  Previewing first {Math.min(parsedRows.length, 5)} rows
                 </span>
               </div>
 
@@ -380,7 +401,7 @@ export default function StudentCsvUploadModal({
           <button
             onClick={onClose}
             type="button"
-            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 transition"
+            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
           >
             Cancel
           </button>
@@ -389,7 +410,7 @@ export default function StudentCsvUploadModal({
             onClick={handleUploadSubmit}
             disabled={parsedRows.length === 0 || isUploading}
             type="button"
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#082e61] text-white text-xs font-bold shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-bold shadow-2xs hover:shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
           >
             {isUploading ? (
               <>
@@ -398,7 +419,7 @@ export default function StudentCsvUploadModal({
               </>
             ) : (
               <>
-                <Upload className="w-3.5 h-3.5" />
+                <Upload className="w-3.5 h-3.5 text-[#FCAF0A]" />
                 <span>Enroll {parsedRows.length} Students</span>
               </>
             )}

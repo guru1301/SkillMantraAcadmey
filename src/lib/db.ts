@@ -1,70 +1,54 @@
-import { neon, neonConfig } from '@neondatabase/serverless';
-
-// Ensure correct HTTPS endpoint resolution for Neon regional hosts
-neonConfig.fetchEndpoint = (host: string) => `https://${host}/sql`;
-
-let cachedSql: ReturnType<typeof neon> | null = null;
-
 /**
- * Returns a serverless Neon SQL query executor.
- * Reuses a cached connection client to avoid TCP/TLS handshake latency on repeated queries.
- * Strictly runs server-side to prevent exposing DATABASE_URL to the client.
+ * Legacy Database Module — Fully Migrated to FastAPI Backend.
+ * Direct PostgreSQL / Neon connections have been retired in Stage D.
+ * All platform data and administrative statistics are now retrieved via FastAPI (/api/v1).
  */
-export function getDb() {
-  if (typeof window !== 'undefined') {
-    throw new Error('Database operations are restricted to server-side environments.');
-  }
+import { apiGet } from '@/lib/api/client';
 
-  const databaseUrl = process.env.DATABASE_URL;
+export interface AdminStats {
+  totalAdmins: number;
+  activeAdmins: number;
+  dbConnected: boolean;
+  systemStatus: string;
+}
 
-  if (!databaseUrl) {
-    throw new Error(
-      'DATABASE_URL is not configured in .env.local. Please provide your Neon PostgreSQL connection string.'
-    );
-  }
-
-  if (!cachedSql) {
-    cachedSql = neon(databaseUrl);
-  }
-
-  return cachedSql;
+export interface PlatformOverviewStats {
+  totalColleges: number;
+  totalPrograms: number;
+  totalBatches: number;
+  activeBatches: number;
+  totalStudents: number;
+  totalResources: number;
+  totalTrainers: number;
 }
 
 /**
- * Safely executes a parameterized SQL query using Neon PostgreSQL with resilient network retry.
+ * Executes a query — DEPRECATED in Stage D.
+ * Direct SQL queries from the Next.js frontend to PostgreSQL are forbidden.
+ * All operations must route through the FastAPI backend API (/api/v1).
  */
 export async function query<T = any>(
-  queryText: string,
-  params: any[] = []
+  _queryText: string,
+  _params: any[] = []
 ): Promise<T[]> {
-  const sql = getDb();
-  let lastError: any;
-
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const result = await sql.query(queryText, params);
-      return result as T[];
-    } catch (err: any) {
-      lastError = err;
-      const isTransientNetwork =
-        err?.message?.includes('fetch failed') ||
-        err?.message?.includes('Connect Timeout') ||
-        err?.message?.includes('UND_ERR_CONNECT_TIMEOUT') ||
-        err?.message?.includes('ENOTFOUND');
-
-      if (isTransientNetwork && attempt < 3) {
-        await new Promise((res) => setTimeout(res, 800 * attempt));
-        continue;
-      }
-      throw err;
-    }
-  }
-
-  throw lastError;
+  throw new Error(
+    'Direct database queries are deprecated and disabled in Stage D. ' +
+    'All data access must route through the FastAPI backend at /api/v1.'
+  );
 }
 
 /**
- * Tests connectivity to the Neon PostgreSQL database.
+ * Returns a database client — DEPRECATED in Stage D.
+ */
+export function getDb(): never {
+  throw new Error(
+    'Direct database connections are deprecated and disabled in Stage D. ' +
+    'The frontend communicates exclusively with the FastAPI backend via HTTP.'
+  );
+}
+
+/**
+ * Tests connectivity to the backend service.
  */
 export async function testDbConnection(): Promise<{
   connected: boolean;
@@ -72,56 +56,40 @@ export async function testDbConnection(): Promise<{
   error?: string;
 }> {
   try {
-    const rows = await query('SELECT 1 as connected, NOW() as server_time');
-    if (rows && rows.length > 0) {
+    const health = await apiGet<{ status: string }>('/health/live');
+    if (health?.status === 'alive') {
       return {
         connected: true,
-        message: 'Successfully connected to Neon PostgreSQL.',
+        message: 'Successfully connected to FastAPI backend.',
       };
     }
     return {
       connected: false,
-      message: 'No response from database.',
+      message: 'Unexpected health probe response from backend.',
     };
   } catch (error: any) {
-    console.error('[Database Connection Error]:', error?.message || error);
     return {
       connected: false,
-      message: 'Failed to connect to Neon PostgreSQL.',
-      error: error?.message || 'Unknown database error',
+      message: 'Failed to connect to FastAPI backend.',
+      error: error?.message || 'Connection error',
     };
   }
 }
 
 /**
- * Fetches real admin user statistics from the Neon database in a single optimized query.
+ * Fetches admin statistics via FastAPI backend (/api/v1/admin/stats).
  */
-export async function getAdminStats(): Promise<{
-  totalAdmins: number;
-  activeAdmins: number;
-  dbConnected: boolean;
-  systemStatus: string;
-}> {
+export async function getAdminStats(): Promise<AdminStats> {
   try {
-    const rows = await query<{
-      total_count: number;
-      active_count: number;
-    }>(`
-      SELECT 
-        COUNT(*)::int as total_count,
-        COUNT(*) FILTER (WHERE status = 'active')::int as active_count
-      FROM admin_users
-    `);
-
-    const r = rows[0];
+    const stats = await apiGet<AdminStats>('/admin/stats');
     return {
-      totalAdmins: Number(r?.total_count ?? 0),
-      activeAdmins: Number(r?.active_count ?? 0),
-      dbConnected: true,
-      systemStatus: 'Operational',
+      totalAdmins: Number(stats?.totalAdmins ?? 0),
+      activeAdmins: Number(stats?.activeAdmins ?? 0),
+      dbConnected: Boolean(stats?.dbConnected ?? true),
+      systemStatus: stats?.systemStatus ?? 'Operational',
     };
   } catch (error: any) {
-    console.error('[Error fetching admin stats]:', error?.message || error);
+    console.error('[Error fetching admin stats via API]:', error?.message || error);
     return {
       totalAdmins: 0,
       activeAdmins: 0,
@@ -132,49 +100,30 @@ export async function getAdminStats(): Promise<{
 }
 
 /**
- * Fetches platform module statistics in a single consolidated SQL query,
- * cutting multiple HTTP round trips down to a single network call.
+ * Fetches platform module statistics via FastAPI backend (/api/v1/admin/overview-stats).
  */
-export async function getPlatformOverviewStats(): Promise<{
-  totalColleges: number;
-  totalPrograms: number;
-  totalBatches: number;
-  totalResources: number;
-  totalTrainers: number;
-}> {
+export async function getPlatformOverviewStats(): Promise<PlatformOverviewStats> {
   try {
-    const rows = await query<{
-      colleges_count: number;
-      programs_count: number;
-      batches_count: number;
-      resources_count: number;
-      trainers_count: number;
-    }>(`
-      SELECT 
-        (SELECT COUNT(*)::int FROM colleges) as colleges_count,
-        (SELECT COUNT(*)::int FROM programs) as programs_count,
-        (SELECT COUNT(*)::int FROM batches) as batches_count,
-        (SELECT COUNT(*)::int FROM resources) as resources_count,
-        (SELECT COUNT(*)::int FROM trainers) as trainers_count
-    `);
-
-    const r = rows[0];
+    const stats = await apiGet<PlatformOverviewStats>('/admin/overview-stats');
     return {
-      totalColleges: Number(r?.colleges_count ?? 0),
-      totalPrograms: Number(r?.programs_count ?? 0),
-      totalBatches: Number(r?.batches_count ?? 0),
-      totalResources: Number(r?.resources_count ?? 0),
-      totalTrainers: Number(r?.trainers_count ?? 0),
+      totalColleges: Number(stats?.totalColleges ?? 0),
+      totalPrograms: Number(stats?.totalPrograms ?? 0),
+      totalBatches: Number(stats?.totalBatches ?? 0),
+      activeBatches: Number(stats?.activeBatches ?? 0),
+      totalStudents: Number(stats?.totalStudents ?? 0),
+      totalResources: Number(stats?.totalResources ?? 0),
+      totalTrainers: Number(stats?.totalTrainers ?? 0),
     };
   } catch (error: any) {
-    console.error('[Error fetching platform stats]:', error?.message || error);
+    console.error('[Error fetching platform stats via API]:', error?.message || error);
     return {
       totalColleges: 0,
       totalPrograms: 0,
       totalBatches: 0,
+      activeBatches: 0,
+      totalStudents: 0,
       totalResources: 0,
       totalTrainers: 0,
     };
   }
 }
-

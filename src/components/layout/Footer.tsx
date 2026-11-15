@@ -30,114 +30,102 @@ export default function Footer() {
         {/* Main directory grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-[#0A2A4A]">
 
-          {/* Col 1: Brand identity + contacts (4 cols) */}
-          <div className="lg:col-span-4 space-y-5">
-            <Link href="/" className="inline-block group">
+          {/* Col 1: Brand identity (4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
+            <Link href="/#top" className="inline-block group">
               <BrandLogo variant="dark" size="md" showTagline={true} />
             </Link>
 
-            <p className="text-sm text-slate-400 leading-[1.75] max-w-xs">
-              <strong className="text-white font-semibold">Learn Today • Build Tomorrow</strong> — practical, industry-relevant training for students, graduates, and working professionals.
+            <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
+              Learn Today · Build Tomorrow — practical, industry-relevant training for students, graduates, and working professionals.
             </p>
-
-            {/* Contact strip */}
-            <div className="space-y-2.5 text-xs text-slate-400">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-3.5 h-3.5 text-[#FCAF0A] shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{BRAND_INFO.officeLocation}</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-3.5 h-3.5 text-[#FCAF0A] shrink-0" />
-                <a href={`tel:${BRAND_INFO.contactPhone.replace(/\s+/g, '')}`} className="hover:text-white transition-colors">
-                  {BRAND_INFO.contactPhone}
-                </a>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Mail className="w-3.5 h-3.5 text-[#FCAF0A] shrink-0" />
-                <a href={`mailto:${BRAND_INFO.contactEmail}`} className="hover:text-white transition-colors">
-                  {BRAND_INFO.contactEmail}
-                </a>
-              </div>
-            </div>
-
-            <a
-              href={BRAND_INFO.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-xs"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Chat on WhatsApp</span>
-            </a>
           </div>
 
-          {/* Col 2: Programs (4 cols) */}
-          <div className="lg:col-span-4 space-y-3.5">
-            <div className="text-[11px] font-mono font-bold tracking-[0.15em] uppercase text-white/80 border-b border-[#0A2A4A] pb-2.5">
-              Programs Directory
+          {/* Col 2: Quick Links (3 cols) */}
+          <div className="lg:col-span-3 space-y-3.5">
+            <div className="text-xs font-mono font-bold tracking-[0.15em] uppercase text-white/90 border-b border-[#0A2A4A] pb-2.5">
+              Quick Links
             </div>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs text-slate-400">
-              {PROGRAMS_DATA.map((prog) => (
-                <li key={prog.id}>
-                  <Link href="/#programs" className="hover:text-[#FCAF0A] transition-colors leading-snug line-clamp-1 block">
-                    {prog.name}
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li><Link href="/#top" className="hover:text-[#FCAF0A] transition-colors">Home</Link></li>
+              <li><Link href="/#about" className="hover:text-[#FCAF0A] transition-colors">About</Link></li>
+              <li><Link href="/#courses" className="hover:text-[#FCAF0A] transition-colors">Courses</Link></li>
+              <li><Link href="/#trainers" className="hover:text-[#FCAF0A] transition-colors">Trainers</Link></li>
+              <li><Link href="/#faq" className="hover:text-[#FCAF0A] transition-colors">FAQ</Link></li>
+              <li><Link href="/#contact" className="hover:text-[#FCAF0A] transition-colors">Contact</Link></li>
             </ul>
           </div>
 
-          {/* Col 3: Academy links (2 cols) */}
+          {/* Col 3: Portal & Tools (2 cols) */}
           <div className="lg:col-span-2 space-y-3.5">
-            <div className="text-[11px] font-mono font-bold tracking-[0.15em] uppercase text-white/80 border-b border-[#0A2A4A] pb-2.5">
-              Academy
+            <div className="text-xs font-mono font-bold tracking-[0.15em] uppercase text-white/90 border-b border-[#0A2A4A] pb-2.5">
+              Portal &amp; Tools
             </div>
-            <ul className="space-y-2.5 text-xs text-slate-400">
-              <li><Link href="/#why-skillthinker" className="hover:text-[#FCAF0A] transition-colors">Why Skillthinker</Link></li>
-              <li><Link href="/#about" className="hover:text-[#FCAF0A] transition-colors">About Us</Link></li>
-              <li><Link href="/#audiences" className="hover:text-[#FCAF0A] transition-colors">Who We Serve</Link></li>
-              <li><Link href="/#certifications" className="hover:text-[#FCAF0A] transition-colors">Verifiable Credentials</Link></li>
-              <li><Link href="/#journey" className="hover:text-[#FCAF0A] transition-colors">Learning Journey</Link></li>
-              <li><Link href="/#mentors" className="hover:text-[#FCAF0A] transition-colors">Our Trainers</Link></li>
-              <li><Link href="/#faq" className="hover:text-[#FCAF0A] transition-colors">FAQs</Link></li>
-            </ul>
-          </div>
-
-          {/* Col 4: Portals (2 cols) */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <div className="text-[11px] font-mono font-bold tracking-[0.15em] uppercase text-white/80 border-b border-[#0A2A4A] pb-2.5">
-              Portals
-            </div>
-            <ul className="space-y-2.5 text-xs text-slate-400">
+            <ul className="space-y-2 text-xs text-slate-300">
               <li>
-                <Link href="/login" className="text-white hover:text-[#FCAF0A] transition-colors font-medium">
-                  Portal Login
-                </Link>
+                <a href="/assessment.html" className="text-[#FCAF0A] hover:underline font-medium">
+                  Take Assessment
+                </a>
               </li>
               <li>
-                <Link href="/verify" className="inline-flex items-center gap-1.5 text-[#FCAF0A] hover:text-white transition-colors font-medium">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                <a href="/student-login.html" className="hover:text-white transition-colors">
+                  Feedback
+                </a>
+              </li>
+              <li>
+                <a href="/verify.html" className="hover:text-[#FCAF0A] transition-colors flex items-center gap-1.5 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Verify Certificate</span>
+                </a>
+              </li>
+              <li>
+                <Link href="/portal" className="hover:text-white transition-colors">
+                  College Portal
                 </Link>
               </li>
-              <li><Link href="/login" className="hover:text-[#FCAF0A] transition-colors">Student Account</Link></li>
-              <li><Link href="/login" className="hover:text-[#FCAF0A] transition-colors">Trainer Portal</Link></li>
-              <li><Link href="/#contact" className="hover:text-[#FCAF0A] transition-colors">Admissions Desk</Link></li>
             </ul>
           </div>
+
+          {/* Col 4: Contact Info (3 cols) */}
+          <div className="lg:col-span-3 space-y-3.5">
+            <div className="text-xs font-mono font-bold tracking-[0.15em] uppercase text-white/90 border-b border-[#0A2A4A] pb-2.5">
+              Contact Info
+            </div>
+            <div className="space-y-2.5 text-xs text-slate-300">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-[#FCAF0A] shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  H274, First Floor, Phase 1, Anna Nagar, Trichy – 620026
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-[#FCAF0A] shrink-0" />
+                <a href="tel:+919442605096" className="hover:text-white transition-colors font-medium">
+                  +91 94426 05096
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-[#FCAF0A] shrink-0" />
+                <a href="mailto:info@skillthinker.com" className="hover:text-white transition-colors font-medium">
+                  info@skillthinker.com
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Bottom legal bar */}
-        <div className="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
+        <div className="pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div>
-            © {currentYear} {BRAND_INFO.legalName}. All rights reserved.
+            © 2026 Skillthinker Solutions. All rights reserved. www.skillthinker.com
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-xs">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <span>•</span>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
             <span>•</span>
-            <Link href="/verify" className="hover:text-[#FCAF0A] transition-colors">Verify Certificate</Link>
+            <a href="/verify.html" className="hover:text-[#FCAF0A] transition-colors">Verify Certificate</a>
           </div>
         </div>
 

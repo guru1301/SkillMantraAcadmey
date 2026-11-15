@@ -71,7 +71,7 @@ export default function CollegeTabs({ collegeId, activeTab }: CollegeTabsProps) 
   ];
 
   return (
-    <div className="border-b border-slate-200 mb-6 overflow-x-auto">
+    <div className="border-b border-slate-200 mb-3.5 sm:mb-4 overflow-x-auto">
       <nav className="flex space-x-1 sm:space-x-2 min-w-max">
         {tabs.map((tab) => {
           const Icon = tab.icon;

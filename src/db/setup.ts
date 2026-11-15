@@ -1,15 +1,13 @@
 import { runMigration } from './migrate';
-import { seedDatabase } from './seed';
 
 async function main() {
   console.log('==================================================');
-  console.log('Skill Matra: Database Setup (Migration & Seeding)');
+  console.log('SkillThinker: Legacy Database Setup (Migrations Only)');
   console.log('==================================================');
 
   await runMigration();
-  await seedDatabase();
 
-  console.log('🎉 Setup complete! Neon PostgreSQL is ready for Skill Matra.');
+  console.log('🎉 Setup complete (legacy seeding disabled for security).');
 }
 
 main().catch((err) => {

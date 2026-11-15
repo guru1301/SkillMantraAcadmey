@@ -1,21 +1,25 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getCollegeById } from '@/lib/db/colleges';
+import { getCollegeById, getColleges } from '@/lib/db/colleges';
 import { getPrograms } from '@/lib/db/programs';
+import { getTrainers } from '@/lib/db/trainers';
 import Breadcrumbs from '@/components/admin/Breadcrumbs';
-import PageHeader from '@/components/admin/PageHeader';
-import NewBatchWrapper from '@/components/admin/NewBatchWrapper';
+import GuidedBatchCreationWizard from '@/components/admin/GuidedBatchCreationWizard';
 
-interface NewBatchPageProps {
+export const dynamic = 'force-dynamic';
+
+interface CollegeNewBatchPageProps {
   params: Promise<{ collegeId: string }>;
 }
 
-export default async function NewBatchPage({ params }: NewBatchPageProps) {
+export default async function CollegeNewBatchPage({ params }: CollegeNewBatchPageProps) {
   const { collegeId } = await params;
 
-  const [college, programs] = await Promise.all([
+  const [college, allColleges, programs, trainers] = await Promise.all([
     getCollegeById(collegeId),
+    getColleges(),
     getPrograms({ status: 'active' }),
+    getTrainers({ status: 'active' }),
   ]);
 
   if (!college) {
@@ -23,7 +27,7 @@ export default async function NewBatchPage({ params }: NewBatchPageProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin/dashboard' },
@@ -34,15 +38,20 @@ export default async function NewBatchPage({ params }: NewBatchPageProps) {
         ]}
       />
 
-      <PageHeader
-        title="Initialize Training Batch"
-        description={`Set up a training cohort for ${college.name} with curriculum and timeline.`}
-      />
+      <div className="pb-2 border-b border-slate-200">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          Create Training Batch for {college.name}
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          Guided 4-step workflow to configure curriculum, assign instructors, and enroll students.
+        </p>
+      </div>
 
-      <NewBatchWrapper
-        collegeId={college.id}
-        collegeName={college.name}
-        initialPrograms={programs}
+      <GuidedBatchCreationWizard
+        colleges={allColleges}
+        programs={programs}
+        trainers={trainers}
+        initialCollegeId={college.id}
       />
     </div>
   );

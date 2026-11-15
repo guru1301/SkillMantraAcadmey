@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { BRAND_INFO } from '@/data/siteData';
 
 export const metadata: Metadata = {
-  title: 'Terms of Engagement | Skill Mantra Academy',
+  title: 'Terms of Engagement | SkillThinker',
   description: 'Terms and academic conditions governing institutional partnerships, campus training programs, and workshops.',
 };
 

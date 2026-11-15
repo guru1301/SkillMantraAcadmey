@@ -35,7 +35,7 @@ export default function StudentDevelopmentSection() {
             {/* Philosophy Flow */}
             <div className="pt-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                The Skill Mantra Learning Philosophy
+                The SkillThinker Learning Philosophy
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {philosophySteps.map((item) => (

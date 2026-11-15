@@ -2,13 +2,51 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
+import { MapPin, Award, Laptop, TrendingUp, Handshake, Trophy } from 'lucide-react';
 import { BRAND_INFO, CORE_VALUES } from '@/data/siteData';
+
+const VALUE_CARDS = [
+  {
+    title: 'Quality',
+    description: 'We focus on delivering meaningful and effective learning experiences.',
+    icon: Award,
+    iconBg: 'bg-[#EBF2FE]',
+    iconColor: 'text-[#0A3A7A]',
+  },
+  {
+    title: 'Practical Learning',
+    description: 'We encourage learners to apply knowledge through practical activities and projects.',
+    icon: Laptop,
+    iconBg: 'bg-[#FEF7E6]',
+    iconColor: 'text-[#D97706]',
+  },
+  {
+    title: 'Growth',
+    description: 'We promote continuous improvement and lifelong learning.',
+    icon: TrendingUp,
+    iconBg: 'bg-[#EBF2FE]',
+    iconColor: 'text-[#0A3A7A]',
+  },
+  {
+    title: 'Integrity',
+    description: 'We believe in transparent, responsible, and learner-focused education.',
+    icon: Handshake,
+    iconBg: 'bg-[#FEF7E6]',
+    iconColor: 'text-[#D97706]',
+  },
+  {
+    title: 'Excellence',
+    description: 'We encourage every learner to aim higher and achieve their potential.',
+    icon: Trophy,
+    iconBg: 'bg-[#EBF2FE]',
+    iconColor: 'text-[#0A3A7A]',
+  },
+];
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-20 lg:py-28 bg-[#FAFCFF] border-b border-slate-200 select-none">
-      <div className="container-custom space-y-16 lg:space-y-24">
+    <section id="about" className="py-12 sm:py-16 lg:py-20 bg-[#FAFCFF] border-b border-slate-200 select-none">
+      <div className="w-full max-w-[1400px] xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 space-y-12 lg:space-y-16">
         
         {/* ── BLOCK 1: Senior Editorial Split (Institution Narrative & Campus Hub) ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -110,9 +148,12 @@ export default function AboutSection() {
                 </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-4">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-1">
                 Our Mission
               </h3>
+              <div className="text-sm font-bold text-[#0A3A7A] mb-4">
+                Accessible, meaningful skill development
+              </div>
 
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
                 {BRAND_INFO.mission}
@@ -134,9 +175,12 @@ export default function AboutSection() {
                 </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-4">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-1">
                 Our Vision
               </h3>
+              <div className="text-sm font-bold text-[#0A3A7A] mb-4">
+                A trusted center of excellence
+              </div>
 
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
                 {BRAND_INFO.vision}
@@ -148,56 +192,82 @@ export default function AboutSection() {
 
         </div>
 
-        {/* ── BLOCK 3: Our 5 Foundational Principles (Continuous Divided Ribbon) ── */}
-        <div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-2">
-            <div>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#06284F] tracking-tight">
-                Our 5 Foundational Principles
+        {/* ── BLOCK 3: Our Values (What Guides How We Teach.) ── */}
+        <div className="pt-2">
+          
+          {/* Upper Row: Left Intro & Right Architectural Photo Grounded Together */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:gap-8 mb-3 sm:mb-4">
+            
+            {/* Left: Section Header */}
+            <div className="max-w-xl pb-1">
+              {/* Overline with Amber Accent Dash */}
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-5 h-0.5 rounded-full bg-[#FCAF0A]" />
+                <span className="text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase text-[#06284F]">
+                  OUR VALUES
+                </span>
+              </div>
+
+              {/* Master Heading */}
+              <h3 className="text-2xl sm:text-3xl lg:text-[36px] font-black tracking-tight leading-[1.15] text-[#06284F]">
+                What Guides <span className="text-[#1548AE]">How We Teach.</span>
               </h3>
-              <p className="text-xs text-slate-500 uppercase tracking-wider mt-1 font-medium">
-                Guiding institutional education &amp; student success
+
+              {/* Description */}
+              <p className="text-slate-600 text-xs sm:text-sm font-normal leading-relaxed mt-1.5 max-w-lg">
+                Five core values shape our programs, our training approach, and the learning experience we create for every learner.
               </p>
             </div>
-            <div className="text-xs font-mono text-slate-400">
-              5 Pillars of Excellence
+
+            {/* Right: Bespoke 3D Head-Out Reference Artwork */}
+            <div className="w-full lg:w-auto lg:shrink-0 flex justify-end">
+              <div className="relative w-full sm:w-[380px] lg:w-[440px] xl:w-[480px] flex items-end justify-end animate-audience-fade">
+                <Image
+                  src="/images/values-leadership-3d.png"
+                  alt="Skillthinker Solutions experienced trainers mentoring students in hands-on technical sessions"
+                  width={770}
+                  height={306}
+                  className="w-full h-auto max-h-[165px] sm:max-h-[180px] lg:max-h-[195px] object-contain object-right-bottom"
+                  priority
+                />
+              </div>
             </div>
+
           </div>
 
-          {/* Continuous Architectural Ribbon with Hairline Dividers */}
-          <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-200 border border-slate-200 rounded-2xl bg-white shadow-xs overflow-hidden">
-            {CORE_VALUES.map((val, i) => (
-              <div
-                key={val.title}
-                className="group relative p-6 sm:p-7 flex flex-col justify-between hover:bg-slate-50/70 transition-colors"
-              >
-                {/* Subtle top indicator bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-transparent group-hover:bg-[#FCAF0A] transition-colors" />
-
-                <div>
-                  {/* Monospace Phase Number */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono font-bold text-slate-400 group-hover:text-[#0A3A7A] transition-colors">
-                      0{i + 1}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-300 group-hover:text-[#FCAF0A] transition-colors">
-                      P{i + 1}
-                    </span>
+          {/* Lower Row: 5-Column Core Values Ribbon with Hairline Dividers */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 pt-4 sm:pt-5 border-t border-slate-200/80">
+            {VALUE_CARDS.map((val) => {
+              const Icon = val.icon;
+              return (
+                <div
+                  key={val.title}
+                  className="py-3 sm:py-3.5 lg:py-1 px-3 sm:px-4 lg:px-5 flex flex-col justify-start group"
+                >
+                  {/* Icon Box */}
+                  <div
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${val.iconBg} ${val.iconColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
+                  >
+                    <Icon className="w-4.5 h-4.5" />
                   </div>
 
                   {/* Principle Title */}
-                  <h4 className="text-base sm:text-lg font-extrabold text-[#06284F] group-hover:text-[#0A3A7A] transition-colors mb-2.5 leading-snug">
+                  <h4 className="text-sm sm:text-base font-black text-[#06284F] tracking-tight mt-2.5 group-hover:text-[#1548AE] transition-colors leading-snug">
                     {val.title}
                   </h4>
 
+                  {/* Amber Accent Line */}
+                  <div className="w-5 h-0.5 rounded-full bg-[#FCAF0A] mt-1.5 mb-2.5" />
+
                   {/* Principle Description */}
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
                     {val.description}
                   </p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
         </div>
 
       </div>

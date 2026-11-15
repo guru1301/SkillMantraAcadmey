@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { Users, Crown, Mail, Phone, Calendar } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getCollegePortalData } from '@/lib/db/collegePortal';
-import { query } from '@/lib/db';
+import { getColleges } from '@/lib/db/colleges';
 import PageHeader from '@/components/admin/PageHeader';
 import Breadcrumbs from '@/components/admin/Breadcrumbs';
 
@@ -15,9 +15,7 @@ export default async function CollegePortalTrainersPage() {
 
   let targetCollegeId = session.collegeId;
   if (!targetCollegeId && session.role === 'super_admin') {
-    const cols = await query<{ id: string }>(
-      `SELECT id FROM colleges WHERE status = 'active' ORDER BY created_at ASC LIMIT 1`
-    );
+    const cols = await getColleges({ status: 'active' });
     if (cols.length > 0) targetCollegeId = cols[0].id;
   }
 

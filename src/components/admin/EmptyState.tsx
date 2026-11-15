@@ -33,7 +33,7 @@ export default function EmptyState({
 
   return (
     <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-10 sm:p-14 text-center max-w-lg mx-auto">
-      <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-[#0A3A7A] flex items-center justify-center mx-auto mb-4">
+      <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 text-[#0A3A7A] flex items-center justify-center mx-auto mb-4">
         {isComponentIcon
           ? React.createElement(icon as LucideIcon, { className: 'w-6 h-6' })
           : (icon as React.ReactNode)}
@@ -47,7 +47,7 @@ export default function EmptyState({
         finalActionHref ? (
           <Link
             href={finalActionHref}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-semibold transition-all shadow-xs"
           >
             <Plus className="w-4 h-4" />
             <span>{finalActionLabel}</span>
@@ -56,7 +56,7 @@ export default function EmptyState({
           <button
             type="button"
             onClick={finalActionClick}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0A3A7A] hover:bg-[#062F68] text-white text-xs font-semibold transition-all shadow-xs cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>{finalActionLabel}</span>

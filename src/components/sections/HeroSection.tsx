@@ -88,7 +88,7 @@ export default function HeroSection() {
                 Hands-On
               </div>
               <div className="text-[11px] sm:text-xs md:text-sm text-slate-300 mt-0.5 font-medium leading-snug">
-                Projects &amp; real-world learning
+                Projects & real-world learning
               </div>
             </div>
 
@@ -102,6 +102,26 @@ export default function HeroSection() {
             </div>
           </div>
 
+        </div>
+      </div>
+
+      {/* 4 Trust Metrics Bar */}
+      <div className="relative z-10 w-full bg-[#031122]/90 border-t border-white/10 py-3.5 backdrop-blur-md mt-6">
+        <div className="container-custom">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center sm:text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-slate-200 font-bold">10 Industry-Relevant Programs</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-slate-200 font-bold">3 Certificate Tiers — Bronze to Gold</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-slate-200 font-bold">5 Step Guided Learning Journey</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-slate-200 font-bold">100% Verifiable Digital Certificates</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

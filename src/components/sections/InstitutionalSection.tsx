@@ -17,7 +17,7 @@ export default function InstitutionalSection() {
           </h2>
           <div className="gold-accent-line mx-auto my-3" />
           <p className="text-base text-[#667085] leading-relaxed max-w-2xl mx-auto">
-            Skill Mantra Academy partners with forward-thinking academic leadership—Principals, Deans, HODs, and Placement Officers—to deliver impactful student workshops, FDPs, and technical bootcamps.
+            SkillThinker partners with forward-thinking academic leadership—Principals, Deans, HODs, and Placement Officers—to deliver impactful student workshops, FDPs, and technical bootcamps.
           </p>
         </div>
 

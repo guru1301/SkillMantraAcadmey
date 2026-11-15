@@ -16,8 +16,8 @@ export async function generateMetadata({
   const trainer = await getTrainerById(trainerId);
   return {
     title: trainer
-      ? `${trainer.full_name} | Faculty Profile | Skill Matra`
-      : 'Trainer Not Found | Skill Matra',
+      ? `${trainer.full_name} | Faculty Profile | SkillThinker`
+      : 'Trainer Not Found | SkillThinker',
   };
 }
 

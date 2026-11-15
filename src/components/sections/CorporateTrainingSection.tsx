@@ -37,7 +37,7 @@ export default function CorporateTrainingSection() {
             </h2>
             <div className="gold-accent-line mx-auto my-3" />
             <p className="text-base text-[#667085] leading-relaxed max-w-2xl mx-auto">
-              Skill Mantra Academy delivers customized technical training and digital transformation workshops for corporate development teams, IT consultancies, and emerging tech enterprises.
+              SkillThinker delivers customized technical training and digital transformation workshops for corporate development teams, IT consultancies, and emerging tech enterprises.
             </p>
           </div>
 

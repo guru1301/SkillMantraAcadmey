@@ -7,7 +7,7 @@ import { Calendar, ArrowRight, Building } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Workshops & Events | Academic Initiatives & FDPs',
   description:
-    'Upcoming technical workshops, faculty development cohorts, and campus technology symposiums conducted by Skill Mantra Academy.',
+    'Upcoming technical workshops, faculty development cohorts, and campus technology symposiums conducted by SkillThinker.',
 };
 
 export default function EventsPage() {

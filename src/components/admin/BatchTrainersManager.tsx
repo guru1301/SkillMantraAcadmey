@@ -505,11 +505,14 @@ export default function BatchTrainersManager({
                     </label>
 
                     {isLead && currentLead && (
-                      <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-[11px] leading-relaxed">
-                        ⚠️ <strong>Notice:</strong> This batch already has a Lead Trainer (
-                        <strong>{currentLead.full_name}</strong>). To prevent duplicate leads,
-                        either assign this trainer as an assistant first and use &quot;Make Lead&quot;
-                        to swap, or remove the existing lead.
+                      <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong>Notice:</strong> This batch already has a Lead Trainer (
+                          <strong>{currentLead.full_name}</strong>). To prevent duplicate leads,
+                          either assign this trainer as an assistant first and use &quot;Make Lead&quot;
+                          to swap, or remove the existing lead.
+                        </div>
                       </div>
                     )}
 

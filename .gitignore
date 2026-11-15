@@ -33,7 +33,22 @@ yarn-error.log*
 # env files (secrets ignored, template preserved)
 .env*.local
 .env
+.env.*
 !.env.example
+!backend/.env.example
+
+# python / virtualenvs / caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# scratch / release archives / audit reports
+scratch/
+*.zip
+STAGE_*/
+audit_reports/
 
 # vercel
 .vercel

@@ -39,7 +39,7 @@ export default function TrainerModal({
               <p className="text-xs text-blue-200">
                 {isEdit
                   ? 'Update instructor qualifications and contact details.'
-                  : 'Add a technical trainer to the Skill Mantra faculty network.'}
+                  : 'Add a technical trainer to the SkillThinker faculty network.'}
               </p>
             </div>
           </div>

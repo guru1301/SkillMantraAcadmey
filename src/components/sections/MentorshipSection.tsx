@@ -7,7 +7,8 @@ import { BRAND_INFO, TRAINER_EXPECTATIONS } from '@/data/siteData';
 
 export default function MentorshipSection() {
   return (
-    <section id="mentors" className="py-20 lg:py-28 bg-white border-b border-slate-200">
+    <section id="trainers" className="py-20 lg:py-28 bg-white border-b border-slate-200 scroll-mt-20">
+      <div id="mentors" className="sr-only" />
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
@@ -47,7 +48,7 @@ export default function MentorshipSection() {
           <div className="lg:col-span-7 space-y-6 order-1 lg:order-2">
             <div>
               <div className="text-xs font-bold uppercase tracking-widest text-[#0A3A7A] mb-3">
-                Mentorship Ethos
+                Our Trainers
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-tight">
                 Learn from people who <span className="text-[#0A3A7A]">guide your growth.</span>
@@ -55,24 +56,14 @@ export default function MentorshipSection() {
             </div>
 
             <p className="text-base text-slate-600 leading-relaxed font-normal">
-              A transformative learning journey requires direct human guidance. Our trainers are experienced software practitioners committed to making complex concepts simple, resolving doubts one-on-one, and providing real-time code reviews during lab exercises.
+              A great learning experience starts with the right guidance. At Skillthinker Solutions, our trainers and mentors are committed to making learning practical, understandable, and engaging. They bring knowledge, experience, and a learner-focused approach to the classroom — encouraging questions, practical application, problem-solving, and continuous improvement.
             </p>
-
-            {/* Official Trainer Quote */}
-            <blockquote className="p-5 rounded-xl bg-blue-50/70 border-l-4 border-[#0A3A7A] border-y border-r border-blue-100">
-              <p className="text-base font-bold text-[#06284F] italic">
-                {BRAND_INFO.trainerQuote}
-              </p>
-              <span className="block text-xs font-semibold uppercase tracking-wider text-[#0A3A7A] mt-2">
-                — Skillthinker Mentor Commitment
-              </span>
-            </blockquote>
 
             {/* 7 Trainer Expectations Checklist */}
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-[#0A3A7A]" />
-                <span>What Every Learner Can Expect from Mentors</span>
+                <span>What You Can Expect From Our Trainers</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -88,6 +79,37 @@ export default function MentorshipSection() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Mentorship That Goes Beyond the Classroom */}
+            <div className="p-6 rounded-2xl bg-blue-50/70 border border-blue-100 space-y-3">
+              <h3 className="text-lg font-bold text-[#06284F]">
+                Mentorship That Goes Beyond the Classroom
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                Our trainers don&apos;t just teach concepts. They help learners understand how those concepts can be applied in practical situations and encourage them to develop confidence in their abilities.
+              </p>
+              <blockquote className="border-l-2 border-[#0A3A7A] pl-4 py-1 italic font-semibold text-slate-800 text-sm">
+                “Learn from experts. Practice with guidance. Grow with confidence.”
+              </blockquote>
+            </div>
+
+            {/* Ready to upgrade your skills CTA banner */}
+            <div className="p-6 rounded-2xl bg-[#06284F] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+              <div>
+                <h4 className="text-lg font-bold text-white">
+                  Ready to upgrade your skills?
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-300 mt-0.5 leading-relaxed">
+                  Explore our programs and take the next step toward achieving your career goals.
+                </p>
+              </div>
+              <a
+                href="#courses"
+                className="shrink-0 px-5 py-2.5 rounded-xl bg-[#FCAF0A] hover:bg-[#F5A800] text-[#06284F] text-xs font-bold transition-colors shadow-xs"
+              >
+                Explore Courses
+              </a>
             </div>
 
           </div>

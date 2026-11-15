@@ -15,9 +15,7 @@ import {
   Crown,
   ExternalLink,
   ShieldCheck,
-  CheckCircle2,
-  Clock,
-  Sparkles,
+  MapPin,
 } from 'lucide-react';
 import { CollegePortalOverview } from '@/lib/db/collegePortal';
 
@@ -97,13 +95,16 @@ export default function CollegePortalDashboard({
               <span>Verified Institutional Partner</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               {college.name}
             </h1>
-            <p className="text-sm text-blue-200 mt-1 flex items-center gap-2">
-              <span>📍 {college.city || 'Campus'}, {college.state || 'India'}</span>
+            <p className="text-sm text-blue-200 mt-1 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-blue-300" />
+                <span>{college.city || 'Campus'}, {college.state || 'India'}</span>
+              </span>
               <span>•</span>
-              <span>Coordinator: <strong>{coordinatorName}</strong> ({coordinatorEmail})</span>
+              <span>Coordinator: <strong className="text-white font-semibold">{coordinatorName}</strong> ({coordinatorEmail})</span>
             </p>
           </div>
 
@@ -180,7 +181,7 @@ export default function CollegePortalDashboard({
           return (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as 'overview' | 'batches' | 'students' | 'trainers' | 'resources')}
               className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-xs font-bold transition border-b-2 whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'border-[#0A3A7A] text-[#0A3A7A] bg-blue-50/50'

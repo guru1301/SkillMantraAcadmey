@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Award, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Award, CheckCircle2 } from 'lucide-react';
 import { CERTIFICATE_TIERS } from '@/data/siteData';
-import BrandLogo from '@/components/ui/BrandLogo';
 
 export default function CertificationsSection() {
   return (
@@ -25,63 +24,41 @@ export default function CertificationsSection() {
         </div>
 
         {/* Certificate Visual Showcase + Merit Tiers Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
-          {/* Left: Certificate Mockup Card (5 cols) */}
-          <div className="lg:col-span-5 relative group">
-            <div className="relative rounded-2xl bg-gradient-to-b from-white via-slate-50 to-amber-50/30 p-7 sm:p-8 text-slate-900 border-4 border-[#FCAF0A] shadow-xl">
+          {/* Left: Clean Official Certificate Showcase (6 cols) */}
+          <div className="lg:col-span-6 relative group">
+            {/* Ambient Frame Container */}
+            <div className="relative rounded-2xl bg-white p-2.5 sm:p-4 shadow-xl border border-slate-200/90 transition-all duration-300 hover:shadow-2xl">
               
-              {/* Certificate Inner Border */}
-              <div className="border border-slate-300 rounded-xl p-5 sm:p-6 text-center space-y-4 bg-white/95">
-                {/* Logo & Header */}
-                <div className="flex justify-center">
-                  <BrandLogo variant="light" size="sm" showTagline={true} />
-                </div>
-
-                <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#0A3A7A] font-bold">
-                  Certificate of Competence &amp; Merit
-                </div>
-
-                <div className="text-xs text-slate-500 font-serif italic">
-                  This is proudly presented to
-                </div>
-
-                <div className="text-lg sm:text-xl font-bold text-[#06284F] border-b-2 border-slate-200 pb-1 font-serif">
-                  Karthik Ramesh
-                </div>
-
-                <p className="text-[11px] text-slate-600 leading-relaxed">
-                  for successfully demonstrating project excellence in <br />
-                  <strong className="text-slate-900">Web &amp; Full Stack Development</strong>
-                </p>
-
-                {/* Badge & Seal Row */}
-                <div className="pt-2 flex items-center justify-between border-t border-slate-200">
-                  <div className="text-left">
-                    <span className="inline-block px-2.5 py-0.5 rounded bg-amber-100 border border-amber-300 text-[10px] font-bold text-amber-900">
-                      ★ Gold Merit Tier
-                    </span>
-                    <div className="text-[9px] font-mono text-slate-400 mt-1">
-                      ID: SKT-2026-FSD-0842
-                    </div>
-                  </div>
-
-                  <div className="w-12 h-12 rounded-full border-2 border-dashed border-[#0A3A7A] flex items-center justify-center bg-blue-50">
-                    <ShieldCheck className="w-6 h-6 text-[#0A3A7A]" />
-                  </div>
-                </div>
+              {/* Clean Certificate Image (No Overlays) */}
+              <div className="relative rounded-xl overflow-hidden bg-white shadow-xs border border-slate-200/60 select-none">
+                <Image
+                  src="/images/certificates/student-certificate-template.jpg"
+                  alt="Skillthinker Solutions Official Certificate of Completion"
+                  width={1024}
+                  height={682}
+                  className="w-full h-auto object-contain block rounded-lg"
+                  priority
+                  unoptimized
+                />
               </div>
 
-              {/* Floating Verification Tag */}
-              <div className="absolute -bottom-3 -right-3 px-3.5 py-1.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold shadow-md flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Verified Online</span>
+              {/* Bottom Floating Live Verification Seal */}
+              <div className="absolute -bottom-3 right-4 sm:right-6 px-4 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 border-2 border-white">
+                <CheckCircle2 className="w-4 h-4 text-emerald-200" />
+                <span>100% Digitally Verifiable</span>
               </div>
             </div>
+
+            {/* Authentic Credential Assurance Caption */}
+            <p className="text-center text-xs text-slate-400 font-medium mt-5">
+              Official physical &amp; digital credential issued to graduating cohort members upon course defense.
+            </p>
           </div>
 
-          {/* Right: 3 Merit Tiers (7 cols) */}
-          <div className="lg:col-span-7 space-y-4">
+          {/* Right: 3 Merit Tiers (6 cols) */}
+          <div className="lg:col-span-6 space-y-4">
             {CERTIFICATE_TIERS.map((tier) => (
               <div
                 key={tier.tier}

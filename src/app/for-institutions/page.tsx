@@ -8,7 +8,7 @@ import PartnersSection from '@/components/sections/PartnersSection';
 export const metadata: Metadata = {
   title: 'For Educational Institutions | College Training, FDPs & MoUs',
   description:
-    'Skill Mantra Academy partners with engineering colleges, universities, and arts & science institutions to deliver technical workshops, faculty development, and placement bootcamps.',
+    'SkillThinker partners with engineering colleges, universities, and arts & science institutions to deliver technical workshops, faculty development, and placement bootcamps.',
 };
 
 export default function ForInstitutionsPage() {
@@ -47,7 +47,7 @@ export default function ForInstitutionsPage() {
               </h2>
               <div className="gold-accent-line" />
               <p className="text-sm text-[#667085] leading-relaxed">
-                An institutional MoU with Skill Mantra Academy provides your campus with a structured roadmap for multi-semester skill enhancement. We work with your academic calendar to schedule semester-aligned tracks without disrupting university examination schedules.
+                An institutional MoU with SkillThinker provides your campus with a structured roadmap for multi-semester skill enhancement. We work with your academic calendar to schedule semester-aligned tracks without disrupting university examination schedules.
               </p>
 
               <div className="space-y-3 pt-2 text-sm text-[#162033]">

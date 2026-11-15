@@ -18,7 +18,7 @@ export default async function EditCollegePage({ params }: EditCollegePageProps) 
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-4 max-w-6xl mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin/dashboard' },

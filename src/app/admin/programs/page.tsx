@@ -15,7 +15,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
   const programs = await getPrograms({ status });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-4 max-w-7xl mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin/dashboard' },

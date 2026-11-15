@@ -6,6 +6,7 @@ import {
   trainerSchema,
   batchTrainerAssignmentSchema,
 } from '@/lib/validations/trainer';
+import { assertUuid } from '@/lib/validations/ids';
 import {
   createTrainer,
   updateTrainer,
@@ -93,12 +94,13 @@ export async function updateTrainerAction(
   }
 
   try {
-    const updated = await updateTrainer(trainerId, parsed.data);
+    const safeTrainerId = assertUuid(trainerId, 'trainerId');
+    const updated = await updateTrainer(safeTrainerId, parsed.data);
     if (!updated) {
       return { success: false, error: 'Trainer not found or could not be updated.' };
     }
     revalidatePath('/admin/trainers');
-    revalidatePath(`/admin/trainers/${trainerId}`);
+    revalidatePath(`/admin/trainers/${safeTrainerId}`);
     return { success: true };
   } catch (err: any) {
     console.error('[Update Trainer Error]:', err);
@@ -110,6 +112,9 @@ export async function updateTrainerAction(
         success: false,
         error: 'A trainer with this email address already exists. Please use a unique email.',
       };
+    }
+    if (err.message?.startsWith('Invalid trainerId')) {
+      return { success: false, error: err.message };
     }
     return { success: false, error: 'Failed to update trainer. Please try again.' };
   }
@@ -128,16 +133,17 @@ export async function toggleTrainerStatusAction(
   }
 
   try {
-    const updated = await setTrainerStatus(trainerId, status);
+    const safeTrainerId = assertUuid(trainerId, 'trainerId');
+    const updated = await setTrainerStatus(safeTrainerId, status);
     if (!updated) {
       return { success: false, error: 'Trainer not found.' };
     }
     revalidatePath('/admin/trainers');
-    revalidatePath(`/admin/trainers/${trainerId}`);
+    revalidatePath(`/admin/trainers/${safeTrainerId}`);
     return { success: true };
   } catch (err: any) {
     console.error('[Toggle Trainer Status Error]:', err);
-    return { success: false, error: 'Failed to update trainer status.' };
+    return { success: false, error: err?.message || 'Failed to update trainer status.' };
   }
 }
 
@@ -148,8 +154,8 @@ export async function assignTrainerToBatchAction(
   formData: FormData
 ): Promise<TrainerActionResult<{ id: string }>> {
   const session = await getSession();
-  if (!session || session.role !== 'super_admin') {
-    return { success: false, error: 'Unauthorized: Admin authentication required.' };
+  if (!session || !['super_admin', 'college_admin'].includes(session.role)) {
+    return { success: false, error: 'Unauthorized: Administrative authentication required.' };
   }
 
   const raw = {
@@ -212,12 +218,14 @@ export async function setLeadTrainerAction(
   }
 
   try {
-    const updated = await setLeadTrainer(batchId, trainerId);
+    const safeBatchId = assertUuid(batchId, 'batchId');
+    const safeTrainerId = assertUuid(trainerId, 'trainerId');
+    const updated = await setLeadTrainer(safeBatchId, safeTrainerId);
     if (!updated) {
       return { success: false, error: 'Failed to update lead trainer.' };
     }
-    revalidatePath(`/admin/batches/${batchId}`);
-    revalidatePath(`/admin/batches/${batchId}/trainers`);
+    revalidatePath(`/admin/batches/${safeBatchId}`);
+    revalidatePath(`/admin/batches/${safeBatchId}/trainers`);
     return { success: true };
   } catch (err: any) {
     console.error('[Set Lead Trainer Error]:', err);
@@ -241,17 +249,19 @@ export async function removeTrainerFromBatchAction(
   }
 
   try {
-    const removed = await removeTrainerFromBatch(batchId, trainerId);
+    const safeBatchId = assertUuid(batchId, 'batchId');
+    const safeTrainerId = assertUuid(trainerId, 'trainerId');
+    const removed = await removeTrainerFromBatch(safeBatchId, safeTrainerId);
     if (!removed) {
       return { success: false, error: 'Assignment record not found.' };
     }
-    revalidatePath(`/admin/batches/${batchId}`);
-    revalidatePath(`/admin/batches/${batchId}/trainers`);
+    revalidatePath(`/admin/batches/${safeBatchId}`);
+    revalidatePath(`/admin/batches/${safeBatchId}/trainers`);
     revalidatePath('/admin/batches');
     revalidatePath('/admin/dashboard');
     return { success: true };
   } catch (err: any) {
     console.error('[Remove Trainer From Batch Error]:', err);
-    return { success: false, error: 'Failed to remove trainer from batch.' };
+    return { success: false, error: err?.message || 'Failed to remove trainer from batch.' };
   }
 }

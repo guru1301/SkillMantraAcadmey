@@ -48,7 +48,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Spring Boot',
       'RESTful Web Services',
     ],
-    idealFor: 'Backend developers building with Java & Spring',
+    idealFor: 'Ideal for: Backend developers building with Java & Spring',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '2,840 ratings',
@@ -69,7 +69,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Enterprise Design & Ecosystem Tools',
       'High-Level Framework Domains',
     ],
-    idealFor: 'Python developers at any level, beginner to advanced',
+    idealFor: 'Ideal for: Python developers at any level, beginner to advanced',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '3,410 ratings',
@@ -89,7 +89,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'MongoDB',
       'Full Stack Project Development',
     ],
-    idealFor: 'Aspiring front-end & full stack developers',
+    idealFor: 'Ideal for: Aspiring front-end & full stack developers',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '4,120 ratings',
@@ -111,7 +111,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'SQL Server',
       'Full Stack .NET Projects',
     ],
-    idealFor: 'Developers targeting enterprise .NET roles',
+    idealFor: 'Ideal for: Developers targeting enterprise .NET roles',
     badge: 'Premium',
     rating: 4.8,
     ratingCount: '1,290 ratings',
@@ -134,7 +134,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Data Analytics using Python',
       'Tableau',
     ],
-    idealFor: 'Analysts & BI aspirants who love working with data',
+    idealFor: 'Ideal for: Analysts & BI aspirants who love working with data',
     badge: 'Bestseller',
     rating: 4.8,
     ratingCount: '2,630 ratings',
@@ -154,7 +154,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'AI Application Development',
       'N8N (Nodemation)',
     ],
-    idealFor: 'Developers exploring applied AI & automation',
+    idealFor: 'Ideal for: Developers exploring applied AI & automation',
     badge: 'Premium',
     rating: 4.9,
     ratingCount: '5,210 ratings',
@@ -173,7 +173,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Database Design',
       'Joins, Subqueries & Stored Procedures',
     ],
-    idealFor: 'Backend & database-focused learners',
+    idealFor: 'Ideal for: Backend & database-focused learners',
     badge: 'Specialization',
     rating: 4.7,
     ratingCount: '1,540 ratings',
@@ -193,7 +193,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Object-Oriented Programming',
       'Problem Solving & Coding Practice',
     ],
-    idealFor: 'Beginners starting their programming journey',
+    idealFor: 'Ideal for: Beginners starting their programming journey',
     badge: 'Foundation',
     rating: 4.8,
     ratingCount: '3,870 ratings',
@@ -215,7 +215,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'Company-Specific Prep',
       'GD & Interview Skills',
     ],
-    idealFor: 'Final-year students & graduates preparing for placements',
+    idealFor: 'Ideal for: Final-year students & graduates preparing for placements',
     badge: 'Bestseller',
     rating: 4.9,
     ratingCount: '6,450 ratings',
@@ -232,7 +232,7 @@ export const COURSES_DATA: CourseProgram[] = [
       'SEO (Search Engine Optimization)',
       'Google Tag Manager (GTM)',
     ],
-    idealFor: 'Marketers, business owners & career switchers',
+    idealFor: 'Ideal for: Marketers, business owners & career switchers',
     badge: 'Specialization',
     rating: 4.7,
     ratingCount: '1,180 ratings',
@@ -305,7 +305,7 @@ export default function ProgramsSection() {
             id="courses-programs-heading"
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1c1d1f] tracking-[-0.02em] leading-tight"
           >
-            Choose the right <span className="text-[#0A3A7A]">learning path.</span>
+            Choose the right learning path.
           </h2>
 
           <p className="text-[#6a6f73] text-sm sm:text-base mt-2.5 font-normal leading-relaxed">
@@ -412,7 +412,7 @@ export default function ProgramsSection() {
                     <div className="mt-2 p-2 rounded-md bg-slate-50 border border-slate-100 flex items-start gap-1.5">
                       <UserCheck className="w-3.5 h-3.5 text-[#0A3A7A] shrink-0 mt-0.5" />
                       <p className="text-[11px] text-slate-700 leading-snug">
-                        <strong className="text-slate-900 font-semibold">Ideal for:</strong> {course.idealFor}
+                        {course.idealFor}
                       </p>
                     </div>
 
@@ -449,13 +449,13 @@ export default function ProgramsSection() {
                       </span>
                     </div>
 
-                    {/* Core Syllabus Modules Preview (Clean, Non-clipped) */}
+                    {/* Core Syllabus Modules */}
                     <div className="mt-3">
                       <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                         Core Syllabus Modules
                       </div>
-                      <div className="flex flex-wrap gap-1">
-                        {course.topics.slice(0, 4).map((topic) => (
+                      <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto no-scrollbar">
+                        {course.topics.map((topic) => (
                           <span 
                             key={topic} 
                             className="text-[10px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded"
@@ -463,11 +463,6 @@ export default function ProgramsSection() {
                             {topic}
                           </span>
                         ))}
-                        {course.topics.length > 4 && (
-                          <span className="text-[10px] font-semibold text-[#0A3A7A] bg-blue-50 px-1.5 py-0.5 rounded">
-                            +{course.topics.length - 4} more
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -485,8 +480,7 @@ export default function ProgramsSection() {
                     href={course.contactUrl}
                     className="py-1.5 px-3 rounded-md border border-[#0A3A7A] text-[#0A3A7A] hover:bg-[#0A3A7A] hover:text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer whitespace-nowrap"
                   >
-                    <span>Ask about this course</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <span>Ask about this course →</span>
                   </Link>
                 </div>
               </div>

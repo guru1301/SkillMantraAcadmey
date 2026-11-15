@@ -7,12 +7,9 @@ import {
   LayoutDashboard,
   GraduationCap,
   Users,
-  Calendar,
   CheckSquare,
-  FileCheck2,
-  TrendingUp,
   FolderOpen,
-  BarChart3,
+  MessageSquareHeart,
 } from 'lucide-react';
 
 interface BatchTabsProps {
@@ -46,13 +43,6 @@ export default function BatchTabs({ batchId, activeTab }: BatchTabsProps) {
       active: activeTab === 'trainers' || pathname.startsWith(`/admin/batches/${batchId}/trainers`),
     },
     {
-      id: 'sessions',
-      name: 'Sessions',
-      href: `/admin/batches/${batchId}/sessions`,
-      icon: Calendar,
-      active: activeTab === 'sessions' || pathname.startsWith(`/admin/batches/${batchId}/sessions`),
-    },
-    {
       id: 'attendance',
       name: 'Attendance',
       href: `/admin/batches/${batchId}/attendance`,
@@ -60,37 +50,23 @@ export default function BatchTabs({ batchId, activeTab }: BatchTabsProps) {
       active: activeTab === 'attendance' || pathname.startsWith(`/admin/batches/${batchId}/attendance`),
     },
     {
-      id: 'assessments',
-      name: 'Assessments',
-      href: `/admin/batches/${batchId}/assessments`,
-      icon: FileCheck2,
-      active: activeTab === 'assessments' || pathname.startsWith(`/admin/batches/${batchId}/assessments`),
-    },
-    {
-      id: 'progress',
-      name: 'Progress',
-      href: `/admin/batches/${batchId}/progress`,
-      icon: TrendingUp,
-      active: activeTab === 'progress' || pathname.startsWith(`/admin/batches/${batchId}/progress`),
-    },
-    {
       id: 'resources',
-      name: 'Resources',
+      name: 'Materials',
       href: `/admin/batches/${batchId}/resources`,
       icon: FolderOpen,
       active: activeTab === 'resources' || pathname.startsWith(`/admin/batches/${batchId}/resources`),
     },
     {
-      id: 'reports',
-      name: 'Reports',
-      href: `/admin/batches/${batchId}/reports`,
-      icon: BarChart3,
-      active: activeTab === 'reports' || pathname.startsWith(`/admin/batches/${batchId}/reports`),
+      id: 'feedback',
+      name: 'Feedback',
+      href: `/admin/batches/${batchId}/feedback`,
+      icon: MessageSquareHeart,
+      active: activeTab === 'feedback' || pathname.startsWith(`/admin/batches/${batchId}/feedback`),
     },
   ];
 
   return (
-    <div className="border-b border-slate-200 mb-6 overflow-x-auto">
+    <div className="border-b border-slate-200 mb-3.5 sm:mb-4 overflow-x-auto">
       <nav className="flex space-x-1 sm:space-x-2 min-w-max">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -99,7 +75,7 @@ export default function BatchTabs({ batchId, activeTab }: BatchTabsProps) {
             <Link
               key={tab.name}
               href={tab.href}
-              className={`flex items-center gap-2 py-3 px-3.5 border-b-2 font-bold text-xs tracking-tight transition-all ${
+              className={`flex items-center gap-2 py-2.5 px-3.5 border-b-2 font-bold text-xs tracking-tight transition-all ${
                 tab.active
                   ? 'border-[#0A3A7A] text-[#0A3A7A]'
                   : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300'

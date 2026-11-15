@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { getSession } from '@/lib/auth/session';
 import { resourceSchema } from '@/lib/validations/resource';
+import { assertUuid } from '@/lib/validations/ids';
 import { createResource } from '@/lib/db/resources';
 import { ActionResult } from './colleges';
 
@@ -10,13 +11,14 @@ export async function createResourceAction(
   formData: FormData
 ): Promise<ActionResult<{ id: string }>> {
   const session = await getSession();
-  if (!session || session.role !== 'super_admin') {
-    return { success: false, error: 'Unauthorized: Admin authentication required.' };
+  if (!session || !['super_admin', 'college_admin', 'trainer'].includes(session.role)) {
+    return { success: false, error: 'Unauthorized: Staff authentication required.' };
   }
 
   const raw = {
     batchId: formData.get('batchId'),
-    name: formData.get('name'),
+    title: formData.get('title') || formData.get('name'),
+    name: formData.get('name') || formData.get('title'),
     type: formData.get('type') || 'google_drive',
     url: formData.get('url'),
     description: formData.get('description'),
@@ -29,8 +31,9 @@ export async function createResourceAction(
   }
 
   try {
-    const result = await createResource(parsed.data);
-    revalidatePath(`/admin/batches/${parsed.data.batchId}`);
+    const safeBatchId = assertUuid(parsed.data.batchId, 'batchId');
+    const result = await createResource({ ...parsed.data, batchId: safeBatchId });
+    revalidatePath(`/admin/batches/${safeBatchId}`);
     return { success: true, data: result };
   } catch (err: any) {
     console.error('[Create Resource Error]:', err);

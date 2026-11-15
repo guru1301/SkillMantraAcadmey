@@ -12,7 +12,7 @@ import ContactSection from '@/components/sections/ContactSection';
 
 export default function HomePage() {
   return (
-    <div className="w-full overflow-hidden bg-white">
+    <div id="top" className="w-full overflow-hidden bg-white">
       {/* 1. Hero: The right skills can transform your career. */}
       <HeroSection />
 

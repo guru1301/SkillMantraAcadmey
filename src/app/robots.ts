@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: 'https://skillmantraacademy.com/sitemap.xml',
+    sitemap: 'https://skillthinker.com/sitemap.xml',
   };
 }

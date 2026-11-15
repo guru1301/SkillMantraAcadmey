@@ -169,7 +169,7 @@ export default function TrainerForm({
               name="email"
               value={formData.email || ''}
               onChange={handleChange}
-              placeholder="e.g. rajesh.k@skillmantra.com"
+              placeholder="e.g. rajesh.k@skillthinker.com"
               className={`w-full pl-9 pr-3 py-2 text-xs rounded-xl border ${
                 fieldErrors.email ? 'border-rose-400 bg-rose-50/20' : 'border-slate-300'
               } focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition`}

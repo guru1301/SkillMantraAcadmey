@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Layers, Calendar, Users, GraduationCap, ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getCollegePortalData } from '@/lib/db/collegePortal';
-import { query } from '@/lib/db';
+import { getColleges } from '@/lib/db/colleges';
 import PageHeader from '@/components/admin/PageHeader';
 import Breadcrumbs from '@/components/admin/Breadcrumbs';
 
@@ -16,9 +16,7 @@ export default async function CollegePortalBatchesPage() {
 
   let targetCollegeId = session.collegeId;
   if (!targetCollegeId && session.role === 'super_admin') {
-    const cols = await query<{ id: string }>(
-      `SELECT id FROM colleges WHERE status = 'active' ORDER BY created_at ASC LIMIT 1`
-    );
+    const cols = await getColleges({ status: 'active' });
     if (cols.length > 0) targetCollegeId = cols[0].id;
   }
 
@@ -83,10 +81,10 @@ export default async function CollegePortalBatchesPage() {
             <div className="pt-2 flex items-center justify-between text-xs text-slate-500">
               <span>{b.trainers_count} Assigned Trainer(s)</span>
               <Link
-                href="/portal/students"
-                className="text-blue-700 font-bold hover:underline"
+                href={`/portal/batches/${b.id}`}
+                className="text-[#0A3A7A] font-bold hover:underline"
               >
-                View Roster →
+                View Batch Details →
               </Link>
             </div>
           </div>

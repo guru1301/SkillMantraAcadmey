@@ -1,20 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import { API_CONFIG } from '@/lib/api/config';
 
-const SESSION_COOKIE_NAME = 'skillmatra_session';
-let cachedSecretKey: Uint8Array | null = null;
-
-function getSecretKey(): Uint8Array {
-  if (!cachedSecretKey) {
-    const secret = process.env.AUTH_SECRET || 'skillmatra_development_secret_key_minimum_32_characters_long_12345';
-    cachedSecretKey = new TextEncoder().encode(secret);
-  }
-  return cachedSecretKey;
-}
+const SESSION_COOKIE_NAME = API_CONFIG.sessionCookieName;
 
 /**
- * Next.js Middleware: Server-side route protection for /admin and /login routes.
+ * Next.js Middleware: Server-side route protection for /admin, /portal, /trainer, /student, and /login routes.
+ * Authenticates active session against the FastAPI backend.
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,21 +14,51 @@ export async function middleware(request: NextRequest) {
 
   let isAuthenticated = false;
   let userRole = '';
+  let mustChangePassword = false;
 
   if (sessionCookie?.value) {
     try {
-      const secretKey = getSecretKey();
-      const { payload } = await jwtVerify(sessionCookie.value, secretKey, {
-        algorithms: ['HS256'],
+      const authMeUrl = `${API_CONFIG.baseUrl}${API_CONFIG.prefix}/auth/me`;
+      const res = await fetch(authMeUrl, {
+        headers: {
+          Cookie: `${SESSION_COOKIE_NAME}=${sessionCookie.value}`,
+        },
+        cache: 'no-store',
+        signal: AbortSignal.timeout(10000),
       });
 
-      if (payload.id && payload.email) {
-        isAuthenticated = true;
-        userRole = (payload.role as string) || '';
+      if (res.ok) {
+        const payload = await res.json();
+        if (payload?.id && payload?.role) {
+          isAuthenticated = true;
+          userRole = payload.role;
+          mustChangePassword = Boolean(payload.must_change_password);
+        }
       }
     } catch {
       isAuthenticated = false;
     }
+  }
+
+  // 0. Enforce mandatory password rotation across all routes except /change-password and /login
+  if (isAuthenticated && mustChangePassword) {
+    if (pathname.startsWith('/api/certificates')) {
+      return NextResponse.json(
+        { error: 'Password change required before accessing certificates.' },
+        { status: 403 }
+      );
+    }
+    if (pathname !== '/change-password' && pathname !== '/login') {
+      return NextResponse.redirect(new URL('/change-password', request.url));
+    }
+  }
+
+  // If user visits /change-password while not authenticated, redirect to /login
+  if (pathname === '/change-password') {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    return NextResponse.next();
   }
 
   // 1. Protection for /admin routes (Super Admin only)
@@ -47,7 +69,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
     if (userRole !== 'super_admin') {
-      // College admins cannot access super admin area
       return NextResponse.redirect(new URL('/portal', request.url));
     }
     return NextResponse.next();
@@ -60,14 +81,58 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
     }
+    if (userRole !== 'college_admin' && userRole !== 'super_admin') {
+      if (userRole === 'trainer') return NextResponse.redirect(new URL('/trainer', request.url));
+      if (userRole === 'student') return NextResponse.redirect(new URL('/student', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
     return NextResponse.next();
   }
 
-  // 3. Redirect already authenticated users away from /login
+  // 3. Protection for /trainer routes (Trainers & Super Admins)
+  if (pathname.startsWith('/trainer')) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (userRole !== 'trainer' && userRole !== 'super_admin') {
+      if (userRole === 'college_admin') return NextResponse.redirect(new URL('/portal', request.url));
+      if (userRole === 'student') return NextResponse.redirect(new URL('/student', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 4. Protection for /student routes (Students & Super Admins)
+  if (pathname.startsWith('/student')) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (userRole !== 'student' && userRole !== 'super_admin') {
+      if (userRole === 'college_admin') return NextResponse.redirect(new URL('/portal', request.url));
+      if (userRole === 'trainer') return NextResponse.redirect(new URL('/trainer', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 5. Redirect already authenticated users away from /login
   if (pathname === '/login') {
     if (isAuthenticated) {
+      if (mustChangePassword) {
+        return NextResponse.redirect(new URL('/change-password', request.url));
+      }
       if (userRole === 'super_admin') {
         return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+      }
+      if (userRole === 'trainer') {
+        return NextResponse.redirect(new URL('/trainer', request.url));
+      }
+      if (userRole === 'student') {
+        return NextResponse.redirect(new URL('/student', request.url));
       }
       return NextResponse.redirect(new URL('/portal', request.url));
     }
@@ -78,5 +143,13 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/portal/:path*', '/login'],
+  matcher: [
+    '/admin/:path*',
+    '/portal/:path*',
+    '/trainer/:path*',
+    '/student/:path*',
+    '/login',
+    '/change-password',
+    '/api/certificates/:path*',
+  ],
 };

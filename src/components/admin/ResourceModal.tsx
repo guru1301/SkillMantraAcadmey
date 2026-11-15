@@ -73,8 +73,9 @@ export default function ResourceModal({
     try {
       const data = new FormData();
       data.append('batchId', formData.batchId);
-      data.append('name', formData.name);
-      data.append('type', formData.type);
+      data.append('title', formData.title || formData.name || '');
+      data.append('name', formData.name || formData.title || '');
+      data.append('type', formData.type || 'google_drive');
       data.append('url', formData.url);
       data.append('description', formData.description || '');
 

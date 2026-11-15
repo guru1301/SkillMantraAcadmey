@@ -69,7 +69,7 @@ export default function ResourcesPage() {
 
               <div className="mt-6 pt-4 border-t border-[#E4E8EF] flex items-center justify-between">
                 <span className="text-xs text-slate-400 font-mono">
-                  Skill Mantra Academic Advisory Series
+                  SkillThinker Academic Advisory Series
                 </span>
                 <Link
                   href="/contact?intent=academic-dialogue"

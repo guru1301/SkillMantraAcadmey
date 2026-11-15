@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   const faqs = [
     {
-      q: 'How does Skill Mantra Academy schedule training around our college examination timetable?',
+      q: 'How does SkillThinker schedule training around our college examination timetable?',
       a: 'We customize training calendars in direct coordination with college deans and HODs, utilizing term breaks, post-internal exam slots, or weekend modules to prevent academic clashes.',
     },
     {

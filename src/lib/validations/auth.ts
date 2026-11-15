@@ -3,9 +3,8 @@ import { z } from 'zod';
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address')
-    .transform((val) => val.trim().toLowerCase()),
+    .min(1, 'Email or Roll number is required')
+    .transform((val) => val.trim()),
   password: z
     .string()
     .min(1, 'Password is required'),

@@ -36,7 +36,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'practical-training',
     number: '01',
     tabTitle: 'PRACTICAL TRAINING',
-    headline: 'INDUSTRY-RELEVANT & PRACTICAL TRAINING',
+    headline: 'Industry-relevant and practical training',
     icon: Laptop,
     description:
       'Courses engineered around modern industry tooling, active paradigms, and practical execution. We discard outdated syllabus models in favor of live workflows and production tools used by modern engineering teams today.',
@@ -49,7 +49,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'expert-mentors',
     number: '02',
     tabTitle: 'EXPERT MENTORS',
-    headline: 'EXPERIENCED PRACTITIONERS & MENTORS',
+    headline: 'Experienced trainers and mentors',
     icon: Users,
     description:
       'Learn directly from seasoned mentors who bring deep software and domain experience to the classroom. Our trainers act as active mentors, offering 1-on-1 code reviews, real-time debugging guidance, and industry-tested architecture practices.',
@@ -62,7 +62,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'hands-on-projects',
     number: '03',
     tabTitle: 'HANDS-ON PROJECTS',
-    headline: 'REAL-WORLD LEARNING & PORTFOLIO PROJECTS',
+    headline: 'Hands-on learning and real-world projects',
     icon: FolderGit2,
     description:
       'Apply theoretical understanding through live coding, assignments, and real-world project portfolios. Every student builds complete production-grade applications that can be demonstrated directly to technical recruiters.',
@@ -75,7 +75,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'career-focused',
     number: '04',
     tabTitle: 'CAREER FOCUSED',
-    headline: 'CAREER-FOCUSED SKILL DEVELOPMENT',
+    headline: 'Career-focused skill development',
     icon: TrendingUp,
     description:
       'Curriculum specifically designed to build competencies that recruiters and technical teams actively look for. We bridge the gap between academic education and day-one workplace readiness with measurable proficiency.',
@@ -88,7 +88,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'personalized-guidance',
     number: '05',
     tabTitle: '1-ON-1 GUIDANCE',
-    headline: 'PERSONALIZED GUIDANCE & DOUBT RESOLUTION',
+    headline: 'Personalized guidance and support',
     icon: Headphones,
     description:
       'We maintain structured batch sizes so every learner receives individual attention, question resolution, and constructive feedback throughout their technical development journey with continuous mentor check-ins.',
@@ -101,7 +101,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'recognized-certification',
     number: '06',
     tabTitle: 'RECOGNIZED CERTS',
-    headline: 'VERIFIABLE DIGITAL CERTIFICATION OF MERIT',
+    headline: 'Certification upon successful completion',
     icon: Award,
     description:
       'Earn a recognized Bronze, Silver, or Gold digital certificate backed by an online verification ID. Each credential reflects verified project evaluations and comprehensive test performance, easily shareable on LinkedIn.',
@@ -114,7 +114,7 @@ const PILLARS: CapabilityPillar[] = [
     id: 'interview-preparation',
     number: '07',
     tabTitle: 'INTERVIEW PREP',
-    headline: 'PLACEMENT & COMPREHENSIVE INTERVIEW PREPARATION',
+    headline: 'Interview and career preparation',
     icon: Briefcase,
     description:
       'Dedicated placement readiness covering quantitative aptitude, logical reasoning, technical problem-solving, group discussions, and mock technical interviews with seasoned industry professionals.',
@@ -140,6 +140,44 @@ export default function WhySkillthinkerSection() {
   return (
     <section id="why-skillthinker" className="w-full bg-white select-none">
       
+      {/* ── CONTINUOUS MOVING TICKER: SEAMLESS & UNCLIPPED ── */}
+      <div className="w-full bg-[#0A3A7A] text-white py-2.5 sm:py-3 overflow-hidden border-b border-[#06284F]/30 shadow-inner">
+        <div className="animate-marquee flex items-center whitespace-nowrap text-xs sm:text-sm font-semibold tracking-wide">
+          <div className="flex items-center gap-6 pr-6 shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FCAF0A] text-[#041427] font-black text-xs uppercase tracking-wider shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#041427]" />
+              Why Us
+            </span>
+            <span>Industry-relevant and practical training</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Experienced trainers and mentors</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Hands-on learning and real-world projects</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Personalized guidance and support</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Certification upon successful completion</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+          </div>
+          <div className="flex items-center gap-6 pr-6 shrink-0" aria-hidden="true">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FCAF0A] text-[#041427] font-black text-xs uppercase tracking-wider shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#041427]" />
+              Why Us
+            </span>
+            <span>Industry-relevant and practical training</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Experienced trainers and mentors</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Hands-on learning and real-world projects</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Personalized guidance and support</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+            <span>Certification upon successful completion</span>
+            <span className="text-[#FCAF0A] font-bold">·</span>
+          </div>
+        </div>
+      </div>
+
       {/* ── TOP SECTION: Crisp Centered Header & Minimalist Icon Tabs ── */}
       <div className="pt-16 sm:pt-20 pb-8 sm:pb-12 border-t border-slate-200">
         <div className="container-custom">

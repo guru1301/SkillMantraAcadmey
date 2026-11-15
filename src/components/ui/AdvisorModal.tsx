@@ -1,11 +1,25 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, MessageCircle, Phone, MapPin, Sparkles } from 'lucide-react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useId,
+} from 'react';
+import Image from 'next/image';
+import BrandLogo from '@/components/ui/BrandLogo';
+import styles from './AdvisorModal.module.css';
 import { BRAND_INFO, PROGRAMS_DATA } from '@/data/siteData';
-import { getApiUrl } from '@/lib/api/config';
+import { submitAdvisoryEnquiryAction, advisoryInquirySchema } from '@/app/actions/advisory';
 
-interface AdvisorModalContextType {
+/* ==========================================================================
+   Types & Context Definitions
+   ========================================================================== */
+
+export interface AdvisorModalContextType {
   isOpen: boolean;
   selectedCourse: string;
   openModal: (course?: string) => void;
@@ -21,16 +35,16 @@ const AdvisorModalContext = createContext<AdvisorModalContextType>({
 
 export function AdvisorModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState('Web & Full Stack Development');
+  const [selectedCourse, setSelectedCourse] = useState('');
 
-  const openModal = (course?: string) => {
-    if (course) setSelectedCourse(course);
+  const openModal = useCallback((course?: string) => {
+    setSelectedCourse(course || '');
     setIsOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   return (
     <AdvisorModalContext.Provider value={{ isOpen, selectedCourse, openModal, closeModal }}>
@@ -44,339 +58,730 @@ export function useAdvisorModal() {
   return useContext(AdvisorModalContext);
 }
 
-function AdvisorModalDialog() {
+/* ==========================================================================
+   Domain Data: Profiles & Curricula
+   ========================================================================== */
+
+export const ADVISOR_PROFILES = [
+  { value: 'College Student', label: 'College & Degree Student' },
+  { value: 'Fresh Graduate', label: 'Fresh Graduate / Job Seeker' },
+  { value: 'Working Professional', label: 'Working Professional' },
+  { value: 'Entrepreneur / Founder', label: 'Founder / Entrepreneur' },
+  { value: 'Other', label: 'Other / Career Switcher' },
+] as const;
+
+export const ADVISOR_PROGRAMMES = [
+  ...PROGRAMS_DATA.map((prog) => ({ value: prog.name, label: prog.name })),
+  { value: 'Not sure yet / General assessment', label: 'Not sure yet (Recommend a track)' },
+];
+
+/* ==========================================================================
+   Main Dialog Component
+   ========================================================================== */
+
+export interface AdvisorModalDialogProps {
+  defaultCourse?: string;
+}
+
+export function AdvisorModalDialog({ defaultCourse }: AdvisorModalDialogProps = {}) {
   const { isOpen, selectedCourse, closeModal } = useAdvisorModal();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    course: selectedCourse || 'Web & Full Stack Development',
-    message: '',
-  });
+  // Animation lifecycle
+  const [isMounted, setIsMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  // Form State
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [profile, setProfile] = useState<string>(ADVISOR_PROFILES[0].value);
+  const [programme, setProgramme] = useState<string>('');
+  const [isNoteExpanded, setIsNoteExpanded] = useState(false);
+  const [note, setNote] = useState('');
+  const [honeypot, setHoneypot] = useState('');
 
-  // Sync selected course when modal opens
-  useEffect(() => {
-    if (selectedCourse) {
-      setFormData((prev) => ({ ...prev, course: selectedCourse }));
-    }
-  }, [selectedCourse]);
+  // Dropdown States for Custom Listbox
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProgrammeOpen, setIsProgrammeOpen] = useState(false);
 
-  // Lock body scroll + Escape key
+  // Submission & Validation States
+  const [errors, setErrors] = useState<{
+    name?: string;
+    phone?: string;
+    email?: string;
+    general?: string;
+  }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // Accessibility & DOM references
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const lastActiveElementRef = useRef<HTMLElement | null>(null);
+  const profileListboxRef = useRef<HTMLDivElement>(null);
+  const programmeListboxRef = useRef<HTMLDivElement>(null);
+
+  // Unique IDs for accessibility
+  const nameId = useId();
+  const phoneId = useId();
+  const emailId = useId();
+  const profileId = useId();
+  const programmeId = useId();
+  const noteId = useId();
+  const dialogHeadingId = useId();
+
+  // Handle open / course sync
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') closeModal();
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.body.style.overflow = 'unset';
-        window.removeEventListener('keydown', handleKeyDown);
-      };
-    } else {
-      document.body.style.overflow = 'unset';
+      lastActiveElementRef.current = document.activeElement as HTMLElement | null;
+      setIsMounted(true);
+      setIsClosing(false);
+      setIsSuccess(false);
+      setErrors({});
+
+      const initialCourse = selectedCourse || defaultCourse || '';
+      setProgramme(initialCourse);
     }
-  }, [isOpen, closeModal]);
+  }, [isOpen, selectedCourse, defaultCourse]);
 
-  if (!isOpen) return null;
+  // Graceful Close with 200ms exit animation
+  const handleRequestClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsMounted(false);
+      setIsClosing(false);
+      setIsProfileOpen(false);
+      setIsProgrammeOpen(false);
+      closeModal();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (status === 'error') {
-      setStatus('idle');
-      setErrorMessage('');
+      // Return focus to previous trigger
+      if (lastActiveElementRef.current && typeof lastActiveElementRef.current.focus === 'function') {
+        lastActiveElementRef.current.focus();
+      }
+    }, 200);
+  }, [closeModal]);
+
+  // Escape key & Body Scroll Lock without layout shift
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isProfileOpen) {
+          setIsProfileOpen(false);
+        } else if (isProgrammeOpen) {
+          setIsProgrammeOpen(false);
+        } else {
+          handleRequestClose();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMounted, isProfileOpen, isProgrammeOpen, handleRequestClose]);
+
+  // Outside click listener for listbox dropdowns
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (profileListboxRef.current && !profileListboxRef.current.contains(e.target as Node)) {
+        setIsProfileOpen(false);
+      }
+      if (programmeListboxRef.current && !programmeListboxRef.current.contains(e.target as Node)) {
+        setIsProgrammeOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
+
+  // Focus trap inside modal
+  const handleKeyDownTrap = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !dialogRef.current) return;
+
+    const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   };
 
+  // Focus heading upon success
+  useEffect(() => {
+    if (isSuccess && successHeadingRef.current) {
+      successHeadingRef.current.focus();
+    }
+  }, [isSuccess]);
+
+  if (!isMounted && !isOpen) return null;
+
+  // Client-side Zod validation
+  const validateForm = () => {
+    const parseResult = advisoryInquirySchema.safeParse({
+      name,
+      phone,
+      email,
+      profile,
+      course: programme || 'General Academic Assessment',
+      message: note,
+      honeypot,
+    });
+
+    if (!parseResult.success) {
+      const nextErrors: typeof errors = {};
+      for (const issue of parseResult.error.issues) {
+        const field = issue.path[0] as string;
+        if (!nextErrors[field as keyof typeof errors]) {
+          nextErrors[field as keyof typeof errors] = issue.message;
+        }
+      }
+      setErrors(nextErrors);
+      return false;
+    }
+
+    setErrors({});
+    return true;
+  };
+
+  // Form Submit Handler wired via Next.js Server Action
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim()) {
-      setStatus('error');
-      setErrorMessage('Please fill in your Name, Phone Number, and Email Address.');
+    // Honeypot check: silently drop bots
+    if (honeypot) {
+      setIsSuccess(true);
       return;
     }
 
-    setStatus('submitting');
-    setErrorMessage('');
+    if (!validateForm()) return;
 
-    const payload = {
-      name: formData.name.trim(),
-      designation: 'Prospective Learner',
-      organization: 'Skillthinker Enrollee',
-      email: formData.email.trim(),
-      phone: formData.phone.trim(),
-      requirement_type: 'Course Enquiry (Popup)',
-      area_of_interest: formData.course,
-      message: formData.message.trim() || `Course Enquiry for ${formData.course} via Advisor Popup.`,
-    };
+    setIsSubmitting(true);
+    setErrors({});
 
     try {
-      const response = await fetch(getApiUrl('/inquiries'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const result = await submitAdvisoryEnquiryAction({
+        name,
+        phone,
+        email,
+        profile,
+        course: programme || 'General Academic Assessment',
+        message: note,
+        honeypot,
       });
 
-      if (response.ok) {
-        setStatus('success');
+      if (result.success) {
+        setIsSuccess(true);
       } else {
-        if (response.status === 429) {
-          setStatus('error');
-          setErrorMessage('Too many inquiries. Please try again shortly or contact via WhatsApp.');
-        } else {
-          setStatus('success');
-        }
+        setErrors({
+          general: result.error,
+          ...result.fieldErrors,
+        });
       }
     } catch {
-      setStatus('success');
+      setErrors({
+        general: 'An unexpected connection error occurred. Please try again or reach out on WhatsApp.',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleResetAndClose = () => {
-    setStatus('idle');
-    setFormData({ name: '', phone: '', email: '', course: 'Web & Full Stack Development', message: '' });
-    closeModal();
-  };
+  const selectedProfileObj = ADVISOR_PROFILES.find((p) => p.value === profile);
+  const selectedProgrammeObj = ADVISOR_PROGRAMMES.find((p) => p.value === programme);
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="advisor-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
+      className={`${styles.backdrop} ${isClosing ? styles.backdropClosing : styles.backdropOpen}`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleRequestClose();
+      }}
+      aria-hidden={!isOpen}
     >
-      {/* Backdrop dismiss */}
-      <div className="absolute inset-0 -z-10" onClick={closeModal} />
-
-      {/* Spacious, Confident, Human-Crafted Modal Dialog (max-w-2xl) */}
       <div
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl shadow-black/40 overflow-hidden max-h-[92vh] flex flex-col border border-slate-200 animate-in zoom-in-95 duration-200"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogHeadingId}
+        onKeyDown={handleKeyDownTrap}
+        className={`${styles.dialog} ${isClosing ? styles.dialogClosing : styles.dialogOpen}`}
       >
-        {/* Authoritative Header */}
-        <div className="bg-gradient-to-r from-[#041427] via-[#06284F] to-[#0A3A7A] text-white px-8 py-7 flex items-start justify-between gap-6 shrink-0 relative overflow-hidden">
-          {/* Subtle background glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FCAF0A]/10 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="relative z-10">
-            <div className="text-xs font-bold uppercase tracking-widest text-[#FCAF0A] mb-2">
-              Skillthinker Admissions Desk
+        {/* ====================================================================
+            LEFT PANEL: 300px, Deep Navy (#0a1628), Padding 40px
+            ==================================================================== */}
+        <div className={styles.leftPanel}>
+          <div className={styles.leftTop}>
+            {/* Official Brand Logo Lockup */}
+            <div className={styles.brandLockup}>
+              <BrandLogo variant="dark" size="sm" showTagline={true} />
             </div>
-            <h3 id="advisor-modal-title" className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
-              Talk to an Academic Advisor
-            </h3>
-            <p className="text-sm text-slate-300 mt-2 leading-relaxed font-normal max-w-lg">
-              Have questions regarding course curriculum, laboratory sessions, fee structures, or batch timings? Our mentors will walk you through the options.
-            </p>
+
+            {/* Headline (Serif Display, 30px / 1.2, off-white) */}
+            <h1 id={dialogHeadingId} className={styles.leftHeadline}>
+              Talk to an academic advisor
+            </h1>
+
+            {/* Hairline Rule */}
+            <hr className={styles.hairline} />
+
+            {/* Four Short Lines in Muted Blue-Grey, No Bullets, 15px */}
+            <ul className={styles.leftCurriculumList}>
+              <li className={styles.leftCurriculumItem}>Curriculum details</li>
+              <li className={styles.leftCurriculumItem}>Batch schedules</li>
+              <li className={styles.leftCurriculumItem}>Hands-on lab projects</li>
+              <li className={styles.leftCurriculumItem}>Digital certification</li>
+            </ul>
           </div>
 
-          <button
-            type="button"
-            onClick={closeModal}
-            className="p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all cursor-pointer shrink-0 mt-1 relative z-10"
-            aria-label="Close dialog"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          {/* Bottom, Pinned: Phone + WhatsApp with hairline above */}
+          <div className={styles.leftBottom}>
+            <hr className={styles.hairline} />
+            <div className={styles.leftContactRow}>
+              <a href="tel:+919442605096" className={styles.contactLink}>
+                +91 94426 05096
+              </a>
+              <span className={styles.contactDivider} aria-hidden="true">
+                /
+              </span>
+              <a
+                href={BRAND_INFO.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.contactLink}
+              >
+                WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
 
-        {/* Scrollable Form Body (Substantial, confident sizing) */}
-        <div className="p-8 overflow-y-auto space-y-6">
+        {/* ====================================================================
+            RIGHT PANEL: Warm Paper (#f6f4ef), Padding 48px 44px
+            ==================================================================== */}
+        <div className={styles.rightPanel}>
+          {/* Header Row: Label top-left, Bare 24px × glyph top-right */}
+          <div className={styles.rightHeader}>
+            <span className={styles.panelLabel}>Enquiry</span>
+            <button
+              type="button"
+              onClick={handleRequestClose}
+              className={styles.closeButton}
+              aria-label="Close dialog"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
 
-          {/* Prominent WhatsApp Instant Option */}
-          <div className="p-4.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                <MessageCircle className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-sm font-bold text-emerald-950">
-                  Prefer instant messaging?
-                </div>
-                <div className="text-xs text-emerald-800 mt-0.5">
-                  Direct WhatsApp chat with admissions team (+91 94426 05096)
-                </div>
-              </div>
+          {isSuccess ? (
+            /* Calm Confirmation View */
+            <div className={styles.successPanel}>
+              <h2
+                ref={successHeadingRef}
+                tabIndex={-1}
+                className={styles.successHeading}
+              >
+                Thank you
+              </h2>
+              <p className={styles.successMessage}>
+                An advisor will be in touch on the number you provided.
+              </p>
+              <button
+                type="button"
+                onClick={handleRequestClose}
+                className={styles.successCloseLink}
+              >
+                Close
+              </button>
             </div>
+          ) : (
+            /* Fields Stacked with 28px Rhythm */
+            <form onSubmit={handleSubmit} noValidate>
+              
+              {/* General Failure Message */}
+              {errors.general && (
+                <div role="alert" className={styles.inlineFailure}>
+                  {errors.general}
+                </div>
+              )}
 
+              {/* Hidden Honeypot for Anti-Bot protection */}
+              <input
+                type="text"
+                name="website_url_check"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0 }}
+                aria-hidden="true"
+              />
+
+              <div className={styles.formStack}>
+                
+                {/* 1. Full name (required) */}
+                <div className={styles.fieldGroup}>
+                  <label htmlFor={nameId} className={styles.fieldLabel}>
+                    <span>
+                      Full name <span className={styles.requiredMarker}>(required)</span>
+                    </span>
+                  </label>
+                  <input
+                    id={nameId}
+                    type="text"
+                    name="name"
+                    required
+                    autoComplete="name"
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
+                    className={`${styles.underlinedInput} ${errors.name ? styles.inputError : ''}`}
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? `${nameId}-error` : undefined}
+                  />
+                  {errors.name && (
+                    <div id={`${nameId}-error`} className={styles.errorMessage}>
+                      {errors.name}
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. Phone / WhatsApp (required) and Email (required) side by side */}
+                <div className={styles.fieldRow}>
+                  {/* Phone */}
+                  <div className={styles.fieldGroup}>
+                    <label htmlFor={phoneId} className={styles.fieldLabel}>
+                      <span>
+                        Phone / WhatsApp <span className={styles.requiredMarker}>(required)</span>
+                      </span>
+                    </label>
+                    <input
+                      id={phoneId}
+                      type="tel"
+                      name="phone"
+                      required
+                      inputMode="tel"
+                      autoComplete="tel"
+                      placeholder="+91 94426 05096"
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+                      }}
+                      className={`${styles.underlinedInput} ${errors.phone ? styles.inputError : ''}`}
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? `${phoneId}-error` : undefined}
+                    />
+                    {errors.phone && (
+                      <div id={`${phoneId}-error`} className={styles.errorMessage}>
+                        {errors.phone}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div className={styles.fieldGroup}>
+                    <label htmlFor={emailId} className={styles.fieldLabel}>
+                      <span>
+                        Email <span className={styles.requiredMarker}>(required)</span>
+                      </span>
+                    </label>
+                    <input
+                      id={emailId}
+                      type="email"
+                      name="email"
+                      required
+                      autoComplete="email"
+                      placeholder="your.name@example.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+                      }}
+                      className={`${styles.underlinedInput} ${errors.email ? styles.inputError : ''}`}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? `${emailId}-error` : undefined}
+                    />
+                    {errors.email && (
+                      <div id={`${emailId}-error`} className={styles.errorMessage}>
+                        {errors.email}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 3. Current profile and Programme of interest side by side */}
+                <div className={styles.fieldRow}>
+                  {/* Current Profile Custom Accessible Listbox */}
+                  <div className={styles.fieldGroup} ref={profileListboxRef}>
+                    <label id={`${profileId}-label`} className={styles.fieldLabel}>
+                      <span>Current profile</span>
+                    </label>
+                    
+                    <button
+                      type="button"
+                      id={profileId}
+                      aria-haspopup="listbox"
+                      aria-expanded={isProfileOpen}
+                      aria-labelledby={`${profileId}-label ${profileId}`}
+                      onClick={() => {
+                        setIsProfileOpen((prev) => !prev);
+                        setIsProgrammeOpen(false);
+                      }}
+                      className={`${styles.listboxTrigger} ${isProfileOpen ? styles.listboxTriggerOpen : ''}`}
+                    >
+                      <span className={styles.listboxValue}>
+                        {selectedProfileObj ? selectedProfileObj.label : 'Select profile'}
+                      </span>
+                      <svg
+                        className={`${styles.chevronGlyph} ${isProfileOpen ? styles.chevronGlyphOpen : ''}`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+
+                    {/* Popover options list */}
+                    {isProfileOpen && (
+                      <ul
+                        role="listbox"
+                        aria-labelledby={`${profileId}-label`}
+                        className={styles.listboxMenu}
+                      >
+                        {ADVISOR_PROFILES.map((item) => (
+                          <li
+                            key={item.value}
+                            role="option"
+                            aria-selected={profile === item.value}
+                            onClick={() => {
+                              setProfile(item.value);
+                              setIsProfileOpen(false);
+                            }}
+                            className={`${styles.listboxOption} ${
+                              profile === item.value ? styles.listboxOptionSelected : ''
+                            }`}
+                          >
+                            <span>{item.label}</span>
+                            {profile === item.value && (
+                              <span aria-hidden="true" style={{ fontSize: '12px' }}>
+                                ✓
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/* Native fallback for touch devices */}
+                    <select
+                      className={styles.nativeSelect}
+                      value={profile}
+                      onChange={(e) => setProfile(e.target.value)}
+                      aria-hidden="true"
+                      tabIndex={-1}
+                    >
+                      {ADVISOR_PROFILES.map((item) => (
+                        <option key={item.value} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Programme of Interest Custom Accessible Listbox */}
+                  <div className={styles.fieldGroup} ref={programmeListboxRef}>
+                    <label id={`${programmeId}-label`} className={styles.fieldLabel}>
+                      <span>Programme of interest</span>
+                    </label>
+
+                    <button
+                      type="button"
+                      id={programmeId}
+                      aria-haspopup="listbox"
+                      aria-expanded={isProgrammeOpen}
+                      aria-labelledby={`${programmeId}-label ${programmeId}`}
+                      onClick={() => {
+                        setIsProgrammeOpen((prev) => !prev);
+                        setIsProfileOpen(false);
+                      }}
+                      className={`${styles.listboxTrigger} ${isProgrammeOpen ? styles.listboxTriggerOpen : ''}`}
+                    >
+                      <span className={styles.listboxValue}>
+                        {selectedProgrammeObj ? (
+                          selectedProgrammeObj.label
+                        ) : (
+                          <span className={styles.listboxPlaceholder}>Select a programme</span>
+                        )}
+                      </span>
+                      <svg
+                        className={`${styles.chevronGlyph} ${isProgrammeOpen ? styles.chevronGlyphOpen : ''}`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+
+                    {/* Popover options list */}
+                    {isProgrammeOpen && (
+                      <ul
+                        role="listbox"
+                        aria-labelledby={`${programmeId}-label`}
+                        className={styles.listboxMenu}
+                      >
+                        {ADVISOR_PROGRAMMES.map((item) => (
+                          <li
+                            key={item.value}
+                            role="option"
+                            aria-selected={programme === item.value}
+                            onClick={() => {
+                              setProgramme(item.value);
+                              setIsProgrammeOpen(false);
+                            }}
+                            className={`${styles.listboxOption} ${
+                              programme === item.value ? styles.listboxOptionSelected : ''
+                            }`}
+                          >
+                            <span>{item.label}</span>
+                            {programme === item.value && (
+                              <span aria-hidden="true" style={{ fontSize: '12px' }}>
+                                ✓
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/* Native fallback for touch devices */}
+                    <select
+                      className={styles.nativeSelect}
+                      value={programme}
+                      onChange={(e) => setProgramme(e.target.value)}
+                      aria-hidden="true"
+                      tabIndex={-1}
+                    >
+                      <option value="">Select a programme</option>
+                      {ADVISOR_PROGRAMMES.map((item) => (
+                        <option key={item.value} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* 4. Text link "Add a note" that expands a 3-line textarea (optional) */}
+                <div className={styles.fieldGroup}>
+                  {!isNoteExpanded ? (
+                    <div className={styles.noteToggleRow}>
+                      <button
+                        type="button"
+                        onClick={() => setIsNoteExpanded(true)}
+                        className={styles.noteToggleLink}
+                      >
+                        Add a note
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      className={`${styles.expandableArea} ${
+                        isNoteExpanded ? styles.expandableAreaOpen : styles.expandableAreaClosed
+                      }`}
+                    >
+                      <label htmlFor={noteId} className={styles.fieldLabel}>
+                        <span>Questions or notes (optional)</span>
+                      </label>
+                      <textarea
+                        id={noteId}
+                        rows={3}
+                        placeholder="Share your technical background, specific questions, or scheduling preferences..."
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        className={styles.underlinedTextarea}
+                        maxLength={1000}
+                      />
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
+              {/* Submit: One filled amber button (#f5a50a) with navy text, 52px tall, radius 4px, no icon */}
+              <div className={styles.submitSection}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={styles.submitButton}
+                >
+                  {isSubmitting ? 'Sending...' : 'Request a callback'}
+                </button>
+                <p className={styles.submitDisclaimer}>
+                  We will contact you on the number provided.
+                </p>
+              </div>
+
+            </form>
+          )}
+
+          {/* Mobile bottom sheet contact footer */}
+          <div className={styles.mobileContactFooter}>
+            <a href="tel:+919442605096" className={styles.mobileContactLink}>
+              +91 94426 05096
+            </a>
+            <span style={{ color: '#9c978b' }} aria-hidden="true">
+              /
+            </span>
             <a
               href={BRAND_INFO.whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all shadow-xs shrink-0"
+              className={styles.mobileContactLink}
             >
-              Open WhatsApp Chat
+              WhatsApp
             </a>
           </div>
-
-          <div className="flex items-center gap-4">
-            <div className="h-px bg-slate-200 flex-1" />
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              Or submit inquiry form
-            </span>
-            <div className="h-px bg-slate-200 flex-1" />
-          </div>
-
-          {status === 'success' ? (
-            <div className="py-12 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
-                <CheckCircle2 className="w-10 h-10" />
-              </div>
-              <h4 className="text-2xl font-extrabold text-slate-900">
-                Enquiry Submitted Successfully
-              </h4>
-              <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                Thank you for your interest. An academic advisor from our Anna Nagar, Trichy center will contact you shortly via phone or WhatsApp.
-              </p>
-              <div className="pt-4">
-                <button
-                  type="button"
-                  onClick={handleResetAndClose}
-                  className="px-8 py-3.5 rounded-xl bg-[#06284F] hover:bg-[#0A3A7A] text-white text-sm font-bold transition-colors cursor-pointer"
-                >
-                  Done
-                </button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {status === 'error' && errorMessage && (
-                <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              {/* 2-Column Name and Phone */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="modal-name" className="block text-sm font-bold text-slate-800 mb-2">
-                    Your Full Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="modal-name"
-                    type="text"
-                    name="name"
-                    required
-                    placeholder="e.g. Anand Kumar"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="modal-phone" className="block text-sm font-bold text-slate-800 mb-2">
-                    Phone / WhatsApp Number <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="modal-phone"
-                    type="tel"
-                    name="phone"
-                    required
-                    placeholder="e.g. +91 94426 05096"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="modal-email" className="block text-sm font-bold text-slate-800 mb-2">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="modal-email"
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="e.g. anand@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all"
-                />
-              </div>
-
-              {/* Program of Interest Selector */}
-              <div>
-                <label htmlFor="modal-course" className="block text-sm font-bold text-slate-800 mb-2">
-                  Program of Interest
-                </label>
-                <select
-                  id="modal-course"
-                  name="course"
-                  value={formData.course}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all cursor-pointer font-medium text-slate-900"
-                >
-                  {PROGRAMS_DATA.map((prog) => (
-                    <option key={prog.id} value={prog.name}>
-                      {prog.name} ({prog.category})
-                    </option>
-                  ))}
-                  <option value="Not sure yet / General enquiry">
-                    Not sure yet / General career assessment
-                  </option>
-                </select>
-              </div>
-
-              {/* Questions or Background */}
-              <div>
-                <label htmlFor="modal-message" className="block text-sm font-bold text-slate-800 mb-2">
-                  Questions or Background <span className="text-slate-400 font-normal">(Optional)</span>
-                </label>
-                <textarea
-                  id="modal-message"
-                  name="message"
-                  rows={3}
-                  placeholder="Tell us about your background, career goals, or preferred batch timings..."
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3.5 text-base sm:text-sm bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-300 focus:border-[#0A3A7A] focus:ring-4 focus:ring-[#0A3A7A]/10 focus:outline-none transition-all resize-none"
-                />
-              </div>
-
-              {/* Large, Authoritative Submit CTA Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={status === 'submitting'}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FCAF0A] via-[#FDC34E] to-[#F5A800] hover:from-[#FDBE2E] hover:to-[#FCAF0A] text-[#041427] font-black text-base shadow-lg shadow-[#FCAF0A]/20 transition-all hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-3 disabled:opacity-60"
-                >
-                  {status === 'submitting' ? (
-                    <span>Submitting Enquiry...</span>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5 text-[#041427]" />
-                      <span>Submit Admissions Enquiry</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Reassuring Location & Helpline Footer */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 border-t border-slate-100">
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#0A3A7A]" />
-                  <span>Anna Nagar, Trichy Center</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-[#0A3A7A]" />
-                  <span>Direct Desk: {BRAND_INFO.contactPhone}</span>
-                </div>
-              </div>
-            </form>
-          )}
         </div>
       </div>
     </div>
   );
 }
+
+export default AdvisorModalDialog;

@@ -13,14 +13,14 @@ export default function LearningJourneySection() {
         {/* Header */}
         <div className="max-w-3xl mb-12">
           <div className="text-xs font-bold tracking-[0.18em] uppercase text-[#0A3A7A] mb-3">
-            Structured Progression
+            How It Works
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#06284F] tracking-tight leading-[1.12]">
             From enrollment to certificate,<br className="hidden lg:block" />
             <span className="text-[#0A3A7A]">step by step.</span>
           </h2>
           <p className="text-slate-600 text-base mt-3 max-w-2xl font-normal leading-relaxed">
-            Our 5-stage learning progression ensures every learner acquires deep conceptual foundation, builds verified project repositories, and graduates with verifiable credential proof.
+            A simple, structured path — so you always know what&apos;s next.
           </p>
         </div>
 
@@ -72,21 +72,21 @@ export default function LearningJourneySection() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <Link
-              href="/login"
+            <a
+              href="/assessment.html"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0A3A7A] hover:bg-[#06284F] text-white font-bold text-xs sm:text-sm shadow-xs transition-all cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
-              <span>Student / Trainer Portal</span>
-            </Link>
+              <span>Take the Assessment</span>
+            </a>
 
-            <Link
-              href="/verify"
+            <a
+              href="/verify.html"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs sm:text-sm transition-all"
             >
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Verify Certificate</span>
-            </Link>
+              <span>Verify a Certificate</span>
+            </a>
           </div>
         </div>
 

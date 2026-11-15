@@ -1,5 +1,9 @@
-import { query } from '@/lib/db';
+/**
+ * College Data Access Layer — Fully migrated to FastAPI Backend.
+ */
+import { apiGet, apiPost, apiPut, apiPatch } from '@/lib/api/client';
 import { CollegeInput } from '@/lib/validations/college';
+import { assertUuid } from '@/lib/validations/ids';
 
 export interface CollegeWithCounts {
   id: string;
@@ -25,188 +29,126 @@ export interface CollegeStats {
   assignedTrainersCount: number;
 }
 
+/**
+ * Retrieves colleges matching optional filters from FastAPI.
+ */
 export async function getColleges(filters?: {
   search?: string;
   status?: string;
   city?: string;
 }): Promise<CollegeWithCounts[]> {
-  const whereClauses: string[] = [];
-  const params: any[] = [];
+  try {
+    const params: Record<string, string> = {};
+    if (filters?.search?.trim()) params.search = filters.search.trim();
+    if (filters?.status && filters.status !== 'all') params.status = filters.status;
+    if (filters?.city && filters.city !== 'all') params.city = filters.city;
 
-  if (filters?.search?.trim()) {
-    params.push(`%${filters.search.trim().toLowerCase()}%`);
-    whereClauses.push(
-      `(LOWER(c.name) LIKE $${params.length} OR LOWER(COALESCE(c.city, '')) LIKE $${params.length})`
-    );
+    const colleges = await apiGet<CollegeWithCounts[]>('/colleges', params);
+    return colleges || [];
+  } catch (err) {
+    console.error('[getColleges error]:', err);
+    return [];
   }
-
-  if (filters?.status && filters.status !== 'all') {
-    params.push(filters.status);
-    whereClauses.push(`c.status = $${params.length}`);
-  }
-
-  if (filters?.city && filters.city !== 'all') {
-    params.push(filters.city.toLowerCase());
-    whereClauses.push(`LOWER(COALESCE(c.city, '')) = $${params.length}`);
-  }
-
-  const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-  const sqlQuery = `
-    SELECT 
-      c.id, 
-      c.name, 
-      c.city, 
-      c.state, 
-      c.contact_name, 
-      c.contact_email, 
-      c.contact_phone, 
-      c.logo_url, 
-      c.status, 
-      c.created_at, 
-      c.updated_at,
-      COUNT(DISTINCT CASE WHEN b.status = 'active' THEN b.id END)::int as active_batches_count,
-      COUNT(DISTINCT bs.id)::int as enrolled_students_count
-    FROM colleges c
-    LEFT JOIN batches b ON b.college_id = c.id
-    LEFT JOIN batch_students bs ON bs.batch_id = b.id
-    ${whereSql}
-    GROUP BY c.id
-    ORDER BY c.created_at DESC, c.name ASC
-  `;
-
-  return query<CollegeWithCounts>(sqlQuery, params);
 }
 
+/**
+ * Retrieves sorted list of unique cities from FastAPI.
+ */
 export async function getDistinctCities(): Promise<string[]> {
-  const rows = await query<{ city: string }>(
-    `SELECT DISTINCT city FROM colleges WHERE city IS NOT NULL AND TRIM(city) != '' ORDER BY city ASC`
-  );
-  return rows.map((r) => r.city);
+  try {
+    const cities = await apiGet<string[]>('/colleges/cities');
+    return cities || [];
+  } catch (err) {
+    console.error('[getDistinctCities error]:', err);
+    return [];
+  }
 }
 
+/**
+ * Retrieves a single college by ID with batch counts from FastAPI.
+ */
 export async function getCollegeById(id: string): Promise<CollegeWithCounts | null> {
-  const rows = await query<CollegeWithCounts>(
-    `
-    SELECT 
-      c.id, 
-      c.name, 
-      c.city, 
-      c.state, 
-      c.contact_name, 
-      c.contact_email, 
-      c.contact_phone, 
-      c.logo_url, 
-      c.status, 
-      c.created_at, 
-      c.updated_at,
-      COUNT(DISTINCT CASE WHEN b.status = 'active' THEN b.id END)::int as active_batches_count,
-      COUNT(DISTINCT bs.id)::int as enrolled_students_count
-    FROM colleges c
-    LEFT JOIN batches b ON b.college_id = c.id
-    LEFT JOIN batch_students bs ON bs.batch_id = b.id
-    WHERE c.id = $1
-    GROUP BY c.id
-    LIMIT 1
-    `,
-    [id]
-  );
-  return rows[0] || null;
+  const safeCollegeId = assertUuid(id, 'collegeId');
+  try {
+    return await apiGet<CollegeWithCounts>(`/colleges/${safeCollegeId}`);
+  } catch (err) {
+    console.error('[getCollegeById error]:', err);
+    return null;
+  }
 }
 
+/**
+ * Retrieves operational statistics for a college from FastAPI.
+ */
 export async function getCollegeStats(collegeId: string): Promise<CollegeStats> {
-  const rows = await query<{
-    programs_count: number;
-    total_batches: number;
-    active_batches: number;
-    enrolled_students: number;
-    assigned_trainers: number;
-  }>(
-    `
-    SELECT 
-      COUNT(DISTINCT b.program_id)::int as programs_count,
-      COUNT(DISTINCT b.id)::int as total_batches,
-      COUNT(DISTINCT CASE WHEN b.status = 'active' THEN b.id END)::int as active_batches,
-      (
-        SELECT COUNT(DISTINCT bs.id)::int 
-        FROM batch_students bs 
-        JOIN batches b2 ON b2.id = bs.batch_id 
-        WHERE b2.college_id = $1
-      ) as enrolled_students,
-      (
-        SELECT COUNT(DISTINCT bt.trainer_id)::int 
-        FROM batch_trainers bt 
-        JOIN batches b3 ON b3.id = bt.batch_id 
-        WHERE b3.college_id = $1
-      ) as assigned_trainers
-    FROM batches b
-    WHERE b.college_id = $1
-    `,
-    [collegeId]
-  );
-
-  const r = rows[0];
-  return {
-    programsCount: Number(r?.programs_count ?? 0),
-    activeBatchesCount: Number(r?.active_batches ?? 0),
-    totalBatchesCount: Number(r?.total_batches ?? 0),
-    enrolledStudentsCount: Number(r?.enrolled_students ?? 0),
-    assignedTrainersCount: Number(r?.assigned_trainers ?? 0),
-  };
+  const safeCollegeId = assertUuid(collegeId, 'collegeId');
+  try {
+    const stats = await apiGet<CollegeStats>(`/colleges/${safeCollegeId}/stats`);
+    return (
+      stats || {
+        programsCount: 0,
+        activeBatchesCount: 0,
+        totalBatchesCount: 0,
+        enrolledStudentsCount: 0,
+        assignedTrainersCount: 0,
+      }
+    );
+  } catch (err) {
+    console.error('[getCollegeStats error]:', err);
+    return {
+      programsCount: 0,
+      activeBatchesCount: 0,
+      totalBatchesCount: 0,
+      enrolledStudentsCount: 0,
+      assignedTrainersCount: 0,
+    };
+  }
 }
 
+/**
+ * Onboards a new college via FastAPI.
+ */
 export async function createCollege(data: CollegeInput): Promise<{ id: string }> {
-  const rows = await query<{ id: string }>(
-    `
-    INSERT INTO colleges (name, city, state, contact_name, contact_email, contact_phone, logo_url, status)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING id
-    `,
-    [
-      data.name.trim(),
-      data.city?.trim() || null,
-      data.state?.trim() || null,
-      data.contactName?.trim() || null,
-      data.contactEmail?.trim().toLowerCase() || null,
-      data.contactPhone?.trim() || null,
-      data.logoUrl?.trim() || null,
-      data.status || 'active',
-    ]
-  );
-  return rows[0];
+  const payload = {
+    name: data.name.trim(),
+    city: data.city?.trim() || null,
+    state: data.state?.trim() || null,
+    contact_name: data.contactName?.trim() || null,
+    contact_email: data.contactEmail?.trim().toLowerCase() || null,
+    contact_phone: data.contactPhone?.trim() || null,
+    logo_url: data.logoUrl?.trim() || null,
+    status: data.status || 'active',
+  };
+
+  const res = await apiPost<{ id: string }>('/colleges', payload);
+  return { id: String(res.id) };
 }
 
-export async function updateCollege(
-  id: string,
-  data: CollegeInput
-): Promise<boolean> {
-  const rows = await query(
-    `
-    UPDATE colleges
-    SET 
-      name = $1,
-      city = $2,
-      state = $3,
-      contact_name = $4,
-      contact_email = $5,
-      contact_phone = $6,
-      logo_url = $7,
-      status = $8,
-      updated_at = NOW()
-    WHERE id = $9
-    RETURNING id
-    `,
-    [
-      data.name.trim(),
-      data.city?.trim() || null,
-      data.state?.trim() || null,
-      data.contactName?.trim() || null,
-      data.contactEmail?.trim().toLowerCase() || null,
-      data.contactPhone?.trim() || null,
-      data.logoUrl?.trim() || null,
-      data.status || 'active',
-      id,
-    ]
-  );
-  return rows.length > 0;
+/**
+ * Updates college metadata via FastAPI.
+ */
+export async function updateCollege(id: string, data: CollegeInput): Promise<boolean> {
+  const safeCollegeId = assertUuid(id, 'collegeId');
+  const payload = {
+    name: data.name.trim(),
+    city: data.city?.trim() || null,
+    state: data.state?.trim() || null,
+    contact_name: data.contactName?.trim() || null,
+    contact_email: data.contactEmail?.trim().toLowerCase() || null,
+    contact_phone: data.contactPhone?.trim() || null,
+    logo_url: data.logoUrl?.trim() || null,
+    status: data.status || 'active',
+  };
+
+  await apiPut(`/colleges/${safeCollegeId}`, payload);
+  return true;
+}
+
+/**
+ * Toggles a college's active/inactive status via FastAPI.
+ */
+export async function updateCollegeStatus(id: string, status: 'active' | 'inactive'): Promise<boolean> {
+  const safeCollegeId = assertUuid(id, 'collegeId');
+  await apiPatch(`/colleges/${safeCollegeId}/status`, { status });
+  return true;
 }

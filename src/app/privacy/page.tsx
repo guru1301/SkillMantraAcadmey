@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { BRAND_INFO } from '@/data/siteData';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Skill Mantra Academy',
+  title: 'Privacy Policy | SkillThinker',
   description: 'Our privacy standards and data protection practices for institutional partners, faculty members, and learners.',
 };
 

@@ -6,7 +6,7 @@ import PageHeader from '@/components/admin/PageHeader';
 import TrainersTable from '@/components/admin/TrainersTable';
 
 export const metadata: Metadata = {
-  title: 'Faculty & Trainers Directory | Skill Matra Admin',
+  title: 'Faculty & Trainers Directory | SkillThinker Admin',
   description: 'Manage certified instructors, domain specialists, and academic mentors.',
 };
 
@@ -16,7 +16,7 @@ export default async function TrainersDirectoryPage() {
   const trainers = await getTrainers();
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-3.5 sm:space-y-4 max-w-7xl mx-auto">
       <Breadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin/dashboard' },

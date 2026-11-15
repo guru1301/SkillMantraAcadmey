@@ -1,71 +1,107 @@
 'use client';
 
-import React from 'react';
+import React, { useTransition } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Building2,
-  BookOpen,
   Layers,
-  GraduationCap,
   Users,
-  HelpCircle,
-  FileCheck2,
-  BarChart3,
-  ScrollText,
-  Settings,
-  X,
+  GraduationCap,
+  BookOpen,
   ShieldCheck,
+  ExternalLink,
+  LogOut,
+  X,
 } from 'lucide-react';
+import { logoutAction } from '@/app/actions/auth';
 
 interface AdminSidebarProps {
   mobileOpen: boolean;
   onCloseMobile: () => void;
 }
 
-interface NavItem {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  active: boolean;
-  badge?: string;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, active: true },
-  { name: 'Colleges', href: '/admin/colleges', icon: Building2, active: true },
-  { name: 'Programs', href: '/admin/programs', icon: BookOpen, active: true },
-  { name: 'Batches', href: '/admin/batches', icon: Layers, active: true },
-  { name: 'Trainers', href: '/admin/trainers', icon: Users, active: true },
-  { name: 'Students', href: '#', icon: GraduationCap, active: false, badge: 'Soon' },
-  { name: 'Question Bank', href: '#', icon: HelpCircle, active: false, badge: 'Soon' },
-  { name: 'Assessments', href: '#', icon: FileCheck2, active: false, badge: 'Soon' },
-  { name: 'Reports', href: '#', icon: BarChart3, active: false, badge: 'Soon' },
-  { name: 'Audit Logs', href: '#', icon: ScrollText, active: false, badge: 'Soon' },
-  { name: 'Settings', href: '#', icon: Settings, active: false, badge: 'Soon' },
-];
-
 export default function AdminSidebar({
   mobileOpen,
   onCloseMobile,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
-  const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#061E42] text-white select-none">
-      {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-5 border-b border-blue-900/60 bg-[#041633]">
-        <Link href="/admin/dashboard" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#0A3A7A] border border-blue-600/50 flex items-center justify-center font-black text-sm text-[#FCAF0A] shadow-inner">
-            SM
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logoutAction();
+    });
+  };
+
+  const navItems = [
+    {
+      name: 'Dashboard',
+      href: '/admin/dashboard',
+      icon: LayoutDashboard,
+      isActive: (p: string) => p === '/admin/dashboard' || p === '/admin',
+    },
+    {
+      name: 'Colleges',
+      href: '/admin/colleges',
+      icon: Building2,
+      isActive: (p: string) => p.startsWith('/admin/colleges'),
+    },
+    {
+      name: 'Batches',
+      href: '/admin/batches',
+      icon: Layers,
+      isActive: (p: string) => p.startsWith('/admin/batches'),
+    },
+    {
+      name: 'Trainers',
+      href: '/admin/trainers',
+      icon: Users,
+      isActive: (p: string) => p.startsWith('/admin/trainers'),
+    },
+    {
+      name: 'Students',
+      href: '/admin/students',
+      icon: GraduationCap,
+      isActive: (p: string) => p.startsWith('/admin/students'),
+    },
+    {
+      name: 'Programs',
+      href: '/admin/programs',
+      icon: BookOpen,
+      isActive: (p: string) => p.startsWith('/admin/programs'),
+    },
+    {
+      name: 'User Accounts',
+      href: '/admin/users',
+      icon: ShieldCheck,
+      isActive: (p: string) => p.startsWith('/admin/users'),
+    },
+  ];
+
+  const sidebarBody = (
+    <div className="flex flex-col h-full bg-white select-none">
+      {/* 1. Header: SkillThinker Logo Lockup */}
+      <div className="h-18 px-5 flex items-center justify-between border-b border-slate-100 bg-white shrink-0">
+        <Link href="/admin/dashboard" onClick={onCloseMobile} className="flex items-center gap-3 min-w-0 group">
+          <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-slate-300 transition-colors">
+            <Image
+              src="/images/brand/logo.png"
+              alt="SkillThinker"
+              width={30}
+              height={30}
+              priority
+              className="object-contain w-full h-full"
+            />
           </div>
-          <div>
-            <span className="font-extrabold text-sm tracking-wider text-white block leading-tight">
-              SKILL MATRA
+          <div className="min-w-0">
+            <span className="block font-bold text-sm text-slate-900 tracking-tight leading-tight">
+              SkillThinker
             </span>
-            <span className="text-[10px] text-blue-300/80 font-medium tracking-wide block">
-              Admin Portal
+            <span className="block text-xs text-slate-500 font-medium leading-tight mt-0.5">
+              Super Admin
             </span>
           </div>
         </Link>
@@ -74,100 +110,100 @@ export default function AdminSidebar({
         <button
           type="button"
           onClick={onCloseMobile}
-          className="lg:hidden p-1.5 rounded-md text-slate-300 hover:text-white hover:bg-white/10"
-          aria-label="Close menu"
+          className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+          aria-label="Close navigation"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-blue-400/80">
-          Main Navigation
+      {/* 2. Core Navigation Items */}
+      <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+        <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          Control Center
         </div>
 
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
+          const active = item.isActive(pathname);
           const Icon = item.icon;
-          const isCurrent =
-            item.active &&
-            (pathname === item.href ||
-              (item.href !== '/admin/dashboard' && pathname.startsWith(item.href)));
 
-          if (item.active) {
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                prefetch={true}
-                onClick={onCloseMobile}
-                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all ${
-                  isCurrent
-                    ? 'bg-[#0A3A7A] text-[#FCAF0A] shadow-inner'
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <Icon className={`w-4 h-4 ${isCurrent ? 'text-[#FCAF0A]' : 'text-slate-400'}`} />
-                  <span>{item.name}</span>
-                </div>
-                <div className="w-1.5 h-1.5 rounded-full bg-[#FCAF0A]" />
-              </Link>
-            );
-          }
-
-          // Disabled / Coming Soon Links
           return (
-            <div
+            <Link
               key={item.name}
-              className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-400/70 cursor-not-allowed opacity-75"
-              title={`${item.name} module is coming soon`}
+              href={item.href}
+              onClick={onCloseMobile}
+              className={`flex items-center gap-3 h-11 px-3.5 rounded-lg text-sm font-medium transition-colors ${
+                active
+                  ? 'bg-[#0A3A7A] text-white shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
             >
-              <div className="flex items-center gap-2.5">
-                <Icon className="w-4 h-4 text-slate-500" />
-                <span>{item.name}</span>
-              </div>
-              {item.badge && (
-                <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-950/80 text-blue-300 border border-blue-800/60">
-                  {item.badge}
-                </span>
-              )}
-            </div>
+              <Icon
+                className={`w-4 h-4 shrink-0 ${
+                  active ? 'text-[#FCAF0A]' : 'text-slate-400'
+                }`}
+              />
+              <span className="truncate">{item.name}</span>
+            </Link>
           );
         })}
-      </div>
 
-      {/* Footer Info Box */}
-      <div className="p-4 border-t border-blue-900/60 bg-[#041633]/80">
-        <div className="flex items-center gap-2 text-xs text-slate-300">
-          <ShieldCheck className="w-4 h-4 text-[#FCAF0A] shrink-0" />
-          <span className="font-semibold text-[11px] text-slate-200 truncate">
-            Super Admin Access
-          </span>
+        {/* Secondary: Switch to College Partner Portal View */}
+        <div className="pt-4 mt-4 border-t border-slate-100">
+          <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            Portals
+          </div>
+          <Link
+            href="/portal"
+            onClick={onCloseMobile}
+            className="flex items-center justify-between h-10 px-3.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+          >
+            <div className="flex items-center gap-2.5">
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+              <span>College Portal</span>
+            </div>
+            <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-semibold">
+              View
+            </span>
+          </Link>
         </div>
-        <p className="text-[10px] text-slate-400 mt-0.5">
-          Neon DB v1.0 • Vertical Slice
-        </p>
+      </nav>
+
+      {/* 3. Footer: Dignified Sign Out */}
+      <div className="p-3 border-t border-slate-100 bg-slate-50/50 shrink-0">
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isPending}
+          className="w-full flex items-center justify-center gap-2 h-10 px-3 rounded-lg text-xs font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 border border-slate-200/80 bg-white transition cursor-pointer disabled:opacity-50"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>{isPending ? 'Signing out...' : 'Sign Out'}</span>
+        </button>
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Desktop Fixed Sidebar */}
-      <aside className="hidden lg:block w-64 h-screen fixed inset-y-0 left-0 z-30 shadow-lg border-r border-blue-950">
-        {sidebarContent}
+      {/* Desktop Sidebar (240px wide, matching Student & Trainer portals) */}
+      <aside
+        className="hidden md:flex fixed inset-y-0 left-0 w-[240px] bg-white border-r border-slate-200/90 z-40 flex-col"
+        aria-label="Super Admin Navigation"
+      >
+        {sidebarBody}
       </aside>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
+        <div className="md:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
             onClick={onCloseMobile}
+            aria-hidden="true"
           />
-          <div className="relative w-64 max-w-[80%] h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
-            {sidebarContent}
+          <div className="relative flex-1 flex flex-col max-w-[260px] w-full bg-white shadow-2xl animate-in slide-in-from-left duration-200">
+            {sidebarBody}
           </div>
         </div>
       )}

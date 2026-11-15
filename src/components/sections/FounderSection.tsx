@@ -17,7 +17,7 @@ export default function FounderSection() {
           </h2>
           <div className="gold-accent-line mx-auto my-3" />
           <p className="text-base text-[#667085] leading-relaxed max-w-2xl mx-auto">
-            Skill Mantra Academy was founded by an experienced technical educator committed to modernizing campus skill education with authentic engineering practice.
+            SkillThinker was founded by an experienced technical educator committed to modernizing campus skill education with authentic engineering practice.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function FounderSection() {
                 <div className="relative rounded-xl overflow-hidden border border-[#E4E8EF] shadow-md aspect-square bg-slate-900">
                   <Image
                     src="/images/founder-trainer.jpg"
-                    alt="Founder and Lead Technical Trainer of Skill Mantra Academy"
+                    alt="Founder and Lead Technical Trainer of SkillThinker"
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 40vw"

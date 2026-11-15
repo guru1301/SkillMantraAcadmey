@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import { Menu, LogOut, Building2, ShieldCheck } from 'lucide-react';
+import { Menu, LogOut } from 'lucide-react';
 import { logoutAction } from '@/app/actions/auth';
 
 interface CollegePortalHeaderProps {
@@ -58,7 +58,7 @@ export default function CollegePortalHeader({
       {/* Right: User Profile & Logout */}
       <div className="flex items-center gap-3 sm:gap-4">
         {/* User Card */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5" title={coordinatorEmail}>
           <div className="w-9 h-9 rounded-full bg-[#0A3A7A] text-[#FCAF0A] font-extrabold text-xs flex items-center justify-center shadow-xs border border-blue-600/30">
             {initials}
           </div>

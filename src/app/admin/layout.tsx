@@ -5,8 +5,8 @@ import { getSession } from '@/lib/auth/session';
 import AdminLayoutShell from '@/components/admin/AdminLayoutShell';
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | Skill Matra',
-  description: 'Skill Matra Training Management Platform - Administrator Portal',
+  title: 'Admin Dashboard | SkillThinker',
+  description: 'SkillThinker Training Management Platform - Administrator Portal',
   robots: {
     index: false,
     follow: false,
@@ -27,7 +27,7 @@ export default async function AdminLayout({
 
   return (
     <AdminLayoutShell
-      adminName={session.fullName || 'Skill Matra Admin'}
+      adminName={session.fullName || 'SkillThinker Admin'}
       adminEmail={session.email}
     >
       {children}

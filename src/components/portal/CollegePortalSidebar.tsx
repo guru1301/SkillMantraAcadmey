@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -10,9 +11,9 @@ import {
   Users,
   FolderDown,
   Building2,
+  MapPin,
   X,
   ShieldCheck,
-  BookOpen,
 } from 'lucide-react';
 
 interface CollegePortalSidebarProps {
@@ -49,14 +50,21 @@ export default function CollegePortalSidebar({
       {/* Brand Header */}
       <div className="h-16 flex items-center justify-between px-5 border-b border-blue-900/60 bg-[#041633]">
         <Link href="/portal" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#0A3A7A] border border-blue-600/50 flex items-center justify-center font-black text-sm text-[#FCAF0A] shadow-inner">
-            SM
+          <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center border border-white/10 shadow-xs">
+            <Image
+              src="/images/brand/logo.png"
+              alt="SkillThinker Logo"
+              width={28}
+              height={28}
+              className="w-full h-full object-contain"
+              priority
+            />
           </div>
           <div>
-            <span className="font-extrabold text-sm tracking-wider text-white block leading-tight">
-              SKILL MATRA
+            <span className="font-bold text-sm tracking-wider text-white block leading-tight">
+              SKILLTHINKER
             </span>
-            <span className="text-[10px] text-[#FCAF0A] font-bold tracking-wide block">
+            <span className="text-[10px] text-[#FCAF0A] font-semibold tracking-wide block">
               College Portal
             </span>
           </div>
@@ -83,8 +91,9 @@ export default function CollegePortalSidebar({
           {collegeName}
         </div>
         {collegeCity && (
-          <div className="text-[11px] text-blue-300/80 mt-0.5">
-            📍 {collegeCity}
+          <div className="text-[11px] text-blue-300/80 mt-1 flex items-center gap-1.5">
+            <MapPin className="w-3 h-3 text-blue-400 shrink-0" />
+            <span>{collegeCity}</span>
           </div>
         )}
       </div>
@@ -130,7 +139,7 @@ export default function CollegePortalSidebar({
           <span className="truncate">Verified College Partner</span>
         </div>
         <div className="text-[10px] text-slate-400 mt-1">
-          Skill Matra Enterprise Network
+          SkillThinker Institutional Network
         </div>
       </div>
     </div>

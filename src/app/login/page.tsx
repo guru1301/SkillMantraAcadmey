@@ -5,8 +5,8 @@ import { getSession } from '@/lib/auth/session';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Admin Login | Skill Matra',
-  description: 'Admin authentication portal for Skill Matra Training Management Platform.',
+  title: 'Portal Login | SkillThinker',
+  description: 'Authentication portal for SkillThinker Training Management Platform.',
   robots: {
     index: false,
     follow: false,
@@ -21,6 +21,12 @@ export default async function LoginPage() {
     }
     if (session.role === 'college_admin') {
       redirect('/portal');
+    }
+    if (session.role === 'trainer') {
+      redirect('/trainer');
+    }
+    if (session.role === 'student') {
+      redirect('/student');
     }
   }
 

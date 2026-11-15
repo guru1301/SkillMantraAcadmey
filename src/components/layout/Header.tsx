@@ -52,8 +52,8 @@ export default function Header() {
 
   const navLinks = [
     { label: 'About', href: '/#about' },
-    { label: 'Why Us', href: '/#why-skillthinker' },
-    { label: 'Certifications', href: '/#certifications' },
+    { label: 'Trainers', href: '/#trainers' },
+    { label: 'FAQ', href: '/#faq' },
     { label: 'Contact', href: '/#contact' },
   ];
 
@@ -67,35 +67,42 @@ export default function Header() {
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-16">
 
             {/* Official Brand Logo Lockup */}
-            <Link href="/" className="group flex items-center shrink-0">
+            <Link href="/#top" className="group flex items-center shrink-0">
               <BrandLogo variant="dark" size="sm" showTagline={true} />
             </Link>
 
             {/* Desktop Navigation - Pure Human-Crafted Typography (No Icon Clutter) */}
             <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
               <Link
-                href="/"
-                className="px-3.5 py-2 text-white/85 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                href="/#top"
+                className="px-3 py-2 text-white/85 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
               >
                 Home
               </Link>
 
-              {/* Programs Mega-Menu Dropdown */}
+              <Link
+                href="/#about"
+                className="px-3 py-2 text-white/85 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+              >
+                About
+              </Link>
+
+              {/* Courses Mega-Menu Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   type="button"
                   onClick={() => setProgramsOpen(!programsOpen)}
-                  className={`group flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-colors cursor-pointer ${
+                  className={`group flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                     programsOpen
                       ? 'bg-white/10 text-white font-semibold'
                       : 'text-white/85 hover:text-white hover:bg-white/5'
                   }`}
                   aria-expanded={programsOpen}
                 >
-                  <span>Programs</span>
+                  <span>Courses</span>
                   <ChevronDown className={`w-3.5 h-3.5 text-white/60 group-hover:text-white transition-transform duration-200 ${programsOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -164,22 +171,28 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* Right Action Area - Clean, Restrained */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* Right Action Area */}
+            <div className="hidden lg:flex items-center gap-3">
+              <a
+                href="/assessment.html"
+                className="text-xs font-semibold text-slate-300 hover:text-white px-2 py-1.5 transition-colors"
+              >
+                Assessment
+              </a>
+
+              <a
+                href="/student-login.html"
+                className="text-xs font-semibold text-slate-300 hover:text-white px-2 py-1.5 transition-colors"
+              >
+                Feedback
+              </a>
+
               <Link
                 href="/login"
-                className="text-sm font-medium text-white/80 hover:text-white px-2 py-1.5 transition-colors"
+                className="text-xs font-semibold text-white/90 hover:text-white px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors border border-white/10"
               >
                 Portal
               </Link>
-
-              <button
-                type="button"
-                onClick={() => openModal()}
-                className="px-4 py-2 rounded-lg bg-[#FCAF0A] hover:bg-[#F5A800] text-[#041427] text-xs font-bold tracking-wide transition-colors cursor-pointer shadow-sm"
-              >
-                Talk to Advisor
-              </button>
             </div>
 
             {/* Mobile Menu Trigger */}
@@ -218,47 +231,70 @@ export default function Header() {
 
             <nav className="flex-1 overflow-y-auto py-6 space-y-1">
               <Link
-                href="/"
+                href="/#top"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
               >
                 Home
               </Link>
               <Link
-                href="/#programs"
+                href="/#about"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                About
+              </Link>
+              <Link
+                href="/#courses"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-2.5 px-3 rounded-lg text-sm font-bold text-[#FCAF0A] hover:bg-white/5"
               >
-                Programs (All 10 Tracks)
+                Courses
               </Link>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
+              <Link
+                href="/#trainers"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                Trainers
+              </Link>
+              <Link
+                href="/#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                FAQ
+              </Link>
+              <Link
+                href="/#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                Contact
+              </Link>
+              <div className="pt-2 pb-1 border-t border-white/10 my-2">
+                <a
+                  href="/assessment.html"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2.5 px-3 rounded-lg text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5"
+                  className="block py-2 px-3 rounded-lg text-xs font-semibold text-[#FCAF0A] hover:bg-white/5"
                 >
-                  {link.label}
-                </Link>
-              ))}
+                  Assessment
+                </a>
+                <a
+                  href="/student-login.html"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 px-3 rounded-lg text-xs font-semibold text-slate-300 hover:bg-white/5"
+                >
+                  Feedback
+                </a>
+              </div>
             </nav>
 
-            <div className="pt-4 border-t border-white/10 space-y-2.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openModal();
-                }}
-                className="w-full py-3 rounded-lg bg-[#FCAF0A] text-[#06284F] font-bold text-sm text-center shadow-sm"
-              >
-                Talk to an Advisor
-              </button>
-
+            <div className="pt-4 border-t border-white/10">
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-xs font-semibold block text-center"
+                className="w-full py-2.5 rounded-lg bg-white/10 border border-white/15 text-white text-xs font-semibold block text-center"
               >
                 Portal Login
               </Link>

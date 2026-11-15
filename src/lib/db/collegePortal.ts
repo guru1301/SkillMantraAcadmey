@@ -1,4 +1,9 @@
-import { query } from '@/lib/db';
+/**
+ * College Portal Data Access Layer — Fully migrated to FastAPI Backend.
+ * Direct SQL queries have been retired in Stage D.
+ */
+import { apiGet } from '@/lib/api/client';
+import { assertUuid } from '@/lib/validations/ids';
 
 export interface CollegePortalOverview {
   college: {
@@ -61,119 +66,84 @@ export interface CollegePortalOverview {
 }
 
 /**
- * Retrieves all data scoped strictly to a specific college.
+ * Retrieves all data scoped strictly to a specific college via FastAPI.
  * Enforces multi-tenant data isolation.
  */
 export async function getCollegePortalData(
   collegeId: string
 ): Promise<CollegePortalOverview | null> {
-  // 1. Fetch college details and all related cohort data in parallel to eliminate network waterfalls
-  const [collegeRows, batchRows, trainerRows, studentRows, resourceRows] =
-    await Promise.all([
-      query<any>(
-        `SELECT id, name, city, state, contact_name, contact_email, contact_phone 
-         FROM colleges 
-         WHERE id = $1 AND status = 'active' 
-         LIMIT 1`,
-        [collegeId]
-      ),
-      query<any>(
-        `SELECT 
-           b.id,
-           b.code,
-           p.name as program_name,
-           b.start_date::text as start_date,
-           b.end_date::text as end_date,
-           b.target_strength,
-           b.status,
-           COUNT(DISTINCT bs.id)::int as enrolled_count,
-           COUNT(DISTINCT bt.id)::int as trainers_count
-         FROM batches b
-         JOIN programs p ON p.id = b.program_id
-         LEFT JOIN batch_students bs ON bs.batch_id = b.id
-         LEFT JOIN batch_trainers bt ON bt.batch_id = b.id
-         WHERE b.college_id = $1
-         GROUP BY b.id, p.name
-         ORDER BY b.start_date DESC, b.created_at DESC`,
-        [collegeId]
-      ),
-      query<any>(
-        `SELECT DISTINCT
-           t.id,
-           t.full_name,
-           t.email,
-           t.phone,
-           t.skills,
-           t.status,
-           b.code as batch_code,
-           bt.is_lead,
-           bt.role
-         FROM batch_trainers bt
-         JOIN batches b ON b.id = bt.batch_id
-         JOIN trainers t ON t.id = bt.trainer_id
-         WHERE b.college_id = $1
-         ORDER BY bt.is_lead DESC, t.full_name ASC`,
-        [collegeId]
-      ),
-      query<any>(
-        `SELECT 
-           s.id,
-           s.roll_number,
-           s.full_name,
-           s.email,
-           s.phone,
-           s.department,
-           s.year_or_semester,
-           b.code as batch_code,
-           bs.enrolled_at::text as enrolled_at
-         FROM batch_students bs
-         JOIN batches b ON b.id = bs.batch_id
-         JOIN students s ON s.id = bs.student_id
-         WHERE b.college_id = $1
-         ORDER BY b.code ASC, s.roll_number ASC`,
-        [collegeId]
-      ),
-      query<any>(
-        `SELECT 
-           r.id,
-           r.name,
-           r.type,
-           r.url,
-           r.description,
-           b.code as batch_code
-         FROM resources r
-         JOIN batches b ON b.id = r.batch_id
-         WHERE b.college_id = $1
-         ORDER BY r.created_at DESC`,
-        [collegeId]
-      ),
-    ]);
+  const safeCollegeId =
+    collegeId !== undefined && collegeId !== ''
+      ? assertUuid(collegeId, 'collegeId')
+      : '';
+  try {
+    const endpoint = safeCollegeId
+      ? `/colleges/${safeCollegeId}/portal-overview`
+      : '/colleges/portal-overview';
+    const data = await apiGet<CollegePortalOverview>(endpoint);
+    if (!data || !data.college) return null;
 
-  if (!collegeRows || collegeRows.length === 0) {
+    return {
+      college: {
+        id: String(data.college.id),
+        name: data.college.name,
+        city: data.college.city ?? null,
+        state: data.college.state ?? null,
+        contact_name: data.college.contact_name ?? null,
+        contact_email: data.college.contact_email ?? null,
+        contact_phone: data.college.contact_phone ?? null,
+      },
+      stats: {
+        totalBatches: Number(data.stats?.totalBatches || 0),
+        activeBatches: Number(data.stats?.activeBatches || 0),
+        totalStudents: Number(data.stats?.totalStudents || 0),
+        totalTrainers: Number(data.stats?.totalTrainers || 0),
+        totalPrograms: Number(data.stats?.totalPrograms || 0),
+      },
+      batches: (data.batches || []).map((b) => ({
+        id: String(b.id),
+        code: b.code,
+        program_name: b.program_name,
+        start_date: b.start_date,
+        end_date: b.end_date,
+        target_strength: Number(b.target_strength || 0),
+        enrolled_count: Number(b.enrolled_count || 0),
+        trainers_count: Number(b.trainers_count || 0),
+        status: b.status,
+      })),
+      trainers: (data.trainers || []).map((t) => ({
+        id: String(t.id),
+        full_name: t.full_name,
+        email: t.email ?? null,
+        phone: t.phone ?? null,
+        skills: t.skills ?? null,
+        batch_code: t.batch_code,
+        is_lead: Boolean(t.is_lead),
+        role: t.role,
+        status: t.status,
+      })),
+      students: (data.students || []).map((s) => ({
+        id: String(s.id),
+        roll_number: s.roll_number,
+        full_name: s.full_name,
+        email: s.email ?? null,
+        phone: s.phone ?? null,
+        department: s.department ?? null,
+        year_or_semester: s.year_or_semester ?? null,
+        batch_code: s.batch_code,
+        enrolled_at: s.enrolled_at,
+      })),
+      resources: (data.resources || []).map((r) => ({
+        id: String(r.id),
+        name: r.name,
+        type: r.type,
+        url: r.url,
+        description: r.description ?? null,
+        batch_code: r.batch_code,
+      })),
+    };
+  } catch (error: any) {
+    console.error('[getCollegePortalData error]:', error?.message || error);
     return null;
   }
-
-  const college = collegeRows[0];
-
-  // Calculate aggregated metrics
-  const totalBatches = batchRows.length;
-  const activeBatches = batchRows.filter((b) => b.status === 'active').length;
-  const totalStudents = studentRows.length;
-  const distinctTrainerIds = new Set(trainerRows.map((t) => t.id));
-  const distinctProgramNames = new Set(batchRows.map((b) => b.program_name));
-
-  return {
-    college,
-    stats: {
-      totalBatches,
-      activeBatches,
-      totalStudents,
-      totalTrainers: distinctTrainerIds.size,
-      totalPrograms: distinctProgramNames.size,
-    },
-    batches: batchRows,
-    trainers: trainerRows,
-    students: studentRows,
-    resources: resourceRows,
-  };
 }

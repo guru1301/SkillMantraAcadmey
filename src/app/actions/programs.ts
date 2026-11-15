@@ -3,7 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { getSession } from '@/lib/auth/session';
 import { programSchema } from '@/lib/validations/program';
-import { createProgram } from '@/lib/db/programs';
+import { assertUuid } from '@/lib/validations/ids';
+import { createProgram, deleteProgram } from '@/lib/db/programs';
 import { ActionResult } from './colleges';
 
 export async function createProgramAction(
@@ -30,6 +31,7 @@ export async function createProgramAction(
   try {
     const result = await createProgram(parsed.data);
     revalidatePath('/admin/programs');
+    revalidatePath('/admin/dashboard');
     return { success: true, data: result };
   } catch (err: any) {
     console.error('[Create Program Error]:', err);
@@ -37,5 +39,28 @@ export async function createProgramAction(
       return { success: false, error: 'A program with this name already exists.' };
     }
     return { success: false, error: 'Failed to create program. Please try again.' };
+  }
+}
+
+export async function deleteProgramAction(
+  programId: string
+): Promise<ActionResult<{ success: boolean }>> {
+  const session = await getSession();
+  if (!session || session.role !== 'super_admin') {
+    return { success: false, error: 'Unauthorized: Admin authentication required.' };
+  }
+
+  try {
+    const safeProgramId = assertUuid(programId, 'programId');
+    const res = await deleteProgram(safeProgramId);
+    if (!res.success) {
+      return { success: false, error: res.error || 'Failed to delete program.' };
+    }
+    revalidatePath('/admin/programs');
+    revalidatePath('/admin/dashboard');
+    return { success: true, data: { success: true } };
+  } catch (err: any) {
+    console.error('[Delete Program Error]:', err);
+    return { success: false, error: 'Failed to delete program.' };
   }
 }

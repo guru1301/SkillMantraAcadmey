@@ -25,7 +25,7 @@ export default function WhatWeDoSection() {
           </h2>
           <div className="gold-accent-line mx-auto my-3" />
           <p className="text-base text-[#667085] leading-relaxed max-w-2xl mx-auto mt-2">
-            Skill Mantra Academy delivers structured learning experiences designed around practical skills, institutional needs, and evolving workplace requirements.
+            SkillThinker delivers structured learning experiences designed around practical skills, institutional needs, and evolving workplace requirements.
           </p>
         </div>
 
