@@ -33,36 +33,33 @@ export default function HeroSection() {
   const { openModal } = useAdvisorModal();
 
   return (
-    <section className="relative w-full bg-[#06182B] text-white overflow-hidden flex flex-col justify-between min-h-[100dvh] lg:h-[100dvh] lg:max-h-[860px] pt-20 sm:pt-22 lg:pt-20 pb-4 sm:pb-5 select-none">
+    <section className="relative w-full bg-[#031222] text-white overflow-hidden flex flex-col justify-between min-h-[100dvh] lg:h-[100dvh] lg:max-h-[860px] pt-20 sm:pt-22 lg:pt-20 pb-4 sm:pb-5 select-none">
       
-      {/* ── DESKTOP STAIRCASE BACKDROP (Locked within viewport, crisp, zero crop) ── */}
-      <div
-        className="hidden lg:block absolute right-0 top-14 bottom-18 w-[62%] xl:w-[65%] pointer-events-none select-none z-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="relative w-full h-full flex items-center justify-end">
-          <Image
-            src="/images/hero-staircase-hd.webp"
-            alt="Skillthinker Solutions learning journey staircase: Learn, Practice, Build, Upskill, Career"
-            fill
-            priority
-            className="object-contain object-right"
-            sizes="(min-width: 1024px) 65vw, 100vw"
-          />
-        </div>
+      {/* ── CINEMATIC MASTER BACKGROUND (Unified scene with fine edge gradient blending) ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none" aria-hidden="true">
+        <Image
+          src="/images/hero-cinematic-master.webp"
+          alt="Skillthinker Solutions learning journey: Learn, Practice, Build, Upskill, Career"
+          fill
+          priority
+          className="object-cover object-right lg:object-center"
+          sizes="100vw"
+        />
+        {/* Fine Ambient Atmospheric Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#031222]/90 via-[#031222]/30 to-transparent pointer-events-none" />
       </div>
 
-      {/* ── MAIN CONTENT CONTAINER (Strictly inside viewport on desktop) ── */}
+      {/* ── MAIN CONTENT CONTAINER (Strictly inside single viewport) ── */}
       <div className="relative z-10 container-custom w-full flex-1 flex flex-col justify-between">
         
-        {/* Middle Stage: Left Column Content */}
-        <div className="w-full flex-1 flex flex-col lg:flex-row items-center justify-between gap-6 my-auto py-2">
+        {/* Middle Stage: Left Column Content (Overlays the smooth navy region) */}
+        <div className="w-full flex-1 flex items-center justify-start my-auto py-2">
           
-          {/* Left Column: Eyebrow, Master Headline, Description & CTAs (~40% width) */}
-          <div className="w-full lg:w-[44%] xl:w-[40%] flex flex-col items-start text-left shrink-0">
+          {/* Left Column: Eyebrow, Master Headline, Description & CTAs */}
+          <div className="w-full lg:w-[48%] xl:w-[44%] flex flex-col items-start text-left shrink-0">
             
             {/* Eyebrow Label with Golden Accent Dash */}
-            <div className="flex items-center gap-2.5 mb-3.5">
+            <div className="flex items-center gap-2.5 mb-3 sm:mb-3.5">
               <span className="w-6 h-0.5 rounded-full bg-[#FFB000]" />
               <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFB000]">
                 SKILLTHINKER SOLUTIONS
@@ -70,14 +67,14 @@ export default function HeroSection() {
             </div>
 
             {/* Master Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black tracking-tight leading-[1.08] text-white mb-3.5 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black tracking-tight leading-[1.08] text-white mb-3.5 sm:mb-4 drop-shadow-sm">
               The right skills<br />
               <span className="text-[#FFB000]">can transform</span><br />
               your career.
             </h1>
 
             {/* Supporting Description */}
-            <p className="text-slate-300 text-xs sm:text-sm lg:text-[14.5px] leading-relaxed max-w-lg font-normal mb-5 sm:mb-6">
+            <p className="text-slate-200/90 text-xs sm:text-sm lg:text-[14.5px] leading-relaxed max-w-lg font-normal mb-5 sm:mb-6">
               Our training programs are designed to help students, graduates, and working professionals
               develop practical, industry-relevant skills and prepare for the demands of the modern workplace.
             </p>
@@ -97,31 +94,20 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => openModal()}
-                className="h-12 px-6 rounded-full bg-transparent hover:bg-white/[0.08] border border-white/30 hover:border-white/50 text-white font-medium text-xs sm:text-sm inline-flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer"
+                className="h-12 px-6 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/25 hover:border-white/50 text-white font-medium text-xs sm:text-sm inline-flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer backdrop-blur-xs"
               >
-                <MessageSquare className="w-4 h-4 text-white/80" />
+                <MessageSquare className="w-4 h-4 text-white/85" />
                 <span>Talk to an Advisor</span>
               </button>
             </div>
 
           </div>
 
-          {/* Mobile & Tablet Staircase Card (Shown only on screens < lg) */}
-          <div className="block lg:hidden w-full my-3 rounded-2xl overflow-hidden border border-white/10 relative aspect-[2.1/1] bg-[#06182B] shadow-xl">
-            <Image
-              src="/images/hero-staircase-hd.webp"
-              alt="Skillthinker Solutions learning journey staircase: Learn, Practice, Build, Upskill, Career"
-              fill
-              className="object-contain object-center"
-              sizes="100vw"
-            />
-          </div>
-
         </div>
 
         {/* ── BOTTOM INFORMATION STRIP (Bare line icons, minimal luxury design) ── */}
         <div className="w-full shrink-0 pt-2">
-          <div className="w-full rounded-2xl bg-[#05182B]/90 border border-white/10 shadow-2xl backdrop-blur-md px-5 sm:px-7 py-3.5 sm:py-4">
+          <div className="w-full rounded-2xl bg-[#041527]/85 border border-white/10 shadow-2xl backdrop-blur-md px-5 sm:px-7 py-3.5 sm:py-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
               {HERO_FEATURES.map((item, index) => {
                 const Icon = item.icon;
