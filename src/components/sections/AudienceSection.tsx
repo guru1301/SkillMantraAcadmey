@@ -35,8 +35,8 @@ export const AUDIENCE_DATA: AudienceItem[] = [
       'Build a strong technical foundation alongside your degree, with structured, easy-to-follow learning paths.',
     ctaText: 'View Recommended Tracks',
     ctaHref: '/#courses',
-    image: '/images/audience/students.jpg',
-    imageAlt: 'College student working on laptop in computer laboratory',
+    image: '/images/audience/students-collaboration.jpg',
+    imageAlt: 'College students collaborating on hands-on programming projects in computer lab',
   },
   {
     id: 'graduates',
