@@ -221,14 +221,15 @@ export default function AboutSection() {
 
             {/* Right: Bespoke 3D Head-Out Reference Artwork */}
             <div className="w-full lg:w-auto lg:shrink-0 flex justify-end">
-              <div className="relative w-full sm:w-[380px] lg:w-[440px] xl:w-[480px] flex items-end justify-end animate-audience-fade">
+              <div className="relative w-full sm:w-[400px] lg:w-[460px] xl:w-[500px] flex items-end justify-end animate-audience-fade">
                 <Image
-                  src="/images/values-leadership-3d.png"
+                  src="/images/values-authentic-hd-3d.png"
                   alt="Skillthinker Solutions experienced trainers mentoring students in hands-on technical sessions"
-                  width={770}
-                  height={306}
-                  className="w-full h-auto max-h-[165px] sm:max-h-[180px] lg:max-h-[195px] object-contain object-right-bottom"
+                  width={1155}
+                  height={459}
+                  className="w-full h-auto max-h-[175px] sm:max-h-[195px] lg:max-h-[215px] object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(6,40,79,0.12)]"
                   priority
+                  quality={95}
                 />
               </div>
             </div>
