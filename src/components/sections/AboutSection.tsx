@@ -133,61 +133,59 @@ export default function AboutSection() {
 
         </div>
 
-        {/* ── BLOCK 2: Mission & Vision (Dual Architectural Horizon Split) ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        {/* ── BLOCK 2: Mission & Vision (Side-by-Side Institutional Columns) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200/80 py-6 sm:py-8 border-y border-slate-200/80">
           
-          {/* Mission Card: Core Purpose */}
-          <div className="p-8 sm:p-10 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow group">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono font-bold text-amber-700 tracking-widest uppercase">
-                  Core Purpose
-                </span>
-                <span className="text-xs font-mono text-slate-300 group-hover:text-amber-500 transition-colors">
-                  01
-                </span>
-              </div>
-
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-1">
-                Our Mission
-              </h3>
-              <div className="text-sm font-bold text-[#0A3A7A] mb-4">
-                Accessible, meaningful skill development
-              </div>
-
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-                {BRAND_INFO.mission}
-              </p>
+          {/* Left Column: Mission */}
+          <div className="pb-6 md:pb-0 md:pr-8 lg:pr-12 xl:pr-16 flex flex-col justify-start">
+            {/* Small Uppercase Label */}
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-0.5 rounded-full bg-[#FCAF0A]" />
+              <span className="text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase text-[#06284F]">
+                OUR MISSION
+              </span>
             </div>
 
-            <div className="w-12 h-0.5 bg-[#FCAF0A] mt-8" />
+            {/* Refined Navy Heading (26–30px) */}
+            <h3 className="text-2xl sm:text-[26px] lg:text-[28px] font-extrabold text-[#06284F] tracking-tight leading-[1.2] mb-1">
+              Our Mission
+            </h3>
+
+            {/* Supporting Statement */}
+            <div className="text-xs sm:text-sm font-bold text-[#1548AE] mb-2.5">
+              {BRAND_INFO.missionSubtitle}
+            </div>
+
+            {/* Description */}
+            <p className="text-xs sm:text-[13.5px] lg:text-[14px] text-slate-600 leading-relaxed font-normal">
+              {BRAND_INFO.mission}
+            </p>
           </div>
 
-          {/* Vision Card: Long-Term Horizon */}
-          <div className="p-8 sm:p-10 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow group">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono font-bold text-[#0A3A7A] tracking-widest uppercase">
-                  Long-Term Horizon
-                </span>
-                <span className="text-xs font-mono text-slate-300 group-hover:text-[#0A3A7A] transition-colors">
-                  02
-                </span>
-              </div>
-
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#06284F] tracking-tight mb-1">
-                Our Vision
-              </h3>
-              <div className="text-sm font-bold text-[#0A3A7A] mb-4">
-                A trusted center of excellence
-              </div>
-
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-                {BRAND_INFO.vision}
-              </p>
+          {/* Right Column: Vision */}
+          <div className="pt-6 md:pt-0 md:pl-8 lg:pl-12 xl:pl-16 flex flex-col justify-start">
+            {/* Small Uppercase Label */}
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-0.5 rounded-full bg-[#FCAF0A]" />
+              <span className="text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase text-[#06284F]">
+                OUR VISION
+              </span>
             </div>
 
-            <div className="w-12 h-0.5 bg-[#0A3A7A] mt-8" />
+            {/* Refined Navy Heading (26–30px) */}
+            <h3 className="text-2xl sm:text-[26px] lg:text-[28px] font-extrabold text-[#06284F] tracking-tight leading-[1.2] mb-1">
+              Our Vision
+            </h3>
+
+            {/* Supporting Statement */}
+            <div className="text-xs sm:text-sm font-bold text-[#1548AE] mb-2.5">
+              {BRAND_INFO.visionSubtitle}
+            </div>
+
+            {/* Description */}
+            <p className="text-xs sm:text-[13.5px] lg:text-[14px] text-slate-600 leading-relaxed font-normal">
+              {BRAND_INFO.vision}
+            </p>
           </div>
 
         </div>
