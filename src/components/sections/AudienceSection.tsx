@@ -51,8 +51,8 @@ export const AUDIENCE_DATA: AudienceItem[] = [
       'Sharpen placement-ready skills — aptitude, technical depth, and interview confidence — before you enter the job market.',
     ctaText: 'View Recommended Tracks',
     ctaHref: '/#courses',
-    image: '/images/audience/graduates.jpg',
-    imageAlt: 'Recent graduate preparing for placement interviews with technical mentor',
+    image: '/images/audience/graduates-readiness.jpg',
+    imageAlt: 'Fresh graduate studying aptitude, data structures, and interview preparation for job readiness',
   },
   {
     id: 'professionals',
