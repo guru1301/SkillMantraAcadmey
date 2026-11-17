@@ -83,8 +83,8 @@ export const AUDIENCE_DATA: AudienceItem[] = [
       'Pick up the technical and digital marketing skills needed to build, launch, and grow your own ideas.',
     ctaText: 'View Recommended Tracks',
     ctaHref: '/#courses',
-    image: '/images/audience/entrepreneurs.jpg',
-    imageAlt: 'Founders collaborating on digital product development and architecture',
+    image: '/images/audience/entrepreneurs-founders.jpg',
+    imageAlt: 'Startup founders and innovators collaborating on digital product development in modern workspace',
   },
 ];
 
