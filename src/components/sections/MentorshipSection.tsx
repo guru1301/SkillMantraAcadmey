@@ -174,9 +174,9 @@ export default function MentorshipSection() {
 
           </div>
 
-          {/* ── RIGHT COLUMN: Trainer Photograph in Geometric Architectural Frame (~44% width on lg) ── */}
+          {/* ── RIGHT COLUMN: Trainer Photograph in Geometric Architectural Frame + Mentorship Block (~44% width on lg) ── */}
           <div
-            className={`w-full lg:w-[44%] xl:w-[43%] flex items-center justify-center lg:justify-end transition-opacity duration-600 ease-out ${
+            className={`w-full lg:w-[44%] xl:w-[43%] flex flex-col items-center lg:items-end justify-center transition-opacity duration-600 ease-out ${
               isVisible ? 'opacity-100' : 'opacity-0'
             } motion-reduce:opacity-100`}
           >
@@ -184,7 +184,7 @@ export default function MentorshipSection() {
               
               {/* Subtle Pale-Blue Background Geometry Behind the Image */}
               <div
-                className="absolute -top-3.5 -left-3.5 sm:-top-4 sm:-left-4 w-full h-full bg-[#EBF2FE] -z-10 transition-transform duration-500"
+                className="absolute -top-3.5 -left-3.5 sm:-top-4 sm:-left-4 w-full h-[320px] sm:h-[350px] lg:h-[360px] bg-[#EBF2FE] -z-10 transition-transform duration-500"
                 style={{
                   clipPath:
                     'polygon(28% 0%, 96% 0%, 100% 4%, 100% 96%, 96% 100%, 4% 100%, 0% 96%, 0% 28%)',
@@ -193,13 +193,13 @@ export default function MentorshipSection() {
 
               {/* Bottom-Right Pale-Blue Geometric Tab Accent */}
               <div
-                className="absolute -bottom-3 -right-3 sm:-bottom-3.5 sm:-right-3.5 w-24 h-24 bg-[#E0EDFE] -z-20 rounded-2xl"
+                className="absolute top-[280px] sm:top-[310px] lg:top-[320px] -right-3 sm:-right-3.5 w-20 h-20 bg-[#E0EDFE] -z-20 rounded-2xl"
                 aria-hidden="true"
               />
 
               {/* Geometric Image Container with Diagonal Top-Left Architectural Cut */}
               <div
-                className="relative w-full aspect-[4/3] sm:aspect-[1/1] lg:aspect-auto lg:h-[450px] xl:h-[480px] overflow-hidden bg-slate-100 shadow-sm border border-blue-50/50"
+                className="relative w-full h-[320px] sm:h-[350px] lg:h-[360px] overflow-hidden bg-slate-100 shadow-sm border border-blue-50/50"
                 style={{
                   clipPath:
                     'polygon(28% 0%, 96% 0%, 100% 4%, 100% 96%, 96% 100%, 4% 100%, 0% 96%, 0% 28%)',
@@ -213,6 +213,22 @@ export default function MentorshipSection() {
                   sizes="(max-width: 1024px) 100vw, 520px"
                   className="object-cover object-top"
                 />
+              </div>
+
+              {/* Mentorship Philosophy & Quote Card */}
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200/90 shadow-2xs">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FCAF0A] shrink-0" />
+                  <h4 className="text-xs sm:text-[13px] font-bold text-[#06284F] tracking-tight">
+                    Mentorship That Goes Beyond the Classroom
+                  </h4>
+                </div>
+                <p className="text-xs sm:text-[12.5px] text-slate-600 leading-relaxed font-normal mb-2.5">
+                  Our trainers don&apos;t just teach concepts. They help learners understand how those concepts can be applied in practical situations and encourage them to develop confidence in their abilities.
+                </p>
+                <blockquote className="border-l-2 border-[#1548AE] pl-3 py-0.5 text-xs sm:text-[13px] font-semibold text-[#06284F] italic leading-snug">
+                  “Learn from experts. Practice with guidance. Grow with confidence.”
+                </blockquote>
               </div>
 
             </div>
