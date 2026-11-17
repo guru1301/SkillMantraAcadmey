@@ -67,8 +67,8 @@ export const AUDIENCE_DATA: AudienceItem[] = [
       'Upskill or pivot into a new domain with practical, project-driven training designed around a working schedule.',
     ctaText: 'View Recommended Tracks',
     ctaHref: '/#courses',
-    image: '/images/audience/professionals.jpg',
-    imageAlt: 'Experienced professional participating in technical training session',
+    image: '/images/audience/professionals-corporate.jpg',
+    imageAlt: 'Corporate working professionals upskilling and advancing their careers at tech park',
   },
   {
     id: 'entrepreneurs',
