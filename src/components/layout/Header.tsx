@@ -51,7 +51,6 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: 'About', href: '/#about' },
     { label: 'Trainers', href: '/#trainers' },
     { label: 'FAQ', href: '/#faq' },
     { label: 'Contact', href: '/#contact' },
