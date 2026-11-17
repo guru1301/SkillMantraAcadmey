@@ -61,23 +61,23 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#041427]/95 backdrop-blur-md border-b border-white/10 shadow-lg py-2.5'
-            : 'bg-transparent py-4'
+            ? 'bg-[#06182B]/95 backdrop-blur-md border-b border-white/10 shadow-lg py-2'
+            : 'bg-[#06182B] border-b border-white/10 py-3'
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14 sm:h-16">
 
             {/* Official Brand Logo Lockup */}
             <Link href="/#top" className="group flex items-center shrink-0">
               <BrandLogo variant="dark" size="sm" showTagline={true} />
             </Link>
 
-            {/* Desktop Navigation - Pure Human-Crafted Typography (No Icon Clutter) */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
               <Link
                 href="/#top"
-                className="px-3 py-2 text-white/85 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                className="relative px-3 py-2 text-white font-semibold transition-colors after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-[#FFB000] after:rounded-full"
               >
                 Home
               </Link>
@@ -174,23 +174,24 @@ export default function Header() {
             <div className="hidden lg:flex items-center gap-3">
               <a
                 href="/assessment.html"
-                className="text-xs font-semibold text-slate-300 hover:text-white px-2 py-1.5 transition-colors"
+                className="h-9 px-4 rounded-full border border-white/25 hover:border-white/50 text-white text-xs font-semibold inline-flex items-center justify-center transition-colors hover:bg-white/[0.08]"
               >
                 Assessment
               </a>
 
               <a
                 href="/student-login.html"
-                className="text-xs font-semibold text-slate-300 hover:text-white px-2 py-1.5 transition-colors"
+                className="h-9 px-3 text-white/85 hover:text-white text-xs font-semibold inline-flex items-center justify-center transition-colors"
               >
                 Feedback
               </a>
 
               <Link
                 href="/login"
-                className="text-xs font-semibold text-white/90 hover:text-white px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors border border-white/10"
+                className="h-9 px-4 rounded-full bg-[#FFB000] hover:bg-[#E59E00] text-[#06182B] text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95"
               >
-                Portal
+                <span>Portal</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#06182B] stroke-[2.5]" />
               </Link>
             </div>
 
