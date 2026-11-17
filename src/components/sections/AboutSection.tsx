@@ -225,8 +225,8 @@ export default function AboutSection() {
                 <Image
                   src="/images/values-authentic-hd-3d.png"
                   alt="Skillthinker Solutions experienced trainers mentoring students in hands-on technical sessions"
-                  width={1155}
-                  height={459}
+                  width={1988}
+                  height={791}
                   className="w-full h-auto max-h-[175px] sm:max-h-[195px] lg:max-h-[215px] object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(6,40,79,0.12)]"
                   priority
                   quality={95}
