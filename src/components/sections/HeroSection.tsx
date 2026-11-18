@@ -38,15 +38,16 @@ export default function HeroSection() {
       {/* ── CINEMATIC MASTER BACKGROUND (Unified scene with fine edge gradient blending) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none" aria-hidden="true">
         <Image
-          src="/images/hero-cinematic-master.webp"
+          src="/images/hero-cinematic-backdrop.webp"
           alt="Skillthinker Solutions learning journey: Learn, Practice, Build, Upskill, Career"
           fill
           priority
+          unoptimized
           className="object-cover object-right lg:object-center"
           sizes="100vw"
         />
-        {/* Fine Ambient Atmospheric Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#031222]/90 via-[#031222]/30 to-transparent pointer-events-none" />
+        {/* Subtle Edge Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#031222]/60 via-[#031222]/10 to-transparent pointer-events-none" />
       </div>
 
       {/* ── MAIN CONTENT CONTAINER (Strictly inside single viewport) ── */}
